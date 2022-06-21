@@ -1,0 +1,65 @@
+﻿#pragma kernel FrustumCulling
+
+// 输入一系列矩阵
+StructuredBuffer<float4x4> input;
+uint inputCount;
+float4 cameraPlanes[6];
+// AABB包围盒
+float3 boxCenter;
+float3 boxExtents;
+struct GPUBounds {
+    float3 min;
+    float3 max;
+};
+
+// 结果
+AppendStructuredBuffer<float4x4> VisibleBuffer;
+AppendStructuredBuffer<GPUBounds> GPUBoundsBuffer;
+
+
+bool IsOutsideThePlane(float4 plane, float3 pointPosition)
+{
+	return dot(plane.xyz, pointPosition) + plane.w > 0;
+}
+bool IsCulled(in float4 boundVerts[8])
+{
+    //如果8个顶点都在某个面外，则肯定在视锥体外面
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (!IsOutsideThePlane(cameraPlanes[i], boundVerts[j].xyz)) break;
+            if (j == 7) return true;
+        }
+    }
+    return false;
+}
+[numthreads(32,1,1)]
+void FrustumCulling(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= inputCount) return;
+
+    float4x4 instance = input[id.x];
+    float3 boundMin = boxCenter - boxExtents;
+    float3 boundMax = boxCenter + boxExtents;
+    float4 boundVerts[8];//AABB8个顶点坐标
+    boundVerts[0] = mul(instance, float4(boundMin, 1));
+    boundVerts[1] = mul(instance, float4(boundMax, 1));
+    boundVerts[2] = mul(instance, float4(boundMax.x, boundMax.y, boundMin.z, 1));
+    boundVerts[3] = mul(instance, float4(boundMax.x, boundMin.y, boundMax.z, 1));
+    boundVerts[6] = mul(instance, float4(boundMax.x, boundMin.y, boundMin.z, 1));
+    boundVerts[4] = mul(instance, float4(boundMin.x, boundMax.y, boundMax.z, 1));
+    boundVerts[5] = mul(instance, float4(boundMin.x, boundMax.y, boundMin.z, 1));
+    boundVerts[7] = mul(instance, float4(boundMin.x, boundMin.y, boundMax.z, 1));
+
+
+
+    if (!IsCulled(boundVerts))
+    {
+        VisibleBuffer.Append(instance);
+ 
+        GPUBounds bounds;
+        bounds.min = boundVerts[0].xyz;
+        bounds.max = boundVerts[1].xyz;
+
+        GPUBoundsBuffer.Append(bounds);
+    }
+}
