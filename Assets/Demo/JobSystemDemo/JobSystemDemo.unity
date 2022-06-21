@@ -293,6 +293,7 @@ MonoBehaviour:
   DrawBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
+  outputLength: 0
 --- !u!1 &1827998729
 GameObject:
   m_ObjectHideFlags: 0

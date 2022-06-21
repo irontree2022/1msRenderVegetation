@@ -9,32 +9,46 @@ public class JobSystemDemo : MonoBehaviour
 {
     public Camera MainCamera;
     public GameObject Prefab;
+
+    [Header("实例总数量")]
     public int InstanceCount = 100000;
+    [Header("实例随机生成的边界范围")]
     public Vector3Int InstanceExtents = new Vector3Int(500, 500, 500);
+    [Header("实例随机生成的缩放值范围")]
     [Range(0.1f, 10)]
     public float RandomeMaxScaleValue = 5;
-    public Bounds DrawBounds = new Bounds();
+
     [Header("平截头内实例总数")]
     public int outputLength = 0;
 
+    // 实例AABB包围盒
     private Bounds meshBounds;
-    private Mesh mesh;
-    private Material material;
-    private ComputeBuffer instanceOutputBuffer;
-    private MaterialPropertyBlock mpb;
-    private NativeArray<float4> FrustumPlanes;
-    private NativeArray<float4x4> input;
-    private NativeArray<int> outputCount;
-    private NativeArray<float4x4> output;
+    // 平截头六个面
     private float4[] FrustumPlanesArray = new float4[6];
-    private FrustumCullingJob FrustumCullingJob;
-    private JobHandle FrustumCullingJobHandle;
+    // 平截头六个面 （用于Job System）
+    private NativeArray<float4> FrustumPlanes;
+    // 输入的所有实例数据
+    private NativeArray<float4x4> input;
+    // 剔除后输出的实例数量
+    private NativeArray<int> outputCount;
+    // 剔除后实例数据
+    private NativeArray<float4x4> output;
+
+    // 模型网格数据
+    private Mesh mesh;
+    // 模型材质
+    private Material material;
+    // 实例数据缓冲对象
+    private ComputeBuffer instanceOutputBuffer;
+    // 材质属性块，比使用 Material.SetBuffer 更快，性能更好。
+    private MaterialPropertyBlock mpb;
+    private Bounds DrawBounds = new Bounds();
 
 
     void Start()
     {
         // 随机生成一系列实例数据
-        RandomlyGenerated(InstanceCount, InstanceExtents, RandomeMaxScaleValue);
+        RandomlyGeneratedInstances(InstanceCount, InstanceExtents, RandomeMaxScaleValue);
 
         mesh = Prefab.GetComponent<MeshFilter>().sharedMesh;
         var mr = Prefab.GetComponent<MeshRenderer>();
@@ -48,17 +62,10 @@ public class JobSystemDemo : MonoBehaviour
         FrustumPlanes = new NativeArray<float4>(6, Allocator.Persistent);
         outputCount = new NativeArray<int>(1, Allocator.Persistent);
         output = new NativeArray<float4x4>(InstanceCount, Allocator.Persistent);
-        FrustumCullingJob = new FrustumCullingJob();
-        FrustumCullingJob.input = input;
-        FrustumCullingJob.outputCount = outputCount;
-        FrustumCullingJob.output = output;
-        FrustumCullingJob.boxCenter = meshBounds.center;
-        FrustumCullingJob.boxExtents = meshBounds.extents;
-        FrustumCullingJob.cameraPlanes = FrustumPlanes;
-
+       
     }
-    // 随机生成10万个实例矩阵
-    private void RandomlyGenerated(int instanceCount, Vector3Int instanceExtents, float maxScale)
+    // 随机生成一系列实例矩阵
+    private void RandomlyGeneratedInstances(int instanceCount, Vector3Int instanceExtents, float maxScale)
     {
         input = new NativeArray<float4x4>(instanceCount, Allocator.Persistent);
         var cameraPos = MainCamera.transform.position;
@@ -131,9 +138,16 @@ public class JobSystemDemo : MonoBehaviour
             // 视锥剔除
             outputCount[0] = 0;
             FrustumPlanes.CopyFrom(GetFrustumPlanes(MainCamera, FrustumPlanesArray));
-            FrustumCullingJobHandle = FrustumCullingJob.Schedule(InstanceCount, InstanceCount);
+            var job = new FrustumCullingJob();
+            job.input = input;
+            job.outputCount = outputCount;
+            job.output = output;
+            job.boxCenter = meshBounds.center;
+            job.boxExtents = meshBounds.extents;
+            job.cameraPlanes = FrustumPlanes;
+            var jobhandle = job.Schedule(InstanceCount, InstanceCount);
             JobHandle.ScheduleBatchedJobs();
-            FrustumCullingJobHandle.Complete();
+            jobhandle.Complete();
             // 将剔除结果写入buffer中
             outputLength = outputCount[0];
             instanceOutputBuffer.SetData(output, 0, 0, outputLength);
