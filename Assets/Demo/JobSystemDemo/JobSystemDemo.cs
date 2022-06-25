@@ -7,69 +7,57 @@ using Unity.Jobs;
 
 public class JobSystemDemo : MonoBehaviour
 {
-    public Camera MainCamera;
+    public Camera MainMamera;
     public GameObject Prefab;
 
-    [Header("实例总数量")]
     public int InstanceCount = 100000;
-    [Header("实例随机生成的边界范围")]
     public Vector3Int InstanceExtents = new Vector3Int(500, 500, 500);
-    [Header("实例随机生成的缩放值范围")]
-    [Range(0.1f, 10)]
     public float RandomeMaxScaleValue = 5;
+    public int outputLength;
 
-    [Header("平截头内实例总数")]
-    public int outputLength = 0;
-
-    // 实例AABB包围盒
     private Bounds meshBounds;
-    // 平截头六个面
     private float4[] FrustumPlanesArray = new float4[6];
-    // 平截头六个面 （用于Job System）
     private NativeArray<float4> FrustumPlanes;
-    // 输入的所有实例数据
     private NativeArray<float4x4> input;
-    // 剔除后输出的实例数量
     private NativeArray<int> outputCount;
-    // 剔除后实例数据
     private NativeArray<float4x4> output;
 
-    // 模型网格数据
-    private Mesh mesh;
-    // 模型材质
-    private Material material;
-    // 实例数据缓冲对象
-    private ComputeBuffer instanceOutputBuffer;
-    // 材质属性块，比使用 Material.SetBuffer 更快，性能更好。
-    private MaterialPropertyBlock mpb;
-    private Bounds DrawBounds = new Bounds();
 
+    private Mesh mesh;
+    private Material material;
+    private Bounds DrawBounds = new Bounds();
+    private MaterialPropertyBlock mpb;
+    private ComputeBuffer instanceOutputBuffer;
 
     void Start()
     {
-        // 随机生成一系列实例数据
-        RandomlyGeneratedInstances(InstanceCount, InstanceExtents, RandomeMaxScaleValue);
+        // 随机生成实例数据
+        RandomGeneratedInstances(InstanceCount, InstanceExtents, RandomeMaxScaleValue);
 
+        // 初始化各种参数
         mesh = Prefab.GetComponent<MeshFilter>().sharedMesh;
         var mr = Prefab.GetComponent<MeshRenderer>();
         material = mr.sharedMaterial;
         meshBounds = mr.bounds;
-        instanceOutputBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 16);
-        mpb = new MaterialPropertyBlock();
-        mpb.SetBuffer("IndirectShaderDataBuffer", instanceOutputBuffer);
-        DrawBounds.size = Vector3.one * 10000;
-
         FrustumPlanes = new NativeArray<float4>(6, Allocator.Persistent);
         outputCount = new NativeArray<int>(1, Allocator.Persistent);
         output = new NativeArray<float4x4>(InstanceCount, Allocator.Persistent);
-       
+        DrawBounds.size = Vector3.one * 100000;
+
+        instanceOutputBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 16);
+        mpb = new MaterialPropertyBlock();
+        // 设置缓冲区位置
+        mpb.SetBuffer("IndirectShaderDataBuffer", instanceOutputBuffer);
     }
-    // 随机生成一系列实例矩阵
-    private void RandomlyGeneratedInstances(int instanceCount, Vector3Int instanceExtents, float maxScale)
+    /// <summary>
+    /// 随机生成实例数据
+    /// </summary>
+    private void RandomGeneratedInstances(int instanceCount, Vector3Int instanceExtents, float maxScale)
     {
         input = new NativeArray<float4x4>(instanceCount, Allocator.Persistent);
-        var cameraPos = MainCamera.transform.position;
-        for (int i = 0; i < instanceCount; i++)
+
+        var cameraPos = MainMamera.transform.position;
+        for(var i = 0; i < instanceCount; i++)
         {
             var pos = new Vector3(
                 cameraPos.x + UnityEngine.Random.Range(-instanceExtents.x, instanceExtents.x),
@@ -79,6 +67,22 @@ public class JobSystemDemo : MonoBehaviour
             var s = new Vector3(UnityEngine.Random.Range(0.1f, maxScale), UnityEngine.Random.Range(0.1f, maxScale), UnityEngine.Random.Range(0.1f, maxScale));
             input[i] = Matrix4x4.TRS(pos, r, s);
         }
+    }
+
+
+    private Vector3 per_playerPos = Vector3.zero;
+    private Quaternion per_playerRot = Quaternion.identity;
+    // 判断摄像机是否发生了变化
+    public bool IsCameraChange()
+    {
+        if(per_playerPos != MainMamera.transform.position ||
+            per_playerRot != MainMamera.transform.rotation)
+        {
+            per_playerPos = MainMamera.transform.position;
+            per_playerRot = MainMamera.transform.rotation;
+            return true;
+        }
+        return false;
     }
 
     private static Vector4 GetPlane(Vector3 normal, Vector3 point) => new Vector4(normal.x, normal.y, normal.z, -Vector3.Dot(normal, point));
@@ -117,27 +121,16 @@ public class JobSystemDemo : MonoBehaviour
         return planes;
     }
 
-    private Vector3 per_playerPos = Vector3.zero;
-    private Quaternion per_playerRot = Quaternion.identity;
-    // 摄像头发生改变？
-    public bool IsRenderCameraChange()
-    {
-        if (per_playerPos != MainCamera.transform.position ||
-            per_playerRot != MainCamera.transform.rotation)
-        {
-            per_playerPos = MainCamera.transform.position;
-            per_playerRot = MainCamera.transform.rotation;
-            return true;
-        }
-        return false;
-    }
+
+
     void Update()
     {
-        if (IsRenderCameraChange())
+        if (IsCameraChange())
         {
-            // 视锥剔除
+            // 执行视锥剔除
+            DrawBounds.center = MainMamera.transform.position;
             outputCount[0] = 0;
-            FrustumPlanes.CopyFrom(GetFrustumPlanes(MainCamera, FrustumPlanesArray));
+            FrustumPlanes.CopyFrom(GetFrustumPlanes(MainMamera, FrustumPlanesArray));
             var job = new FrustumCullingJob();
             job.input = input;
             job.outputCount = outputCount;
@@ -145,31 +138,36 @@ public class JobSystemDemo : MonoBehaviour
             job.boxCenter = meshBounds.center;
             job.boxExtents = meshBounds.extents;
             job.cameraPlanes = FrustumPlanes;
-            var jobhandle = job.Schedule(InstanceCount, InstanceCount);
+            var jobhanle = job.Schedule(InstanceCount, InstanceCount);
             JobHandle.ScheduleBatchedJobs();
-            jobhandle.Complete();
-            // 将剔除结果写入buffer中
+            jobhanle.Complete();
+            // 剔除之后，获得保留的所有实例数量
             outputLength = outputCount[0];
+            // 将这些实例数量全部拷贝进缓冲区中，供绘制使用
             instanceOutputBuffer.SetData(output, 0, 0, outputLength);
-            DrawBounds.center = MainCamera.transform.position;
-            if (!material.enableInstancing) material.enableInstancing = true;
         }
+
         // 绘制
         Graphics.DrawMeshInstancedProcedural(
-                     mesh,
-                     0,
-                     material,
-                     DrawBounds,
-                     outputLength,
-                     mpb);
+            mesh,
+            0,
+            material,
+            DrawBounds,
+            outputLength,
+            mpb);
     }
 
     private void OnDestroy()
     {
-        if (input.IsCreated) input.Dispose();
-        if (outputCount.IsCreated) outputCount.Dispose();
-        if (output.IsCreated) output.Dispose();
-        if(FrustumPlanes.IsCreated) FrustumPlanes.Dispose();
+        // 需要手动释放变量
+        if (input.IsCreated)
+            input.Dispose();
+        if (FrustumPlanes.IsCreated)
+            FrustumPlanes.Dispose();
+        if (outputCount.IsCreated)
+            outputCount.Dispose();
+        if (output.IsCreated)
+            output.Dispose();
         instanceOutputBuffer?.Release();
     }
 }

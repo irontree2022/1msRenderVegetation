@@ -1,4 +1,4 @@
-Shader "URP/Lit"
+Shader "TestURP/Lit"
 {
     Properties
     {
@@ -147,9 +147,9 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
 
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -189,9 +189,8 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
 
-
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -261,8 +260,8 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitGBufferPass.hlsl"
 
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -295,8 +294,9 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -332,8 +332,9 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -365,9 +366,12 @@ Shader "URP/Lit"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitMetaPass.hlsl"
 
-        #pragma multi_compile_instancing        
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+
+         #pragma multi_compile_instancing
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
+
             ENDHLSL
         }
 
@@ -392,9 +396,10 @@ Shader "URP/Lit"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
 
-            #pragma multi_compile_instancing        
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+         #pragma multi_compile_instancing
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
             ENDHLSL
         }
     }
@@ -475,8 +480,9 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -515,8 +521,9 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -548,8 +555,8 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -584,8 +591,9 @@ Shader "URP/Lit"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
 
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
         ENDHLSL
     }
 
@@ -617,9 +625,10 @@ Shader "URP/Lit"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitMetaPass.hlsl"
 
-#pragma multi_compile_instancing        
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+         #pragma multi_compile_instancing
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
 
             ENDHLSL
         }
@@ -644,9 +653,10 @@ Shader "URP/Lit"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
 
-            #pragma multi_compile_instancing        
-#include "Assets/VegetationRenderer/Shader/GPUInstancing_indirect.cginc"
-#pragma instancing_options procedural:setup
+
+         #pragma multi_compile_instancing
+        #include "Assets/Demo/JobSystemDemo/GPUInstancing_indirect.cginc"
+        #pragma instancing_options procedural:setup
             ENDHLSL
         }
     }

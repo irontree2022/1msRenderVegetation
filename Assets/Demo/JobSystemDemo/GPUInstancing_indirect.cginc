@@ -1,10 +1,10 @@
-ï»¿#ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
+#ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
 #if defined(SHADER_API_GLCORE) || defined(SHADER_API_D3D11) || defined(SHADER_API_GLES3) || defined(SHADER_API_METAL) || defined(SHADER_API_VULKAN) || defined(SHADER_API_PSSL) || defined(SHADER_API_XBOXONE)
-// è¡¨ç¤ºå¤–éƒ¨å°†ä¼šç»™shaderè®¾ç½®ä¸€ä¸ªå®ä¾‹æ•°æ®ç¼“å†²åŒºï¼Œå†…éƒ¨æ˜¯è¦æ¸²æŸ“çš„ä¸€ç³»åˆ—å®ä¾‹æ•°æ®
+// ±íÊ¾Íâ²¿½«»á¸øshaderÉèÖÃÒ»¸öÊµÀıÊı¾İ»º³åÇø£¬ÄÚ²¿ÊÇÒªäÖÈ¾µÄÒ»ÏµÁĞÊµÀıÊı¾İ
 StructuredBuffer<float4x4> IndirectShaderDataBuffer;
 #endif	
 #endif
-// inverseå‡½æ•°çš„ä½œç”¨æ˜¯è¿”å›è¾“å…¥çŸ©é˜µçš„é€†çŸ©é˜µ
+// inverseº¯ÊıµÄ×÷ÓÃÊÇ·µ»ØÊäÈë¾ØÕóµÄÄæ¾ØÕó
 float4x4 inverse(float4x4 input)
 {
 #define minor(a,b,c) determinant(float3x3(input.a, input.b, input.c))
@@ -34,7 +34,7 @@ float4x4 inverse(float4x4 input)
 	return transpose(cofactors) / determinant(input);
 }
 
-// setupå‡½æ•°ä½œç”¨æ˜¯ç»™æ¯ä¸ªå®ä¾‹æ•°æ®åœ¨æ¸²æŸ“å‰å¾—åˆ°å®é™…çŸ©é˜µå’Œé€†çŸ©é˜µï¼Œç›¸å½“äºæ¯ä¸ªå®ä¾‹æ•°æ®çš„åˆå§‹åŒ–æ“ä½œã€‚
+// setupº¯Êı×÷ÓÃÊÇ¸øÃ¿¸öÊµÀıÊı¾İÔÚäÖÈ¾Ç°µÃµ½Êµ¼Ê¾ØÕóºÍÄæ¾ØÕó£¬Ïàµ±ÓÚÃ¿¸öÊµÀıÊı¾İµÄ³õÊ¼»¯²Ù×÷¡£
 void setup()
 {
 #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
