@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f18989a360ca1343b5e8d1d6aa049b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainMamera: {fileID: 1770079051}
+  MainCamera: {fileID: 1770079051}
   Prefab: {fileID: 6318120317857089692, guid: 9b12bc9664e69ce41b97a67629f6183e, type: 3}
   InstanceCount: 100000
   InstanceExtents: {x: 500, y: 500, z: 500}

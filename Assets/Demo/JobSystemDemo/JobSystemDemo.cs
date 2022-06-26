@@ -7,7 +7,7 @@ using Unity.Jobs;
 
 public class JobSystemDemo : MonoBehaviour
 {
-    public Camera MainMamera;
+    public Camera MainCamera;
     public GameObject Prefab;
 
     public int InstanceCount = 100000;
@@ -56,7 +56,7 @@ public class JobSystemDemo : MonoBehaviour
     {
         input = new NativeArray<float4x4>(instanceCount, Allocator.Persistent);
 
-        var cameraPos = MainMamera.transform.position;
+        var cameraPos = MainCamera.transform.position;
         for(var i = 0; i < instanceCount; i++)
         {
             var pos = new Vector3(
@@ -75,11 +75,11 @@ public class JobSystemDemo : MonoBehaviour
     // 判断摄像机是否发生了变化
     public bool IsCameraChange()
     {
-        if(per_playerPos != MainMamera.transform.position ||
-            per_playerRot != MainMamera.transform.rotation)
+        if(per_playerPos != MainCamera.transform.position ||
+            per_playerRot != MainCamera.transform.rotation)
         {
-            per_playerPos = MainMamera.transform.position;
-            per_playerRot = MainMamera.transform.rotation;
+            per_playerPos = MainCamera.transform.position;
+            per_playerRot = MainCamera.transform.rotation;
             return true;
         }
         return false;
@@ -128,9 +128,9 @@ public class JobSystemDemo : MonoBehaviour
         if (IsCameraChange())
         {
             // 执行视锥剔除
-            DrawBounds.center = MainMamera.transform.position;
+            DrawBounds.center = MainCamera.transform.position;
             outputCount[0] = 0;
-            FrustumPlanes.CopyFrom(GetFrustumPlanes(MainMamera, FrustumPlanesArray));
+            FrustumPlanes.CopyFrom(GetFrustumPlanes(MainCamera, FrustumPlanesArray));
             var job = new FrustumCullingJob();
             job.input = input;
             job.outputCount = outputCount;
