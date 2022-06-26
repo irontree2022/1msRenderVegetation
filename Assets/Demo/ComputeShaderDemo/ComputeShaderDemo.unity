@@ -402,11 +402,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 762684562}
   Prefab: {fileID: 6612184281252663420, guid: dfb6d178f46ee9541aee400209d1fbe7, type: 3}
-  FrustumCullingComputeShader: {fileID: 7200000, guid: 34321227ee1e8d642aecfef091561c45,
-    type: 3}
   InstanceCount: 100000
   InstanceExtents: {x: 500, y: 500, z: 500}
   RandomeMaxScaleValue: 6.01
-  DrawBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 5000, y: 5000, z: 5000}
+  FrustumCullingComputeShader: {fileID: 7200000, guid: 34321227ee1e8d642aecfef091561c45,
+    type: 3}
+  instanceBoundsCount: 0
+  showInstanceBounds_GetData: 1
+  showInstanceBounds_AsyncRequest: 0

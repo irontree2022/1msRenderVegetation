@@ -7,13 +7,16 @@ float4 cameraPlanes[6];
 // AABB包围盒
 float3 boxCenter;
 float3 boxExtents;
+
+
+
+// 结果
+AppendStructuredBuffer<float4x4> VisibleBuffer;
+bool showInstanceBounds;
 struct GPUBounds {
     float3 min;
     float3 max;
 };
-
-// 结果
-AppendStructuredBuffer<float4x4> VisibleBuffer;
 AppendStructuredBuffer<GPUBounds> GPUBoundsBuffer;
 
 
@@ -56,10 +59,12 @@ void FrustumCulling(uint3 id : SV_DispatchThreadID)
     {
         VisibleBuffer.Append(instance);
  
-        GPUBounds bounds;
-        bounds.min = boundVerts[0].xyz;
-        bounds.max = boundVerts[1].xyz;
+        if (showInstanceBounds) {
+            GPUBounds bounds;
+            bounds.min = boundVerts[0].xyz;
+            bounds.max = boundVerts[1].xyz;
 
-        GPUBoundsBuffer.Append(bounds);
+            GPUBoundsBuffer.Append(bounds);
+        }
     }
 }
