@@ -13,20 +13,40 @@ public class ComputeShaderDemo : MonoBehaviour
 {
     public Camera MainCamera;
     public GameObject Prefab;
-    public int InstanceCount = 100000;
+    public GameObject[] Prefabs;
+    public int InstanceCount = 1000000;
     public Vector3Int InstanceExtents = new Vector3Int(500, 500, 500);
+    public int InstanceCount_3D = 100;
+    public float distanceInterval = 10;
     public float RandomeMaxScaleValue = 5;
     public ComputeShader FrustumCullingComputeShader;
     public uint instanceBoundsCount = 0;
+    [Header("调试：使用随机位置数据")]
+    public bool useRandomPositionInstances;
+    [Header("调试：使用2d位置数据")]
+    public bool use2DPositionInstances;
+    [Header("调试：使用3d位置数据")]
+    public bool use3DPositionInstances;
     [Header("调试：显示实例包围盒 GetData()")]
     public bool showInstanceBounds_GetData;
     [Header("调试：显示实例包围盒 AsyncRequest")]
     public bool showInstanceBounds_AsyncRequest;
 
 
+    private Matrix4x4[] instances_arr;
+    private Matrix4x4[] instances;
+
     private int FrustumCullingKernel;
+    private int FrustumCullingKernel_3D;
+    private int tX = 8;
+    private int tY = 8;
+    private int tZ = 8;
+    private int gX = 13;
+    private int gY = 13;
+    private int gZ = 13;
     private ComputeBuffer instanceInputBuffer;
     private ComputeBuffer instanceOutputBuffer;
+    private ComputeBuffer[] instanceOutputBuffers;
     private ComputeBuffer instanceBoundsBuffer;
     private ComputeBuffer instanceBoundsCountBuffer;
     private Vector4[] FrustumPlanes = new Vector4[6];
@@ -39,17 +59,27 @@ public class ComputeShaderDemo : MonoBehaviour
     private UnityEngine.Rendering.AsyncGPUReadbackRequest instanceBoundsCountRR;
 
     private ComputeBuffer argsBuffer;
-    private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
+    private uint[] args = new uint[5] { 0, 0, 0, 0, 0};
+    private ComputeBuffer[] argsBuffers;
+    private uint[][] argsArr;
     private Bounds meshBounds;
+    private Bounds[] meshBoundsArr;
     private Mesh mesh;
+    private Mesh[] meshs;
     private Material material;
+    private Material[] materials;
     private Bounds DrawBounds = new Bounds();
+    private MaterialPropertyBlock[] mpbs;
     private MaterialPropertyBlock mpb;
-
 
     void Start()
     {
+        instances = RandomGeneratedInstances(InstanceCount, InstanceExtents, RandomeMaxScaleValue);
+        instances_arr = RandomGeneratedInstances_3D();
+
         FrustumCullingKernel = FrustumCullingComputeShader.FindKernel("FrustumCulling");
+        FrustumCullingKernel_3D = FrustumCullingComputeShader.FindKernel("FrustumCulling_3d");
+
         mesh = Prefab.GetComponent<MeshFilter>().sharedMesh;
         var mr = Prefab.GetComponent<MeshRenderer>();
         material = mr.sharedMaterial;
@@ -61,21 +91,77 @@ public class ComputeShaderDemo : MonoBehaviour
         args[4] = 0;
         argsBuffer = new ComputeBuffer(5, sizeof(uint) * 5, ComputeBufferType.IndirectArguments);
         argsBuffer.SetData(args);
-        instanceInputBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 16);
-        instanceInputBuffer.SetData(RandomGeneratedInstances(InstanceCount, InstanceExtents, RandomeMaxScaleValue));
         instanceOutputBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 16, ComputeBufferType.Append);
-        instanceBoundsBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 3 * 2, ComputeBufferType.Append);
-        instanceBoundsCountBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
         mpb = new MaterialPropertyBlock();
         mpb.SetBuffer("IndirectShaderDataBuffer", instanceOutputBuffer);
+
+        FrustumCullingComputeShader.SetInt("maxInstanceX", InstanceCount_3D);
+        FrustumCullingComputeShader.SetInt("maxInstanceY", InstanceCount_3D);
+        FrustumCullingComputeShader.SetInt("maxInstanceZ", InstanceCount_3D);
+        FrustumCullingComputeShader.SetInt("maxgX", gX);
+        FrustumCullingComputeShader.SetInt("maxgY", gY);
+        FrustumCullingComputeShader.SetInt("maxgZ", gZ);
+        FrustumCullingComputeShader.SetBool("use2DPositionInstances", use2DPositionInstances);
+        FrustumCullingComputeShader.SetBool("use3DPositionInstances", use3DPositionInstances);
+        instanceOutputBuffers = new ComputeBuffer[Prefabs.Length];
+        argsBuffers = new ComputeBuffer[Prefabs.Length];
+        argsArr = new uint[Prefabs.Length][];
+        meshBoundsArr = new Bounds[Prefabs.Length];
+        meshs = new Mesh[Prefabs.Length];
+        materials = new Material[Prefabs.Length];
+        mpbs = new MaterialPropertyBlock[Prefabs.Length];
+        for(var i = 0; i < Prefabs.Length; i++)
+        {
+            meshs[i] = Prefabs[i].GetComponent<MeshFilter>().sharedMesh;
+            mr = Prefabs[i].GetComponent<MeshRenderer>();
+            materials[i] = mr.sharedMaterial;
+            meshBoundsArr[i] = mr.bounds;
+            argsArr[i] = new uint[5] { 0, 0, 0, 0, 0 };
+            argsArr[i][0] = meshs[i].GetIndexCount(0);
+            argsArr[i][1] = 0;
+            argsArr[i][2] = meshs[i].GetIndexStart(0);
+            argsArr[i][3] = meshs[i].GetBaseVertex(0);
+            argsArr[i][4] = 0;
+            argsBuffers[i] = new ComputeBuffer(5, sizeof(uint) * 5, ComputeBufferType.IndirectArguments);
+            argsBuffers[i].SetData(argsArr[i]);
+            instanceOutputBuffers[i] = new ComputeBuffer(InstanceCount, sizeof(float) * 16, ComputeBufferType.Append);
+            mpbs[i] = new MaterialPropertyBlock();
+            mpbs[i].SetBuffer("IndirectShaderDataBuffer", instanceOutputBuffers[i]);
+            if(i == 0)
+                FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel_3D, "VisibleBuffer1", instanceOutputBuffers[i]);
+            else if(i == 1)
+                FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel_3D, "VisibleBuffer2", instanceOutputBuffers[i]);
+            else if(i == 2)
+                FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel_3D, "VisibleBuffer3", instanceOutputBuffers[i]);
+            else
+                FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel_3D, "VisibleBuffer4", instanceOutputBuffers[i]);
+        }
+
+        if(useRandomPositionInstances)
+        {
+            instanceInputBuffer = new ComputeBuffer(instances.Length, sizeof(float) * 16);
+            instanceInputBuffer.SetData(instances);
+        }
+        else
+        {
+            instanceInputBuffer = new ComputeBuffer(instances_arr.Length, sizeof(float) * 16);
+            instanceInputBuffer.SetData(instances_arr);
+        }
+        instanceBoundsBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 3 * 2, ComputeBufferType.Append);
+        instanceBoundsCountBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
+        
         DrawBounds.size = Vector3.one * 10000;
 
         FrustumCullingComputeShader.SetInt("inputCount", instanceInputBuffer.count);
         FrustumCullingComputeShader.SetVector("boxCenter", meshBounds.center);
         FrustumCullingComputeShader.SetVector("boxExtents", meshBounds.extents);
         FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel, "input", instanceInputBuffer);
-        FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel, "VisibleBuffer", instanceOutputBuffer);
+        FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel, "VisibleBuffer1", instanceOutputBuffer);
         FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel, "GPUBoundsBuffer", instanceBoundsBuffer);
+
+        FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel_3D, "input", instanceInputBuffer);
+        FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel_3D, "GPUBoundsBuffer", instanceBoundsBuffer);
+
     }
     // 随机生成10万个实例矩阵
     private Matrix4x4[] RandomGeneratedInstances(int instanceCount, Vector3Int instanceExtents, float maxScale)
@@ -91,6 +177,52 @@ public class ComputeShaderDemo : MonoBehaviour
             var r = Quaternion.Euler(Random.Range(0, 180), Random.Range(0, 180), Random.Range(0, 180));
             var s = new Vector3(Random.Range(0.1f, maxScale), Random.Range(0.1f, maxScale), Random.Range(0.1f, maxScale));
             instances[i] = Matrix4x4.TRS(pos, r, s);
+        }
+        return instances;
+    }
+    private Matrix4x4[] RandomGeneratedInstances_3D()
+    {
+        gX = InstanceCount_3D / tX;
+        if (InstanceCount_3D % tX != 0) ++gX;
+        gY = InstanceCount_3D / tY;
+        if (InstanceCount_3D % tY != 0) ++gY;
+        gZ = InstanceCount_3D / tZ;
+        if (InstanceCount_3D % tZ != 0) ++gZ;
+        var instances = new Matrix4x4[gX * gY * gZ * tX * tY * tZ];
+        for (int _gZ = 0; _gZ < gZ; _gZ++)
+        {
+            for(int _gY = 0; _gY < gY; _gY++)
+            {
+                for(var _gX = 0; _gX < gX; _gX++)
+                {
+                    for(var _tZ = 0; _tZ < tZ; _tZ++)
+                    {
+                        for(var _tY = 0; _tY < tY; _tY++)
+                        {
+                            for(var _tX = 0; _tX < tX; _tX++)
+                            {
+                                var x = _gX * tX + _tX;
+                                var y = _gY * tY + _tY;
+                                var z = _gZ * tZ + _tZ;
+                                if (x >= InstanceCount_3D ||
+                                    y >= InstanceCount_3D ||
+                                    z >= InstanceCount_3D) continue;
+                                var pos = new Vector3(
+                                    x * distanceInterval,
+                                    y * distanceInterval,
+                                    z * distanceInterval);
+                                var r = Quaternion.Euler(Random.Range(0, 180), Random.Range(0, 180), Random.Range(0, 180));
+                                var s = new Vector3(Random.Range(0.5f, RandomeMaxScaleValue), Random.Range(0.5f, RandomeMaxScaleValue), Random.Range(0.5f, RandomeMaxScaleValue));
+                                instances[
+                                    z * gY * gX * tX * tY + 
+                                    y * gX * tX +
+                                    x
+                                    ] = Matrix4x4.TRS(pos, r, s);
+                            }
+                        }
+                    }
+                }
+            }
         }
         return instances;
     }
@@ -179,15 +311,38 @@ public class ComputeShaderDemo : MonoBehaviour
         {
             DrawBounds.center = MainCamera.transform.position;
 
-            instanceOutputBuffer.SetCounterValue(0);
             instanceBoundsBuffer.SetCounterValue(0);
             FrustumCullingComputeShader.SetVectorArray("cameraPlanes", GetFrustumPlanes(MainCamera, FrustumPlanes));
             FrustumCullingComputeShader.SetBool("showInstanceBounds", showInstanceBounds_GetData || showInstanceBounds_AsyncRequest);
 
-            int threadGroupsX = InstanceCount / 32;
-            if (InstanceCount % 32 != 0) ++threadGroupsX;
-            FrustumCullingComputeShader.Dispatch(FrustumCullingKernel, threadGroupsX, 1, 1);
-            ComputeBuffer.CopyCount(instanceOutputBuffer, argsBuffer, sizeof(uint));
+            int threadGroupsX = 0;
+            if (useRandomPositionInstances)
+            {
+                instanceOutputBuffer.SetCounterValue(0);
+                threadGroupsX = InstanceCount / 64;
+                if (InstanceCount % 64 != 0) ++threadGroupsX;
+                FrustumCullingComputeShader.Dispatch(FrustumCullingKernel, threadGroupsX, 1, 1);
+                ComputeBuffer.CopyCount(instanceOutputBuffer, argsBuffer, sizeof(uint));
+            }
+            else
+            {
+                instanceOutputBuffers[0].SetCounterValue(0);
+                instanceOutputBuffers[1].SetCounterValue(0);
+                if (use3DPositionInstances)
+                {
+                    instanceOutputBuffers[2].SetCounterValue(0);
+                    instanceOutputBuffers[3].SetCounterValue(0);
+                }
+
+                FrustumCullingComputeShader.Dispatch(FrustumCullingKernel_3D, gX, gY, gZ);
+                ComputeBuffer.CopyCount(instanceOutputBuffers[0], argsBuffers[0], sizeof(uint));
+                ComputeBuffer.CopyCount(instanceOutputBuffers[1], argsBuffers[1], sizeof(uint));
+                if (use3DPositionInstances)
+                {
+                    ComputeBuffer.CopyCount(instanceOutputBuffers[2], argsBuffers[2], sizeof(uint));
+                    ComputeBuffer.CopyCount(instanceOutputBuffers[3], argsBuffers[3], sizeof(uint));
+                }
+            }
             if (showInstanceBounds_GetData)
             {
                 ComputeBuffer.CopyCount(instanceBoundsBuffer, instanceBoundsCountBuffer, 0);
@@ -210,15 +365,60 @@ public class ComputeShaderDemo : MonoBehaviour
                 instanceBoundsCountRR = UnityEngine.Rendering.AsyncGPUReadback.Request(instanceBoundsCountBuffer);
             }
         }
-        Graphics.DrawMeshInstancedIndirect(
-            mesh,
-            0,
-            material,
-            DrawBounds,
-            argsBuffer,
-            0,
-            mpb
-            );
+
+        // 绘制
+        if (useRandomPositionInstances)
+            Graphics.DrawMeshInstancedIndirect(
+                mesh,
+                0,
+                material,
+                DrawBounds,
+                argsBuffer,
+                0,
+                mpb
+                );
+        else
+        {
+            Graphics.DrawMeshInstancedIndirect(
+                meshs[0],
+                0,
+                materials[0],
+                DrawBounds,
+                argsBuffers[0],
+                0,
+                mpbs[0]
+                );
+            Graphics.DrawMeshInstancedIndirect(
+                meshs[1],
+                0,
+                materials[1],
+                DrawBounds,
+                argsBuffers[1],
+                0,
+                mpbs[1]
+                );
+            if(use3DPositionInstances)
+            {
+                Graphics.DrawMeshInstancedIndirect(
+                meshs[2],
+                0,
+                materials[2],
+                DrawBounds,
+                argsBuffers[2],
+                0,
+                mpbs[2]
+                );
+                Graphics.DrawMeshInstancedIndirect(
+                meshs[3],
+                0,
+                materials[3],
+                DrawBounds,
+                argsBuffers[3],
+                0,
+                mpbs[3]
+                );
+            }
+        }
     }
 
     private void OnDrawGizmos()
@@ -238,6 +438,11 @@ public class ComputeShaderDemo : MonoBehaviour
         instanceBoundsBuffer?.Release();
         instanceBoundsCountBuffer?.Release();
         argsBuffer?.Release();
+        for(var i = 0; instanceOutputBuffers != null && i < instanceOutputBuffers.Length; i++)
+        {
+            instanceOutputBuffers[i]?.Release();
+            argsBuffers[i]?.Release();
+        }
     }
 
 }

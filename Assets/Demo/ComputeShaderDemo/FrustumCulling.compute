@@ -1,4 +1,5 @@
 ﻿#pragma kernel FrustumCulling
+#pragma kernel FrustumCulling_3d
 
 // 输入一系列矩阵
 StructuredBuffer<float4x4> input;
@@ -8,10 +9,21 @@ float4 cameraPlanes[6];
 float3 boxCenter;
 float3 boxExtents;
 
+uint maxInstanceX;
+uint maxInstanceY;
+uint maxInstanceZ;
+uint maxgX;
+uint maxgY;
+uint maxgZ;
+bool use2DPositionInstances;
+bool use3DPositionInstances;
 
 
 // 结果
-AppendStructuredBuffer<float4x4> VisibleBuffer;
+AppendStructuredBuffer<float4x4> VisibleBuffer1;
+AppendStructuredBuffer<float4x4> VisibleBuffer2;
+AppendStructuredBuffer<float4x4> VisibleBuffer3;
+AppendStructuredBuffer<float4x4> VisibleBuffer4;
 bool showInstanceBounds;
 struct GPUBounds {
     float3 min;
@@ -35,7 +47,9 @@ bool IsCulled(in float4 boundVerts[8])
     }
     return false;
 }
-[numthreads(32,1,1)]
+
+
+[numthreads(64,1,1)]
 void FrustumCulling(uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= inputCount) return;
@@ -57,8 +71,63 @@ void FrustumCulling(uint3 id : SV_DispatchThreadID)
 
     if (!IsCulled(boundVerts))
     {
-        VisibleBuffer.Append(instance);
+        VisibleBuffer1.Append(instance);
  
+        if (showInstanceBounds) {
+            GPUBounds bounds;
+            bounds.min = boundVerts[0].xyz;
+            bounds.max = boundVerts[1].xyz;
+
+            GPUBoundsBuffer.Append(bounds);
+        }
+    }
+}
+
+[numthreads(8, 8, 8)]
+void FrustumCulling_3d(uint3 groupId : SV_GroupID, uint3 threadId : SV_DispatchThreadID, uint groupIndex : SV_GroupIndex)
+{
+    if (threadId.x >= maxInstanceX ||
+        threadId.y >= maxInstanceY ||
+        threadId.z >= maxInstanceZ) return;
+
+    float4x4 instance = input[
+        threadId.z * maxgX * maxgY * 8 * 8 +
+        threadId.y * maxgX * 8 +
+        threadId.x
+    ];
+    float3 boundMin = boxCenter - boxExtents;
+    float3 boundMax = boxCenter + boxExtents;
+    float4 boundVerts[8];//AABB8个顶点坐标
+    boundVerts[0] = mul(instance, float4(boundMin, 1));
+    boundVerts[1] = mul(instance, float4(boundMax, 1));
+    boundVerts[2] = mul(instance, float4(boundMax.x, boundMax.y, boundMin.z, 1));
+    boundVerts[3] = mul(instance, float4(boundMax.x, boundMin.y, boundMax.z, 1));
+    boundVerts[6] = mul(instance, float4(boundMax.x, boundMin.y, boundMin.z, 1));
+    boundVerts[4] = mul(instance, float4(boundMin.x, boundMax.y, boundMax.z, 1));
+    boundVerts[5] = mul(instance, float4(boundMin.x, boundMax.y, boundMin.z, 1));
+    boundVerts[7] = mul(instance, float4(boundMin.x, boundMin.y, boundMax.z, 1));
+
+
+    if (!IsCulled(boundVerts))
+    {
+        uint halfMaxtX = maxInstanceX / 2;
+        uint halfMaxtZ = maxInstanceZ / 2;
+        if (use2DPositionInstances)
+        {
+            if (threadId.x > halfMaxtX) VisibleBuffer1.Append(instance);
+            else VisibleBuffer2.Append(instance);
+        }
+        else if (use3DPositionInstances)
+        {
+            if (threadId.x >= halfMaxtX && threadId.z >= halfMaxtZ) VisibleBuffer1.Append(instance);
+            else if (threadId.x >= halfMaxtX && threadId.z < halfMaxtZ) VisibleBuffer2.Append(instance);
+            else if (threadId.x < halfMaxtX && threadId.z >= halfMaxtZ) VisibleBuffer3.Append(instance);
+            else VisibleBuffer4.Append(instance);
+
+        }else
+            VisibleBuffer1.Append(instance);
+
+
         if (showInstanceBounds) {
             GPUBounds bounds;
             bounds.min = boundVerts[0].xyz;
