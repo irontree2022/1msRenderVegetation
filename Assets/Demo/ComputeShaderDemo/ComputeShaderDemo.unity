@@ -402,21 +402,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 762684562}
   Prefab: {fileID: 6318120317857089692, guid: 9b12bc9664e69ce41b97a67629f6183e, type: 3}
+  InstanceCount: 1000000
+  InstanceExtents: {x: 500, y: 500, z: 500}
+  RandomeMaxScaleValue: 3
   Prefabs:
   - {fileID: 6318120317857089692, guid: 9b12bc9664e69ce41b97a67629f6183e, type: 3}
   - {fileID: 1285413901892493958, guid: eb47a4b20c2894944abaf2a0fe95f1cd, type: 3}
   - {fileID: 96700086209630991, guid: 3ce3c1ffc5e135144ba03655a3fa398e, type: 3}
   - {fileID: 6612184281252663420, guid: dfb6d178f46ee9541aee400209d1fbe7, type: 3}
-  InstanceCount: 1000000
-  InstanceExtents: {x: 500, y: 500, z: 500}
   InstanceCount_3D: 100
   distanceInterval: 4
-  RandomeMaxScaleValue: 3
   FrustumCullingComputeShader: {fileID: 7200000, guid: 34321227ee1e8d642aecfef091561c45,
     type: 3}
   instanceBoundsCount: 0
   useRandomPositionInstances: 0
-  use2DPositionInstances: 0
-  use3DPositionInstances: 1
+  use2DPositionInstances: 1
+  use3DPositionInstances: 0
   showInstanceBounds_GetData: 0
   showInstanceBounds_AsyncRequest: 0
