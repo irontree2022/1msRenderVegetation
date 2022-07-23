@@ -23,6 +23,9 @@ public class ComputeShaderDemo : MonoBehaviour
     public float distanceInterval = 10;
     public ComputeShader FrustumCullingComputeShader;
     public uint instanceBoundsCount = 0;
+
+    [Header("调试：启用脚本")]
+    public bool enable;
     [Header("调试：使用随机位置数据")]
     public bool useRandomPositionInstances;
     [Header("调试：使用2d位置数据")]
@@ -83,6 +86,8 @@ public class ComputeShaderDemo : MonoBehaviour
 
     void Start()
     {
+        if (!enable) return;
+
         instances = RandomGeneratedInstances(InstanceCount, InstanceExtents, RandomeMaxScaleValue);
 
         FrustumCullingKernel = FrustumCullingComputeShader.FindKernel("FrustumCulling");
@@ -280,6 +285,8 @@ public class ComputeShaderDemo : MonoBehaviour
     }
     void Update()
     {
+        if (!enable) return;
+
         if (!instanceBoundsCount_ok && instanceBoundsCountRR.done)
         {
             instanceBoundsCount_ok = true;
