@@ -543,8 +543,8 @@ MonoBehaviour:
   speed: 0.0001
   Simulating: 0
   SimulationCompleted: 0
-  Dispatch: {x: 4, y: 3, z: 2}
-  numthreads: {x: 5, y: 4, z: 3}
+  Dispatch: {x: 2, y: 2, z: 2}
+  numthreads: {x: 2, y: 1, z: 1}
 --- !u!1 &1866736651
 GameObject:
   m_ObjectHideFlags: 0

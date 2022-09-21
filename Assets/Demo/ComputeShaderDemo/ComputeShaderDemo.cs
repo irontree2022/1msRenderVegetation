@@ -53,6 +53,7 @@ public class ComputeShaderDemo : MonoBehaviour
     private MaterialPropertyBlock mpb;
 
 
+
     private ComputeBuffer instanceBoundsBuffer;
     private ComputeBuffer instanceBoundsCountBuffer;
     private uint[] instanceBoundsCountArray = new uint[] { 0 };
@@ -119,6 +120,11 @@ public class ComputeShaderDemo : MonoBehaviour
         instanceBoundsCountBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
         instanceBoundsBuffer = new ComputeBuffer(InstanceCount, sizeof(float) * 3 * 2, ComputeBufferType.Append);
         FrustumCullingComputeShader.SetBuffer(FrustumCullingKernel, "GPUBoundsBuffer", instanceBoundsBuffer);
+
+
+
+
+
 
 
 
@@ -354,6 +360,7 @@ public class ComputeShaderDemo : MonoBehaviour
                     ComputeBuffer.CopyCount(instanceOutputBuffers[3], argsBuffers[3], sizeof(uint));
                 }
             }
+
             if (showInstanceBounds_GetData)
             {
                 ComputeBuffer.CopyCount(instanceBoundsBuffer, instanceBoundsCountBuffer, 0);
