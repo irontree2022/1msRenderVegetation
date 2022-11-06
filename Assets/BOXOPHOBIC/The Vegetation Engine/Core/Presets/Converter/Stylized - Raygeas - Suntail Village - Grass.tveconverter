@@ -1,0 +1,46 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Raygeas Suntail Village
+InfoPreset Use this preset to convert Raygeas Suntail Village assets.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/suntail-village-203303
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 12
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 4
+Mesh SetMotion3 GET_MASK_PROCEDURAL 4
+
+*******************************************************************
+
+Include Use Default Grass Settings
+
+*******************************************************************
+
+Material COPY_VECTOR _MainColor _MainColor
+Material COPY_TEX _Albedo _MainAlbedoTex
+Material COPY_FLOAT_AS_VECTOR_X _Tiling _MainUVs
+Material COPY_FLOAT_AS_VECTOR_Y _Tiling _MainUVs
+
+Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+Material COPY_VECTOR _MainColor _SubsurfaceColor
+
+// Combine Texture Channels
+Texture PropName _MainMaskTex
+Texture SetRed NONE
+Texture SetGreen NONE
+Texture SetBlue NONE
+Texture SetAlpha GET_RED _SmoothnessTexture
+Utility START_TEXTURE_PACKING

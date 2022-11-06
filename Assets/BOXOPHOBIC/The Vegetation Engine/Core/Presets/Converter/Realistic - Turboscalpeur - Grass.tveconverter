@@ -1,0 +1,36 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Turboscalpeur
+InfoPreset Use this preset to convert Turboscalpeur Grass prefabs. Manualy authored vertex color masks for best motion quality! Set the Vertex Data to World for simple translation motion instead of bending!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/publishers/12027
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 0
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 2
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 12
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 1
+
+*******************************************************************
+
+Include Unity Lit Commons
+Include Use Default Grass Settings
+
+// Use Thickness Map
+Material SET_FLOAT _SubsurfaceMaskMinValue 1
+Material SET_FLOAT _SubsurfaceMaskMaxValue 0
+
+// Set Defaults
+Material SET_VECTOR _VertexOcclusionColor 0 0 0 0
+

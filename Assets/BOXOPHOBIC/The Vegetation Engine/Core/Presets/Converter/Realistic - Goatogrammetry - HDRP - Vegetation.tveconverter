@@ -1,0 +1,55 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Goatogrammetry
+InfoPreset Use this preset to convert Goatogrammetry Castle Valley trees.
+InfoStatus ● ● ● ● ●
+https://assetstore.unity.com/publishers/47093
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 5
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 5
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Lit
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderClip 0
+Include Unity Lit Commons
+
+endif
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Amplify
+
+Material COPY_TEX _ColorTexture _MainAlbedoTex
+Material COPY_TEX _NormalTexture _MainNormalTex
+Material COPY_TEX _MaskTexture _MainMaskTex
+
+Material COPY_FLOAT _DiffusionProfile _SubsurfaceDiffusion
+Material COPY_VECTOR _DiffusionProfile_asset _SubsurfaceDiffusion_asset
+
+endif
+
+*******************************************************************
+
+// Preset Default Settings
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _RenderCull 0
+Material SET_COLOR _SubsurfaceColor 0.4 0.3 0.2 0
+Material SET_FLOAT _MotionAmplitude_10 0
+Material SET_FLOAT _MotionAmplitude_20 0

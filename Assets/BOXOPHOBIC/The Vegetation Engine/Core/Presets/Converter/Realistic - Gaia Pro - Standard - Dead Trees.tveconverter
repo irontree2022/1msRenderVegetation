@@ -1,0 +1,56 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Gaia Pro
+InfoPreset Use this preset to convert Gaia Pro vegetation. Variaton and wind masks are missing, procedural masks will be added instead. The motion might not work as expected!
+InfoStatus ● ● ● ○ ○
+InfoOnline https://assetstore.unity.com/packages/tools/terrain/gaia-2-terrain-scene-generator-42618
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh NONE
+
+*******************************************************************
+
+// Set Default values
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _RenderNormals 0
+
+Material SET_FLOAT _MotionAmplitude_10 0
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _PW_ShaderMode 0
+
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+endif
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _PW_ShaderMode 2
+
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 1
+
+endif
+
+*******************************************************************
+
+// Copy material props
+Material COPY_VECTOR _Color _MainColor
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_TEX _MetallicGlossMap _MainMaskTex
+
+Material COPY_FLOAT _BumpMapScale _MainNormalValue
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+Material COPY_FLOAT _AOPower _MainOcclusionValue

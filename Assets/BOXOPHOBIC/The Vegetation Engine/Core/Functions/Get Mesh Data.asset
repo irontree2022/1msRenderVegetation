@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Get Mesh Data
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity Asset
+    Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=18806\n1920;1;1906;1021;1207.928;1205.167;1;True;False\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;48;256,896;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.ScaleAndOffsetNode;31;0,384;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT;2;False;2;FLOAT;-1;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.Vector4Node;56;-512,-1792;Float;False;Property;_MaxBoundsInfo;_MaxBoundsInfo;0;1;[HideInInspector];Create;False;0;0;0;True;0;False;1,1,1,1;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.TexCoordVertexDataNode;16;-512,128;Inherit;False;3;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.DynamicAppendNode;21;-288,-1152;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.ScaleAndOffsetNode;43;0,640;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT;2;False;2;FLOAT;-1;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.TexCoordVertexDataNode;19;-512,-1152;Inherit;False;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.CustomExpressionNode;24;-256,384;Float;False;
+    float3 result @$  result.x = ((enc >> 0) & 0xFF) / 255.0f@$  result.y = ((enc
+    >> 8) & 0xFF) / 255.0@$  result.z = ((enc >>16) & 0xFF) / 255.0@$  //result.w
+    = ((enc >> 32) & 0xFF) / 255.0@$  return result@;3;False;1;True;enc;INT;0;In;uint;Float;False;DecodeFloatToVector3;False;False;0;1;0;INT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.CustomExpressionNode;26;-256,896;Float;False;
+    float3 result @$  result.x = ((enc >> 0) & 0xFF) / 255.0f@$  result.y = ((enc
+    >> 8) & 0xFF) / 255.0@$  result.z = ((enc >>16) & 0xFF) / 255.0@$  //result.w
+    = ((enc >> 32) & 0xFF) / 255.0@$  return result@;3;False;1;True;enc;INT;0;In;uint;Float;False;DecodeFloatToVector3;False;False;0;1;0;INT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.CustomExpressionNode;25;-256,640;Float;False;
+    float3 result @$  result.x = ((enc >> 0) & 0xFF) / 255.0f@$  result.y = ((enc
+    >> 8) & 0xFF) / 255.0@$  result.z = ((enc >>16) & 0xFF) / 255.0@$  //result.w
+    = ((enc >> 32) & 0xFF) / 255.0@$  return result@;3;False;1;True;enc;INT;0;In;uint;Float;False;DecodeFloatToVector3;False;False;0;1;0;INT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.GetLocalVarNode;47;0,1024;Inherit;False;41;Bounds_Sphere;1;0;OBJECT;;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;15;-256,128;Float;False;
+    float3 result @$  result.x = ((enc >> 0) & 0xFF) / 255.0f@$  result.y = ((enc
+    >> 8) & 0xFF) / 255.0@$  result.z = ((enc >>16) & 0xFF) / 255.0@$  //result.w
+    = ((enc >> 32) & 0xFF) / 255.0@$  return result@;3;False;1;True;enc;INT;0;In;uint;Float;False;DecodeFloatToVector3;False;False;0;1;0;INT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.GetLocalVarNode;42;0,512;Inherit;False;41;Bounds_Sphere;1;0;OBJECT;;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;41;-128,-1664;Inherit;False;Bounds_Sphere;-1;True;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;45;256,640;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.ScaleAndOffsetNode;46;0,896;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT;2;False;2;FLOAT;-1;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.GetLocalVarNode;44;0,768;Inherit;False;41;Bounds_Sphere;1;0;OBJECT;;False;1;FLOAT;0\nNode;AmplifyShaderEditor.TexCoordVertexDataNode;57;-512,-896;Inherit;False;3;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;32;256,384;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.VertexColorNode;6;-512,-1536;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.BreakToComponentsNode;17;0,128;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15\nNode;AmplifyShaderEditor.FunctionOutput;9;-128,-1536;Inherit;False;False;-1;Variation;7;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;23;-128,-1408;Inherit;False;False;-1;Detail
+    Mask;8;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;0;-128,-896;Inherit;False;True;-1;Motion1;2;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;8;-128,-768;Inherit;False;False;-1;Motion3;4;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;58;-128,-1344;Inherit;False;False;-1;Height;6;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;13;-128,-1472;Inherit;False;False;-1;Occlusion;5;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;7;-128,-832;Inherit;False;False;-1;Motion2;3;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;54;-128,-1792;Inherit;False;False;-1;BoundsRadius;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;53;-128,-1728;Inherit;False;False;-1;BoundsHeight;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;22;-128,-1152;Inherit;False;False;-1;Detail
+    Coord;9;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nWireConnection;48;0;46;0\nWireConnection;48;1;47;0\nWireConnection;31;0;24;0\nWireConnection;21;0;19;3\nWireConnection;21;1;19;4\nWireConnection;43;0;25;0\nWireConnection;24;0;16;2\nWireConnection;26;0;16;4\nWireConnection;25;0;16;3\nWireConnection;15;0;16;1\nWireConnection;41;0;56;3\nWireConnection;45;0;43;0\nWireConnection;45;1;44;0\nWireConnection;46;0;26;0\nWireConnection;32;0;31;0\nWireConnection;32;1;42;0\nWireConnection;17;0;15;0\nWireConnection;9;0;6;1\nWireConnection;23;0;6;3\nWireConnection;0;0;57;1\nWireConnection;8;0;57;3\nWireConnection;58;0;6;4\nWireConnection;13;0;6;2\nWireConnection;7;0;57;2\nWireConnection;54;0;56;1\nWireConnection;53;0;56;2\nWireConnection;22;0;21;0\nASEEND*/\n//CHKSM=6CBA047CE5433B1AF4934952C2DB1377818A1E15"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_customNodeCategory: The Vegetation Engine
+  m_previewPosition: 0
+  m_hidden: 0

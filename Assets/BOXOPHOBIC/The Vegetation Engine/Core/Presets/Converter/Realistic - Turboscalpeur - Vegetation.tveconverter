@@ -1,0 +1,35 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Turboscalpeur
+InfoPreset Use this preset to convert Turboscalpeur Vegetation prefabs. Manualy authored vertex color masks for best motion quality!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/publishers/12027
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 0
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 2
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 1
+
+*******************************************************************
+
+Include Unity Lit Commons
+
+// Use Thickness Map
+Material SET_FLOAT _SubsurfaceMaskMinValue 1
+Material SET_FLOAT _SubsurfaceMaskMaxValue 0
+
+// Set Defaults
+Material SET_VECTOR _VertexOcclusionColor 0 0 0 0
+

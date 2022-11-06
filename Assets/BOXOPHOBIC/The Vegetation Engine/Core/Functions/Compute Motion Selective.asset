@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Compute Motion Selective
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity
+    Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=18909\n1920;7;1906;1015;4508.809;2738.376;5.465786;True;False\nNode;AmplifyShaderEditor.CeilOpNode;108;640,384;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.OneMinusNode;125;1824,768;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SaturateNode;123;1696,768;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;130;1536,768;Inherit;False;127;Variation;1;0;OBJECT;;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;119;1280,768;Inherit;False;4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;112;1024,768;Inherit;False;Wind
+    Power;1;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.LerpOp;111;1536,384;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;1;False;2;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleTimeNode;98;0,768;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0\nNode;AmplifyShaderEditor.ScaleAndOffsetNode;104;576,768;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0.5;False;2;FLOAT;0.5;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SinOpNode;101;256,768;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.LerpOp;110;896,384;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;129;-256,512;Inherit;False;127;Variation;1;0;OBJECT;;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CeilOpNode;109;640,512;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SaturateNode;106;480,512;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;96;0,512;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.1715;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleSubtractOpNode;103;320,512;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0.4;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FractNode;99;128,512;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;127;-48,128;Half;False;Variation;-1;True;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;116;-256,128;Inherit;False;Variation;1;1;False;1;0;FLOAT;0.1258;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;128;-256,384;Inherit;False;127;Variation;1;0;OBJECT;;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SaturateNode;105;480,384;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FractNode;121;128,384;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleSubtractOpNode;102;320,384;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0.6;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;120;0,384;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.3576;False;1;FLOAT;0\nNode;AmplifyShaderEditor.LerpOp;126;2048,384;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;1;False;2;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;19;2304,384;Inherit;False;True;-1;;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;108;0;105;0\nWireConnection;125;0;123;0\nWireConnection;123;0;130;0\nWireConnection;119;0;112;0\nWireConnection;119;1;112;0\nWireConnection;119;2;112;0\nWireConnection;119;3;112;0\nWireConnection;111;0;110;0\nWireConnection;111;2;119;0\nWireConnection;104;0;101;0\nWireConnection;101;0;98;0\nWireConnection;110;0;108;0\nWireConnection;110;1;109;0\nWireConnection;110;2;104;0\nWireConnection;109;0;106;0\nWireConnection;106;0;103;0\nWireConnection;96;0;129;0\nWireConnection;103;0;99;0\nWireConnection;99;0;96;0\nWireConnection;127;0;116;0\nWireConnection;105;0;102;0\nWireConnection;121;0;120;0\nWireConnection;102;0;121;0\nWireConnection;120;0;128;0\nWireConnection;126;0;111;0\nWireConnection;126;2;125;0\nWireConnection;19;0;126;0\nASEEND*/\n//CHKSM=424BA8CB5E2277C5850A152FA7762C9C577D98DC"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_customNodeCategory: The Vegetation Engine
+  m_previewPosition: 0
+  m_hidden: 0

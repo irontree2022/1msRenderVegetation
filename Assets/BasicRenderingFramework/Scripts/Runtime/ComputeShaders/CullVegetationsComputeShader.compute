@@ -1,0 +1,164 @@
+﻿#pragma kernel CullVegetations
+
+struct VegetationInstanceData {
+	float3 center;
+	float3 extents;
+	float4x4 Matrix;
+	int InstanceID;
+	int ModelPrototypeID;
+};
+
+struct Bounds {
+	float3 center;
+	float3 extents;
+};
+
+
+uint InstancesCount;
+StructuredBuffer<VegetationInstanceData> InstancesStructuredBuffer;
+
+
+int LODLevelsCount;
+float4 LODLevels;
+bool enableImpostor;
+float tanHalfAngle;
+float4 FrustumPlanes[6];
+float3 CameraPosition;
+float MaxCoreRenderingDistance;
+float MaxRenderingDistance;
+bool ShowVisibleVegetationBounds;
+
+
+AppendStructuredBuffer<VegetationInstanceData> VisibleLOD0AppendStructuredBuffer;
+AppendStructuredBuffer<VegetationInstanceData> VisibleLOD1AppendStructuredBuffer;
+AppendStructuredBuffer<VegetationInstanceData> VisibleLOD2AppendStructuredBuffer;
+AppendStructuredBuffer<VegetationInstanceData> VisibleLOD3AppendStructuredBuffer;
+AppendStructuredBuffer<VegetationInstanceData> VisibleLOD4AppendStructuredBuffer;
+AppendStructuredBuffer<Bounds> VegetationBoundsAppendStructuredBuffer;
+
+
+float Distance(float3 center, float3 min, float3 max)
+{
+	float x = center.x;
+	float y = center.y;
+	float z = center.z;
+	if (x < min.x) x = min.x;
+	else if (x > max.x) x = max.x;
+	if (y < min.y) y = min.y;
+	else if (y > max.y) y = max.y;
+	if (z < min.z) z = min.z;
+	else if (z > max.z) z = max.z;
+	return abs(distance(float3(x, y, z), center));
+}
+bool IsInBounds(float3 center, float3 min, float3 max) {
+	return center.x >= min.x && center.y >= min.y && center.z >= min.z && center.x <= max.x && center.y <= max.y && center.z <= max.z;
+}
+bool IsOutsideThePlane(float4 plane, float3 pointPosition)
+{
+	return (dot(plane.xyz, pointPosition) + plane.w > 0);
+}
+bool IsCulled(in float3 boundVerts[8])
+{
+	//如果8个顶点都在某个面外，则肯定在视锥体外面
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (!IsOutsideThePlane(FrustumPlanes[i], boundVerts[j])) break;
+			if (j == 7) return true;
+		}
+	}
+	return false;
+}
+int CalculateLOD(float4x4 instanceMatrix, float3 boundsExtents)
+{
+	float dist = abs(distance(instanceMatrix._14_24_34, CameraPosition));
+	float maxViewSize = max(max(boundsExtents.x, boundsExtents.y), boundsExtents.z) / (dist * tanHalfAngle);
+	for (int i = 0; i < LODLevelsCount; i++)
+	{
+		float lodLevel = 0;
+		if (i == 0) lodLevel = LODLevels.x;
+		else if (i == 1) lodLevel = LODLevels.y;
+		else if (i == 2) lodLevel = LODLevels.z;
+		else if (i == 3) lodLevel = LODLevels.w;
+		if (maxViewSize > lodLevel)
+			return i;
+	}
+	return 4;
+}
+
+
+[numthreads(64, 1, 1)]
+void CullVegetations(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= InstancesCount) return;
+	VegetationInstanceData instance = InstancesStructuredBuffer[id.x];
+	float3 boundMin = instance.center - instance.extents;
+	float3 boundMax = instance.center + instance.extents;
+
+	// 包围盒的八个点
+	float3 boundVerts[8];
+	boundVerts[0] = boundMin;
+	boundVerts[1] = boundMax;
+	boundVerts[2] = float3(boundMax.x, boundMax.y, boundMin.z);
+	boundVerts[3] = float3(boundMax.x, boundMin.y, boundMax.z);
+	boundVerts[4] = float3(boundMax.x, boundMin.y, boundMin.z);
+	boundVerts[5] = float3(boundMin.x, boundMax.y, boundMax.z);
+	boundVerts[6] = float3(boundMin.x, boundMax.y, boundMin.z);
+	boundVerts[7] = float3(boundMin.x, boundMin.y, boundMax.z);
+
+	// 测试植被可见性
+	bool culled = IsCulled(boundVerts);
+	if (culled) return;
+
+
+	// 摄像机是否在当前区块内
+	float isCameraInBlock = IsInBounds(CameraPosition, boundMin, boundMax);
+	// 摄像机到当前实例的最近距离
+	float cameraToInstanceDistance = isCameraInBlock ? 0 : Distance(CameraPosition, boundMin, boundMax);
+
+	// 剔除超过最大渲染距离的植被
+	if (!isCameraInBlock && cameraToInstanceDistance > MaxRenderingDistance)
+		return;
+
+
+
+	// 超出核心植被渲染距离的，渲染面片
+	if (!isCameraInBlock && cameraToInstanceDistance > MaxCoreRenderingDistance)
+	{
+		if (enableImpostor)
+		{
+			VisibleLOD4AppendStructuredBuffer.Append(instance);
+		
+			if (ShowVisibleVegetationBounds)
+			{
+				Bounds bounds;
+				bounds.center = instance.center;
+				bounds.extents = instance.extents;
+				VegetationBoundsAppendStructuredBuffer.Append(bounds);
+			}
+		}
+		return;
+	}
+
+	// 计算lod
+	int lod = 0;
+	if (LODLevelsCount > 0)
+		lod = CalculateLOD(instance.Matrix, instance.extents);
+	if (lod == 0)
+		VisibleLOD0AppendStructuredBuffer.Append(instance);
+	else if (lod == 1)
+		VisibleLOD1AppendStructuredBuffer.Append(instance);
+	else if (lod == 2)
+		VisibleLOD2AppendStructuredBuffer.Append(instance);
+	else if (lod == 3)
+		VisibleLOD3AppendStructuredBuffer.Append(instance);
+	else if (lod == 4 && enableImpostor)
+		VisibleLOD4AppendStructuredBuffer.Append(instance);
+	
+	if (ShowVisibleVegetationBounds)
+	{
+		Bounds bounds;
+		bounds.center = instance.center;
+		bounds.extents = instance.extents;
+		VegetationBoundsAppendStructuredBuffer.Append(bounds);
+	}
+}

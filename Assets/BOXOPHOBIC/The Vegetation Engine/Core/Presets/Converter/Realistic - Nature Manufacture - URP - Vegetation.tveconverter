@@ -1,0 +1,156 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Nature Manufacture
+InfoPreset Use this preset to convert URP/HDRP Nature Manufacture Trees, Bushes and Plants. Variation is not supported, use the Elasticity motion parameters instead!
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/publishers/6887
+InfoWarning In order for the bark blending to work correctly, all _MASKA textures need to be set to Default type instead of Single Channel on the texture importer settings!
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_3RD_PARTY 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_3RD_PARTY 3
+Mesh SetMotion3 GET_MASK_3RD_PARTY 3
+
+*******************************************************************
+
+// Set Default values
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _RenderNormals 2
+
+Material SET_FLOAT _MainOcclusionValue 1
+Material SET_FLOAT _MainSmoothnessValue 0
+
+Material SET_FLOAT _SubsurfaceViewValue 2
+Material SET_FLOAT _SubsurfaceMaskMinValue 0
+Material SET_FLOAT _SubsurfaceMaskMaxValue 1
+
+*******************************************************************
+
+// Copy HDRP settings
+Material COPY_FLOAT _DoubleSidedNormalMode _RenderNormals
+Material COPY_FLOAT _DiffusionProfileHash _SubsurfaceDiffusion
+Material COPY_VECTOR _DiffusionProfileAsset _SubsurfaceDiffusion_asset
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _DoubleSidedEnable 1
+
+Material SET_FLOAT _RenderCull 0
+
+endif
+
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+endif
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Cross
+
+Material SET_SHADER SHADER_DEFAULT_CROSS
+Material SET_FLOAT _RenderCull 1
+
+Material SET_FLOAT _SubsurfaceValue 0
+
+endif
+
+*******************************************************************
+
+//Enable Betail shading
+
+if MATERIAL_FLOAT_EQUALS _BarkUseUV3 1
+
+Material SET_FLOAT _DetailMode 1
+Material SET_FLOAT _DetailBlendMode 1
+Material SET_FLOAT _DetailMaskMode 0
+
+Material SET_FLOAT _DetailMeshValue 0
+Material SET_FLOAT _DetailBlendMinValue 0.50
+Material SET_FLOAT _DetailBlendMaxValue 0.75
+
+endif
+
+*******************************************************************
+
+// Copy Bark Pros
+Material COPY_COLOR _TrunkBaseColor _MainColor
+Material COPY_TEX _TrunkBaseColorMap _MainAlbedoTex
+Material COPY_VECTOR _TrunkTilingOffset _MainUVs
+
+Material COPY_TEX _TrunkNormalMap _MainNormalTex
+Material COPY_FLOAT _TrunkNormalScale _MainNormalValue
+
+Material COPY_TEX _TrunkMaskMap _MainMaskTex
+
+*******************************************************************
+
+// Copy Bark Base Props
+Material COPY_COLOR _BarkBaseColor _SecondColor
+Material COPY_TEX _BarkBaseColorMap _SecondAlbedoTex
+Material COPY_VECTOR _BarkTilingOffset _SecondUVs
+
+Material COPY_TEX _BarkNormalMap _SecondNormalTex
+Material COPY_FLOAT _BarkNormalScale _SecondNormalValue
+
+Material COPY_TEX _BarkMaskMap _SecondMaskTex
+
+*******************************************************************
+
+// Copy Leaf Pros
+Material COPY_FLOAT _AlphaCutoff _Cutoff
+Material COPY_COLOR _HealthyColor _MainColor
+Material COPY_TEX _BaseColorMap _MainAlbedoTex
+Material COPY_VECTOR _Tiling_and_Offset _MainUVs
+
+Material COPY_TEX _NormalMap _MainNormalTex
+
+Material COPY_TEX _MaskMap _MainMaskTex
+
+*******************************************************************
+
+// Combine Texture Channels
+
+if SHADER_NAME_CONTAINS Bark
+
+Texture SetRed GET_RED _TrunkMaskMap
+Texture SetGreen GET_GREEN _TrunkMaskMap
+Texture SetBlue GET_GREEN _LayerMask
+Texture SetAlpha GET_ALPHA _TrunkMaskMap
+
+Utility START_TEXTURE_PACKING
+
+endif
+
+if SHADER_NAME_CONTAINS Foliage
+
+Texture SetGreen GET_GREEN _MaskMap 
+Texture SetBlue GET_ALPHA _MaskMap 
+Texture SetAlpha GET_ALPHA _MaskMap 
+
+Utility START_TEXTURE_PACKING
+
+endif
+
+
+
+

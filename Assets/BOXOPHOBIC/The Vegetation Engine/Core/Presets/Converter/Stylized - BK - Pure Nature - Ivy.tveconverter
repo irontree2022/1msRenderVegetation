@@ -1,0 +1,89 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Pure Nature
+InfoPreset Use this preset to convert BK Prod - Pure Nature assets. <b>Matching colors is not possible with the current preset, generic colors are added! Feel free to adjust them after the conversion!</b>
+InfoStatus InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/packages/3d/environments/pure-nature-188246
+InfoWarning The BK Billboards are not supported and they will be disabled after conversion! Amplify Impostors can be used as an alternative!
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_POCEDURAL 1
+Mesh SetMotion2 GET_MASK_POCEDURAL 1
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 0 ACTION_INVERT
+
+*******************************************************************
+
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderNormals 0
+
+Material SET_FLOAT _FadeGlancingValue 1
+
+Material COPY_TEX _Diffuse _MainAlbedoTex
+Material COPY_TEX _Normal _MainNormalTex
+Material COPY_TEX _MetallicROcclusionGSmoothnessA _MainMaskTex
+Material COPY_ST_AS_VECTOR _Diffuse _MainUVs
+
+Material COPY_FLOAT _NormalPower _MainNormalValue
+Material SET_FLOAT _MainSmoothnessValue 0
+
+// Set Subsurface
+Material SET_VECTOR _SubsurfaceColor 0.38 0.60 0 1
+Material SET_FLOAT _SubsurfaceViewValue 0.5
+Material SET_FLOAT _SubsurfaceMaskMinValue 0.0
+Material SET_FLOAT _SubsurfaceMaskMaxValue 0.25
+
+// Set dual color
+Material SET_VECTOR _GradientColorOne 0.38 0.60 0 1
+Material SET_VECTOR _GradientColorTwo 0.03 0.18 0 1
+Material SET_FLOAT _GradientMinValue 0.5
+Material SET_FLOAT _GradientMaxValue 1
+
+// Set noise color
+Material SET_VECTOR _NoiseColorOne 0.38 0.60 0 1
+Material SET_FLOAT _NoiseScaleValue 0.5
+Material SET_FLOAT _NoiseMinValue 0.3
+Material SET_FLOAT _NoiseMaxValue 0.7
+
+*******************************************************************
+
+Material SET_FLOAT _OverlayMaskMinValue 0.75
+Material SET_FLOAT _OverlayMaskMaxValue 0.85
+Material SET_FLOAT _OverlayBottomValue 0
+Material SET_FLOAT _OverlayVariationValue 0
+
+*******************************************************************
+
+Material SET_FLOAT _MotionAmplitude_10 0
+Material SET_FLOAT _MotionSpeed_10 0
+Material SET_FLOAT _MotionScale_10 0
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 1.2
+Material SET_FLOAT _MotionSpeed_20 6
+Material SET_FLOAT _MotionScale_20 2
+Material SET_FLOAT _MotionVariation_20 0
+
+Material SET_FLOAT _MotionAmplitude_30 0.5
+Material SET_FLOAT _MotionSpeed_30 8
+Material SET_FLOAT _MotionScale_30 10
+Material SET_FLOAT _MotionVariation_30 10
+
+Material SET_FLOAT _MotionAmplitude_32 0.01
+Material SET_FLOAT _MotionSpeed_32 30
+Material SET_FLOAT _MotionScale_32 10
+Material SET_FLOAT _MotionVariation_32 15
+
+Material SET_FLOAT _InteractionAmplitude 0
+Material SET_FLOAT _InteractionVariation 0

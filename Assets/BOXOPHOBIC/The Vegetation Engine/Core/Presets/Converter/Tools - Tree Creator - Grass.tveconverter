@@ -1,0 +1,27 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+Include Tree Creator Info
+InfoTitle Tree Creator
+InfoOnline https://docs.unity3d.com/Manual/class-Tree.html
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Include Tree Creator Commons
+Include Use Default Grass Settings
+
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 12
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 12
+Mesh SetMotion2 GET_MASK_PROCEDURAL 12
+Mesh SetMotion3 GET_MASK_PROCEDURAL 12

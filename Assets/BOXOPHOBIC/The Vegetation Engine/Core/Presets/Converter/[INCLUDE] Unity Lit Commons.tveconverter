@@ -1,0 +1,103 @@
+*******************************************************************
+*                             INCLUDE                             *
+*******************************************************************
+
+// Try to copy generic props
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _MainColor _MainColor
+Material COPY_COLOR _BaseColor _MainColor
+
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_TEX _MainTexture _MainAlbedoTex
+Material COPY_TEX _BaseMap _MainAlbedoTex
+Material COPY_TEX _BaseTexure _MainAlbedoTex
+Material COPY_TEX _BaseColorMap _MainAlbedoTex
+Material COPY_TEX _Texture _MainAlbedoTex
+Material COPY_TEX _Albedo _MainAlbedoTex
+Material COPY_TEX _AlbedoMap _MainAlbedoTex
+Material COPY_TEX _AlbedoTexture _MainAlbedoTex
+Material COPY_TEX _ColorTexture _MainAlbedoTex
+
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_TEX _Normal _MainNormalTex
+Material COPY_TEX _NormalMap _MainNormalTex
+Material COPY_TEX _NormalTexture _MainNormalTex
+
+Material COPY_TEX _Mask _MainMaskTex
+Material COPY_TEX _MaskMap _MainMaskTex
+Material COPY_TEX _MaskTexture _MainMaskTex
+
+// Copy Standard Pipeline Material Properties
+if SHADER_NAME_CONTAINS Standard
+{
+	Material COPY_COLOR _Color _MainColor
+	Material COPY_COLOR _Color _MainColorVariation
+	Material COPY_TEX _MainTex _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+	Material COPY_TEX _BumpMap _MainNormalTex
+	Material COPY_FLOAT _BumpScale _MainNormalValue
+
+	Material COPY_TEX _MetallicGlossMap _MainMaskTex
+	Material COPY_FLOAT _Metallic _MainMetallicValue
+	Material COPY_FLOAT _OcclusionStrength _MainOcclusionValue
+	Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+	
+	if MATERIAL_KEYWORD_ENABLED _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+	{
+		Material COPY_FLOAT _GlossMapScale _MainSmoothnessValue
+	}
+}
+
+*******************************************************************
+
+// Copy Universal Pipeline Material Properties
+if SHADER_NAME_CONTAINS Universal
+{
+	Material COPY_COLOR _BaseColor _MainColor
+	Material COPY_COLOR _BaseColor _MainColorVariation
+	Material COPY_TEX _BaseMap _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _BaseMap _MainUVs
+
+	Material COPY_TEX _BumpMap _MainNormalTex
+	Material COPY_FLOAT _BumpScale _MainNormalValue
+
+	Material COPY_TEX _MetallicGlossMap _MainMaskTex
+	Material COPY_FLOAT _Metallic _MainMetallicValue
+	Material COPY_FLOAT _OcclusionStrength _MainOcclusionValue
+	Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+	
+	if MATERIAL_KEYWORD_ENABLED _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+	{
+		Material COPY_FLOAT _GlossMapScale _MainSmoothnessValue
+	}
+
+	Material COPY_FLOAT _QueueOffset _render_priority
+}
+
+*******************************************************************
+
+// Copy HD Pipeline Material Properties
+if SHADER_NAME_CONTAINS HDRP
+{
+	Material COPY_COLOR _BaseColor _MainColor
+	Material COPY_COLOR _BaseColor _MainColorVariation
+	Material COPY_TEX _BaseColorMap _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _BaseColorMap _MainUVs
+
+	Material COPY_TEX _NormalMap _MainNormalTex
+	Material COPY_FLOAT _NormalScale _MainNormalValue
+
+	Material COPY_TEX _MaskMap _MainMaskTex
+	
+	Material SET_FLOAT _MainMetallicValue 1
+	Material SET_FLOAT _MainSmoothnessValue 1
+	Material SET_FLOAT _MainOcclusionValue 1
+
+	Material COPY_FLOAT _DiffusionProfileHash _SubsurfaceDiffusion
+	Material COPY_VECTOR _DiffusionProfileAsset _SubsurfaceDiffusion_asset
+	Material COPY_VECTOR _DiffusionProfileAsset _SubsurfaceDiffusion_Asset
+
+	Material COPY_FLOAT _TransparentSortPriority _render_priority
+}
+

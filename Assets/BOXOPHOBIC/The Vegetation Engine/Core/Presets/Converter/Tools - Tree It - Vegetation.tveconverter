@@ -1,0 +1,32 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoPreset Use this preset to convert TreeIt(free softwere) vegetation. The preset will convert the materials only if the Standard/Lit shaders are used!
+InfoStatus ● ● ● ● ●
+InfoOnline https://www.evolved-software.com/treeit/treeit
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 1
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 0
+
+*******************************************************************
+
+// Set Materials
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+
+// Include Unity Default Features
+Include Bark by RenderType
+Include Unity Lit Commons

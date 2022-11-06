@@ -1,0 +1,18 @@
+// Preset for motion when the variation is not available
+
+Material SET_FLOAT _MotionAmplitude_10 0.1
+Material SET_FLOAT _MotionSpeed_10 2
+Material SET_FLOAT _MotionScale_10 0
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 0.1
+Material SET_FLOAT _MotionSpeed_20 6
+Material SET_FLOAT _MotionScale_20 0.5
+Material SET_FLOAT _MotionVariation_20 5
+
+Material SET_FLOAT _MotionAmplitude_32 0.1
+Material SET_FLOAT _MotionSpeed_32 30
+Material SET_FLOAT _MotionScale_32 18
+Material SET_FLOAT _MotionVariation_32 19
+
+Material SET_FLOAT _InteractionAmplitude 0.5

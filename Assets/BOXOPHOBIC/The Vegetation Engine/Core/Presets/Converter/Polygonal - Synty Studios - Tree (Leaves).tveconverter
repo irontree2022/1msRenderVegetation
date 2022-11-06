@@ -1,0 +1,96 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Synty
+InfoPreset Use this preset to convert Synty's vegetation with leaves. Tested with the POLYGON Nature Pack. Due to the current mesh normlals setup, the overly might not work as expected!
+InfoStatus ● ● ● ○ ○
+InfoOnline https://assetstore.unity.com/publishers/5217
+InfoWarning The Vegetation Engine does not have feature parity with the Synty LOD shader. The conversion will only work properly for the first LOD! 
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_FROM_CHANNEL 2 ACTION_INVERT
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 0 ACTION_INVERT
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 0 ACTION_INVERT
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _Small_Wave 0
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _VertexRollingMode 0
+
+endif
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Standard
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _VertexRollingMode 0
+
+endif
+
+*******************************************************************
+
+// Enable Material Features
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+
+Material SET_FLOAT _RenderNormals 2
+Material SET_FLOAT _RenderSpecular 0
+
+Material SET_FLOAT _MainSmoothnessValue 0
+Material SET_FLOAT _MainOcclusionValue 0
+
+Material SET_FLOAT _MainLightScatteringValue 1
+
+*******************************************************************
+
+// Copy Standard Pipeline Material Properties
+Material COPY_COLOR _ColorTint _MainColor
+Material COPY_TEX _MainTexture _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTexture _MainUVs
+
+// Copy Standard shader props
+Material COPY_COLOR _Color _MainColor
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+*******************************************************************
+
+// Copy Universal Pipeline Material Properties
+Material COPY_COLOR Color_369F793F _MainColor
+Material COPY_TEX Texture2D_CAD82441 _MainAlbedoTex
+
+*******************************************************************
+
+//Set Motion Values
+Material SET_FLOAT _MotionAmplitude_10 0.05
+Material SET_FLOAT _MotionSpeed_10 2
+Material SET_FLOAT _MotionScale_10 0
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 0.4
+Material SET_FLOAT _MotionSpeed_20 6
+Material SET_FLOAT _MotionScale_20 2
+Material SET_FLOAT _MotionVariation_20 2
+
+Material SET_FLOAT _MotionAmplitude_32 0.1
+Material SET_FLOAT _MotionSpeed_32 20
+Material SET_FLOAT _MotionScale_32 19
+Material SET_FLOAT _MotionVariation_32 20
+
+Material SET_FLOAT _InteractionAmplitude 1
+Material SET_FLOAT _InteractionVariation 0
+

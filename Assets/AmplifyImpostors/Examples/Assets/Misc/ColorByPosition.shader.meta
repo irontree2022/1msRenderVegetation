@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1b6e398e864362c47959efca1aec9a7d
+timeCreated: 1535029902
+licenseType: Store
+ShaderImporter:
+  defaultTextures:
+  - _AmbientOcclusion: {fileID: 2800000, guid: 09eea9b1b26d9eb489d87839972a8ff3, type: 3}
+  - _SpecularSmoothness: {fileID: 2800000, guid: d56a69fb0521f3246b44d8095fbfc1c8,
+      type: 3}
+  - _Mask: {fileID: 2800000, guid: 7f1493c796ce4494cb3cca9fea5b6d4c, type: 3}
+  - _MainTex: {fileID: 2800000, guid: 40ce0b7000ac5df449255a5e0d17119f, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

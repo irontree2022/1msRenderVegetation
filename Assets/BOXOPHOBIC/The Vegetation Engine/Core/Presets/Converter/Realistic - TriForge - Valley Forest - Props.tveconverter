@@ -1,0 +1,65 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle TriForge Valley Forest
+InfoPreset Use this preset to convert TriForge Valley Forest assets.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/real-landscapes-valley-forest-194338
+//InfoWarning The BK Billboards are not supported and they will be disabled after conversion! Amplify Impostors can be used as an alternative! 
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh NONE
+
+*******************************************************************
+
+// Set Render Settings
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Standard Snow
+{
+	if SHADER_NAME_CONTAINS Cutout
+	{
+		Material SET_FLOAT _RenderClip 1
+	}
+
+	Material COPY_FLOAT _Cutoff _Cutoff
+	Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+	// Copy Main props
+	Material COPY_TEX _BaseColor _MainAlbedoTex
+	Material COPY_TEX _Normal _MainNormalTex
+	Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+	Material COPY_FLOAT _NormalStrength _MainNormalValue
+	Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+	// Pack textures for mask
+	Texture PropName _MainMaskTex
+	Texture SetRed GET_RED _MetallicRSmoothnessA
+	Texture SetGreen GET_GREEN _AmbientOcclusionG
+	Texture SetBlue GET_GREEN _AmbientOcclusionG
+	Texture SetAlpha GET_ALPHA _MetallicRSmoothnessA
+	
+	if MATERIAL_KEYWORD_ENABLED _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+	{
+		Texture SetAlpha GET_ALPHA _BaseColor
+	}
+	
+	Utility START_TEXTURE_PACKING
+}
+
+*******************************************************************
+
+if !SHADER_NAME_CONTAINS Standard Snow
+{
+	Include Unity Lit Commons
+	Include Unity Lit Packer
+}
+

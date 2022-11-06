@@ -1,0 +1,20 @@
+if SHADER_NAME_CONTAINS Prop
+Material SET_SHADER_BY_NAME BOXOPHOBIC/The Vegetation Engine/Objects/Prop Standard Lit
+endif
+
+if SHADER_NAME_CONTAINS Bark
+Material SET_SHADER_BY_NAME BOXOPHOBIC/The Vegetation Engine/Vegetation/Bark Standard Lit
+endif
+
+if SHADER_NAME_CONTAINS Cross
+Material SET_SHADER_BY_NAME BOXOPHOBIC/The Vegetation Engine/Vegetation/Cross Standard Lit
+endif
+
+if SHADER_NAME_CONTAINS Grass
+Material SET_SHADER_BY_NAME BOXOPHOBIC/The Vegetation Engine/Vegetation/Grass Standard Lit
+endif
+
+if SHADER_NAME_CONTAINS Leaf
+Material SET_SHADER_BY_NAME BOXOPHOBIC/The Vegetation Engine/Vegetation/Leaf Standard Lit
+endif
+

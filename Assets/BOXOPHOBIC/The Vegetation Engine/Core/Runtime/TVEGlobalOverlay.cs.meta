@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 82b560ba55b03994a81fe13bc6565cb7
+timeCreated: 1550211176
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - overlayAlbedo: {instanceID: 0}
+  - overlayNormal: {instanceID: 0}
+  - arrowMesh: {fileID: 4300002, guid: 63ed98e640ad20243af2d4faedcaadad, type: 3}
+  - arrowMaterial: {fileID: 2100000, guid: a93ce384d915a06489358dc7ed488c11, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

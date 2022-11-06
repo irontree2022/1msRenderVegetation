@@ -1,0 +1,262 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Poplar_Big02_Leaves
+  m_Shader: {fileID: 4800000, guid: a933075b367f9b24981408633f72ff34, type: 3}
+  m_ValidKeywords:
+  - TVE_ALPHA_CLIP
+  m_InvalidKeywords:
+  - _EMISSION
+  - _NORMALMAP
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2450
+  stringTagMap:
+    NatureRendererInstancing: true
+    RenderType: AlphaTest
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 530bfa51d176cbf43b809f4fa10be13c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainAlbedoTex:
+        m_Texture: {fileID: 2800000, guid: ae2931bfd031382448a9b4d54cd9241b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainMaskTex:
+        m_Texture: {fileID: 2800000, guid: 789f31c2af6420a4a9678cd53b3372c3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainNormalTex:
+        m_Texture: {fileID: 2800000, guid: 530bfa51d176cbf43b809f4fa10be13c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: ae2931bfd031382448a9b4d54cd9241b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaClip: 0
+    - _AlphaCutoff: 0.5
+    - _AlphaVariationValue: 1
+    - _Blend: 0
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _ColorsMaskMaxValue: 1
+    - _ColorsMaskMinValue: 0
+    - _ColorsVariationValue: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailBlendMode: 1
+    - _DetailCat: 0
+    - _DetailMode: 0
+    - _DetailNormalMapScale: 1
+    - _DetailSpace: 0
+    - _DetailTypeMode: 0
+    - _DstBlend: 0
+    - _EmissiveCat: 1
+    - _EmissiveFlagMode: 0
+    - _EnvironmentReflections: 1
+    - _FadeCameraValue: 1
+    - _FadeGlancingValue: 0
+    - _FadeSpace: 0
+    - _GlobalAlpha: 1
+    - _GlobalCat: 0
+    - _GlobalColors: 1
+    - _GlobalEmissive: 1
+    - _GlobalOverlay: 1
+    - _GlobalSize: 0
+    - _GlobalWetness: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _GradientCat: 1
+    - _GradientMaxValue: 1
+    - _GradientMinValue: 0
+    - _InteractionAmplitude: 1
+    - _InteractionVariation: 0
+    - _IsLeafShader: 1
+    - _IsSubsurfaceShader: 1
+    - _IsTVEShader: 1
+    - _IsVersion: 400
+    - _LayerColorsValue: 0
+    - _LayerExtrasValue: 0
+    - _LayerMotionValue: 0
+    - _LayerReactValue: 1
+    - _LayersSpace: 0
+    - _MainCat: 0
+    - _MainLightAngleValue: 8
+    - _MainLightNormalValue: 0.5
+    - _MainLightScatteringValue: 8
+    - _MainNormalValue: 0
+    - _MainOcclusionValue: 1
+    - _MainSmoothnessValue: 0.2
+    - _Metallic: 0
+    - _MotionAmplitude_10: 0.15
+    - _MotionAmplitude_20: 0.4
+    - _MotionAmplitude_32: 0.4
+    - _MotionCat: 0
+    - _MotionScale_10: 0
+    - _MotionScale_20: 0.5
+    - _MotionScale_32: 19
+    - _MotionSpace: 0
+    - _MotionSpeed_10: 2
+    - _MotionSpeed_20: 6
+    - _MotionSpeed_32: 20
+    - _MotionVariation_10: 0
+    - _MotionVariation_20: 4
+    - _MotionVariation_32: 20
+    - _NoiseCat: 1
+    - _NoiseMaxValue: 1
+    - _NoiseMinValue: 0
+    - _NoiseScaleValue: 0.01
+    - _OcclusionCat: 1
+    - _OcclusionStrength: 1
+    - _OverlayBottomValue: 0.5
+    - _OverlayMaskMaxValue: 0.55
+    - _OverlayMaskMinValue: 0.45
+    - _OverlayVariationValue: 0
+    - _Parallax: 0.005
+    - _PerspectiveCat: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _ReceiveSpace: 0
+    - _RenderClip: 1
+    - _RenderCull: 0
+    - _RenderDecals: 1
+    - _RenderMode: 0
+    - _RenderNormals: 0
+    - _RenderPriority: 0
+    - _RenderSSR: 1
+    - _RenderSpecular: 1
+    - _RenderZWrite: 1
+    - _RenderingCat: 0
+    - _SizeFadeCat: 0
+    - _SizeFadeMessage: 0
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _SubsurfaceCat: 1
+    - _SubsurfaceDiffusion: 3.5648174
+    - _SubsurfaceMaskMaxValue: 1
+    - _SubsurfaceMaskMinValue: 0
+    - _SubsurfaceValue: 1
+    - _Surface: 0
+    - _TranslucencyAmbientValue: 0.2
+    - _TranslucencyDirectValue: 1
+    - _TranslucencyHDMessage: 0
+    - _TranslucencyIntensityValue: 1
+    - _TranslucencyNormalValue: 0.1
+    - _TranslucencyScatteringValue: 2
+    - _TranslucencyShadowValue: 1
+    - _VariationGlobalsMessage: 0
+    - _VariationMotionMessage: 0
+    - _VertexDataMode: 0
+    - _VertexMasksMode: 0
+    - _VertexOcclusionMaxValue: 1
+    - _VertexOcclusionMinValue: 0
+    - _VertexRollingMode: 1
+    - _VertexVariationMode: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    - _render_cull: 0
+    - _render_dst: 0
+    - _render_src: 1
+    - _render_zw: 1
+    - _subsurface_shadow: 1
+    - _vertex_pivot_mode: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorsMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _DetailBlendRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissiveUVs: {r: 1, g: 1, b: 0, a: 0}
+    - _GradientColorOne: {r: 1, g: 1, b: 1, a: 1}
+    - _GradientColorTwo: {r: 1, g: 1, b: 1, a: 1}
+    - _GradientMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainUVs: {r: 1, g: 1, b: 0, a: 0}
+    - _MaxBoundsInfo: {r: 7.062784, g: 20.980955, b: 20.980955, a: 0}
+    - _NoiseColorOne: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseColorTwo: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _OverlayMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SubsurfaceColor: {r: 0.33, g: 0.49, b: 0, a: 1}
+    - _SubsurfaceDiffusion_Asset: {r: 2.2888926e+38, g: 1.2389358e-26, b: 7.69327e-37,
+        a: 0.00018220427}
+    - _SubsurfaceDiffusion_asset: {r: 2.2888926e+38, g: 1.2389358e-26, b: 7.69327e-37,
+        a: 0.00018220427}
+    - _SubsurfaceMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _VertexOcclusionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _VertexOcclusionRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _render_normals_options: {r: -1, g: -1, b: -1, a: 0}
+  m_BuildTextureStacks: []

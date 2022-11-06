@@ -1,0 +1,32 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Visual Design Cafe
+InfoPreset Use this preset to convert Visual Design Cafe's Open World Nature Kit Bushes.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/landscapes/open-world-nature-kit-150748
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 7
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 1
+
+*******************************************************************
+
+// Set Material Shader
+Include Nature Renderer Commons
+
+// Set default settings
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0

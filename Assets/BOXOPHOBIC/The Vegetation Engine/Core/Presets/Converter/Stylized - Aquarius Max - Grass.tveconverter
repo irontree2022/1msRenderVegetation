@@ -1,0 +1,50 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Aquarius Stylized
+InfoPreset Use this preset to convert Aquarius Max Stylized Trees assets.
+InfoStatus InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/packages/3d/vegetation/trees/stylized-trees-and-foliage-190601
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 4
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 4
+Mesh SetMotion3 GET_MASK_PROCEDURAL 4
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Leaves
+{
+	Material SET_FLOAT _RenderCull 0
+	Material SET_FLOAT _RenderNormals 2
+	Material SET_FLOAT _RenderSpecular 0
+	Material SET_FLOAT _Cutoff 0.5
+
+	Material COPY_TEX _MainTex _MainAlbedoTex
+	Material SET_FLOAT _MainSmoothnessValue 0
+
+	// Set Subsurface Settings
+	Material COPY_COLOR _Color2 _SubsurfaceColor
+
+	// Set Gradient Colors
+	Material COPY_COLOR _Color2 _GradientColorOne
+	Material COPY_COLOR _Color _GradientColorTwo
+	Material SET_FLOAT _GradientMinValue 0
+	Material SET_FLOAT _GradientMaxValue 1
+}
+
+*******************************************************************
+
+Include Use Default Grass Settings
+

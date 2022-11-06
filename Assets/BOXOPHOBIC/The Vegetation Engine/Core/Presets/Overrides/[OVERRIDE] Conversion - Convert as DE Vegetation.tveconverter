@@ -1,0 +1,54 @@
+*******************************************************************
+*                            OVERRIDE                             *
+*******************************************************************
+
+InfoStatus Mesh and materials conversion will be set for DE ENVIRONMENT compatibility!
+
+*******************************************************************
+
+// Set outputs
+OutputMesh DEENVIRONMENT
+OutputMaterial DEFAULT
+OutputSuffix DE
+
+*******************************************************************
+
+Utility SET_CURRENT_MATERIAL_AS_BASE
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Leaf
+{
+	Material SET_SHADER_BY_NAME DE/Cutout Wind/Cutout Wind Translucency
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Grass
+{
+	Material SET_SHADER_BY_NAME DE/Cutout Wind/Cutout Wind Translucency
+	Material SET_FLOAT _WindType 2
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+{
+	Material SET_SHADER_BY_NAME DE/Surface Wind/Surface Wind Simple
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Cross
+{
+	Material SET_SHADER_BY_NAME DE/Billboard/Billboard Wind
+}
+
+*******************************************************************
+
+Include DE Commons
+
+*******************************************************************
+
+Utility DELETE_FILES_BY_NAME MainMaskTex
+

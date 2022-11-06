@@ -1,0 +1,8 @@
+// Disable Features for Bark
+
+if MATERIAL_FLOAT_EQUALS _AlphaCutoffEnable 0
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+}

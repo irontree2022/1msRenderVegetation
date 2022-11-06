@@ -1,0 +1,48 @@
+*******************************************************************
+*                             INCLUDE                             *
+*******************************************************************
+
+// Combine Texture Channels for Standard
+if SHADER_NAME_CONTAINS Standard
+{
+	Texture SetRed GET_RED _MetallicGlossMap
+	Texture SetGreen GET_GRAY _OcclusionMap
+	Texture SetBlue GET_GRAY _ParallaxMap
+	Texture SetBlue GET_GRAY _DetailMask
+	Texture SetAlpha GET_ALPHA _MetallicGlossMap
+
+	if MATERIAL_KEYWORD_ENABLED _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+	{
+		Texture SetAlpha GET_ALPHA _MainTex
+	}
+}
+
+*******************************************************************
+
+// Combine Texture Channels for URP
+if SHADER_NAME_CONTAINS Universal
+{
+	Texture SetRed GET_RED _MetallicGlossMap
+	Texture SetGreen GET_GRAY _OcclusionMap
+	Texture SetBlue GET_GRAY _ParallaxMap
+	Texture SetBlue GET_GRAY _DetailMask
+	Texture SetAlpha GET_ALPHA _MetallicGlossMap
+
+	if MATERIAL_KEYWORD_ENABLED _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+	{
+		Texture SetAlpha GET_ALPHA _BaseColor
+	}
+}
+
+*******************************************************************
+
+// Combine Texture Channels fot HD
+if SHADER_NAME_CONTAINS HDRP
+{
+	Texture SetRed GET_RED _MaskMap
+	Texture SetGreen GET_GREEN _MaskMap
+	Texture SetBlue GET_GRAY _ThicknessMap
+	Texture SetAlpha GET_ALPHA _MaskMap
+}
+
+Utility START_TEXTURE_PACKING

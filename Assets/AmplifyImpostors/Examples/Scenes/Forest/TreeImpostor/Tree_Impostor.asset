@@ -1,0 +1,255 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ba7a43222473d4292f91ae936fe2cc, type: 3}
+  m_Name: Tree_Impostor
+  m_EditorClassIdentifier: 
+  Material: {fileID: 21272934253153140}
+  Mesh: {fileID: 43322732915683226}
+  Version: 9602
+  ImpostorType: 2
+  LockedSizes: 1
+  SelectedSize: 2048
+  TexSize: {x: 2048, y: 2048}
+  DecoupleAxisFrames: 0
+  HorizontalFrames: 16
+  VerticalFrames: 16
+  PixelPadding: 32
+  MaxVertices: 8
+  Tolerance: 0.13
+  NormalScale: 0
+  ShapePoints:
+  - {x: 0.1640625, y: 0.7265625}
+  - {x: 0.4296875, y: 1}
+  - {x: 0.5859375, y: 1}
+  - {x: 0.8359375, y: 0.703125}
+  - {x: 0.8359375, y: 0.4140625}
+  - {x: 0.578125, y: 0.015625}
+  - {x: 0.40625, y: 0.0234375}
+  - {x: 0.1640625, y: 0.453125}
+  Preset: {fileID: 11400000, guid: e4786beb7716da54dbb02a632681cc37, type: 2}
+  OverrideOutput:
+  - Index: 0
+    OverrideMask: 32
+    Active: 1
+    Name: _AlbedoAlpha
+    Scale: 1
+    SRGB: 1
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: 1
+    OverrideMask: 32
+    Active: 1
+    Name: _SpecularSmoothness
+    Scale: 1
+    SRGB: 1
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: 2
+    OverrideMask: 32
+    Active: 1
+    Name: _NormalDepth
+    Scale: 1
+    SRGB: 0
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: 3
+    OverrideMask: 32
+    Active: 1
+    Name: _EmissionOcclusion
+    Scale: 1
+    SRGB: 0
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+--- !u!21 &21272934253153140
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Tree_Impostor
+  m_Shader: {fileID: 4800000, guid: 572f9be5706148142b8da6e9de53acdb, type: 3}
+  m_ShaderKeywords: EFFECT_HUE_VARIATION _HEMI_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 1c6810488ea1c6d4b9978d68026fea6f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission:
+        m_Texture: {fileID: 2800000, guid: d61243135c755174a9d23e2922549323, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normals:
+        m_Texture: {fileID: 2800000, guid: 80b42d5d9653f304d86f48aa53ca60c3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Specular:
+        m_Texture: {fileID: 2800000, guid: ac7c7dae082b34c43a9e7564fd871ef9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AI_AlphaToCoverage: 0
+    - _AI_ShadowBias: 0.25
+    - _AI_ShadowView: 1
+    - _Bias: -3
+    - _Clip: 0.5
+    - _ClipMask: 0.5
+    - _DepthSize: 18.016346
+    - _Frames: 16
+    - _Hemi: 1
+    - _Hue: 1
+    - _ImpostorSize: 18.076916
+    - _Parallax: 1
+    - _ShadowBias: 0.4
+    - _TextureBias: -1
+    m_Colors:
+    - _AI_SizeOffset: {r: 18.076916, g: 18.016346, b: 0, a: -0.0004908377}
+    - _HueVariation: {r: 1, g: 0.5019608, b: 0, a: 0.101960786}
+    - _Offset: {r: 0.22232056, g: 8.998086, b: -0.14837313, a: 0.007853403}
+--- !u!43 &43322732915683226
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Tree_Impostor
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 18
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: -0.2831912, z: 0}
+      m_Extent: {x: 6.072714, y: 8.897232, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 070005000300030001000700070006000500050004000300030002000100010000000700
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 11
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 256
+    _typelessdata: ac53c2c0bc9987c0000000000000000000000000000080bf0000283e00008c3e37b1a2bf03e312c1000000000000000000000000000080bf0000dc3e0000000098d8c63f03e312c1000000000000000000000000000080bf0000163f00000000ac53c240ef1574c0000000000000000000000000000080bf0000563f0000983eac53c240adacb43f000000000000000000000000000080bf0000563f0000163fe8c4b43f1cd30941000000000000000000000000000080bf0000143f00007c3f49ecd8bfa6900741000000000000000000000000000080bf0000d03e00007a3fac53c2c07294343f000000000000000000000000000080bf0000283e00000c3f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0.22232056, y: 8.998086, z: -0.14837313}
+    m_Extent: {x: 5.874096, y: 8.998089, z: 5.646998}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0

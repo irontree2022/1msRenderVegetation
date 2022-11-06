@@ -1,0 +1,67 @@
+// Set Material Shader
+
+if MATERIAL_KEYWORD_ENABLED GEOM_TYPE_BRANCH
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+}
+
+*******************************************************************
+
+if MATERIAL_KEYWORD_ENABLED GEOM_TYPE_BRANCH_DETAIL
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+}
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _SubsurfaceKwToggle 0
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+}
+
+*******************************************************************
+
+if MATERIAL_KEYWORD_ENABLED EFFECT_BILLBOARD
+{
+	Material SET_SHADER SHADER_DEFAULT_CROSS
+	Material SET_FLOAT _RenderCull 2
+}
+
+*******************************************************************
+
+// Set default settings
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _Cutoff 0.333
+Material SET_FLOAT _SubsurfaceMaskMinValue 1
+Material SET_FLOAT _SubsurfaceMaskMaxValue 0
+
+*******************************************************************
+
+// Copy Material Properties
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _Metallic _MainMetallicValue
+// Set Smoothness for SpeedTree 7
+Material SET_FLOAT _MainSmoothnessValue 0.25
+// Set Smoothness for SpeedTree 8
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+
+*******************************************************************
+
+// Combine Texture Channels
+Texture SetRed GET_RED _ExtraTex
+Texture SetGreen GET_GREEN _ExtraTex
+Texture SetBlue GET_GREEN _SubsurfaceTex
+Texture SetAlpha GET_ALPHA _ExtraTex
+
+Utility START_TEXTURE_PACKING

@@ -1,0 +1,260 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ba7a43222473d4292f91ae936fe2cc, type: 3}
+  m_Name: PropBarrel_Impostor
+  m_EditorClassIdentifier: 
+  Material: {fileID: 21751313986590038}
+  Mesh: {fileID: 43769865896778098}
+  Version: 9300
+  ImpostorType: 1
+  LockedSizes: 1
+  SelectedSize: 2048
+  TexSize: {x: 2048, y: 2048}
+  DecoupleAxisFrames: 0
+  HorizontalFrames: 16
+  VerticalFrames: 16
+  PixelPadding: 32
+  MaxVertices: 8
+  Tolerance: 0.15
+  NormalScale: 0
+  ShapePoints:
+  - {x: 0.15234375, y: 0.89002407}
+  - {x: 0.38216147, y: 0.99609375}
+  - {x: 0.63671875, y: 0.99609375}
+  - {x: 0.84765625, y: 0.890625}
+  - {x: 0.84765625, y: 0.10996097}
+  - {x: 0.6206597, y: 0.0078125}
+  - {x: 0.3856534, y: 0.0078125}
+  - {x: 0.15234375, y: 0.114746094}
+  Preset: {fileID: 11400000, guid: e4786beb7716da54dbb02a632681cc37, type: 2}
+  OverrideOutput:
+  - Index: 0
+    OverrideMask: 32
+    Active: 1
+    Name: _AlbedoAlpha
+    Scale: 1
+    SRGB: 1
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: 1
+    OverrideMask: 32
+    Active: 1
+    Name: _SpecularSmoothness
+    Scale: 1
+    SRGB: 1
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: 2
+    OverrideMask: 32
+    Active: 1
+    Name: _NormalDepth
+    Scale: 1
+    SRGB: 0
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: 3
+    OverrideMask: 32
+    Active: 1
+    Name: _EmissionOcclusion
+    Scale: 1
+    SRGB: 0
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+--- !u!21 &21751313986590038
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: PropBarrel_Impostor
+  m_Shader: {fileID: 4800000, guid: 572f9be5706148142b8da6e9de53acdb, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 947d6e9411166b247aef320cbd11dbaf, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission:
+        m_Texture: {fileID: 2800000, guid: 031f23cd9896fa444b3e1081aac3ee0e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 031f23cd9896fa444b3e1081aac3ee0e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normals:
+        m_Texture: {fileID: 2800000, guid: 5ff79af0b0e5c934581e049a239a95de, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Spec:
+        m_Texture: {fileID: 2800000, guid: 3071d4f013bb8ac42b2df53506b0310b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Specular:
+        m_Texture: {fileID: 2800000, guid: 3071d4f013bb8ac42b2df53506b0310b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AI_ShadowBias: 0.25
+    - _Bias: -2
+    - _Clip: 0.5
+    - _ClipMask: 0.5
+    - _DepthSize: 1.5870781
+    - _Frames: 16
+    - _Hemi: 0
+    - _Hue: 0
+    - _ImpostorSize: 1.2811213
+    - _Parallax: 1
+    - _ShadowBias: 0.25
+    - _TextureBias: -1
+    m_Colors:
+    - _HueVariation: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0.0041795075, g: 0.001348523, b: 0.0028491993, a: 0}
+--- !u!43 &43769865896778098
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: PropBarrel_Impostor
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 18
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: -0.0025021732, z: 0}
+      m_Extent: {x: 0.4453898, y: 0.633054, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 070005000300030001000700070006000500050004000300030002000100010000000700
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 11
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 256
+    _typelessdata: 220ae4be80d4ffbe000000000000000000000000000080bf00001c3e103be13db0961abed0b322bf000000000000000000000000000080bfabaac33e0000803b635b333ed0b322bf000000000000000000000000000080bf0000233f0000803b220ae43eb41c00bf000000000000000000000000000080bf0000593f0000e03d220ae43e03d7ff3e000000000000000000000000ffff7fbf0000593f99d9633f254a1e3ed96b213f000000000000000000000000000080bf8ee31e3f00007e3ff60116bed96b213f000000000000000000000000000080bf5d74c53e00007e3f220ae4be80b3fc3e000000000000000000000000000080bf00001c3e00a0623f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0.0041795075, y: 0.001348523, z: 0.0028491993}
+    m_Extent: {x: 0.43291196, y: 0.5107416, z: 0.43079636}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0

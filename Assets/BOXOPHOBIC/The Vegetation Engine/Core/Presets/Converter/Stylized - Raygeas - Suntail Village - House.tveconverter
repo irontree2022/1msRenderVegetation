@@ -1,0 +1,12 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Raygeas Suntail Village
+InfoError Converting House prefabs directly is not supported. Instead, please convert the building modules found under the Building Modules folder!
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputValid FALSE

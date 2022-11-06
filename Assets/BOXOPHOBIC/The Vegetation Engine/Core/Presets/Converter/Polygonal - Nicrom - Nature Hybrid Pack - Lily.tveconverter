@@ -1,0 +1,61 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Nature Hybrid Pack
+InfoPreset Use this preset to convert Nicrom - Nature - Hybrid Pack assets.
+InfoStatus InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/nature-hybrid-pack-181109
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 NONE
+Mesh SetMotion2 NONE
+Mesh SetMotion3 NONE
+
+*******************************************************************
+
+Material SET_FLOAT _RenderClip 0
+Material SET_FLOAT _RenderCull 2
+
+Material COPY_COLOR _Color _MainColor
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+Material SET_FLOAT _SubsurfaceValue 0.1
+
+*******************************************************************
+
+Material SET_FLOAT _MotionAmplitude_10 0.05
+Material SET_FLOAT _MotionSpeed_10 4
+Material SET_FLOAT _MotionScale_10 1
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 0
+Material SET_FLOAT _MotionSpeed_20 0
+Material SET_FLOAT _MotionScale_20 0
+Material SET_FLOAT _MotionVariation_20 5
+
+Material SET_FLOAT _MotionAmplitude_30 0
+Material SET_FLOAT _MotionSpeed_30 0
+Material SET_FLOAT _MotionScale_30 0
+Material SET_FLOAT _MotionVariation_30 0
+
+Material SET_FLOAT _MotionAmplitude_32 0.2
+Material SET_FLOAT _MotionSpeed_32 4
+Material SET_FLOAT _MotionScale_32 0.1
+Material SET_FLOAT _MotionVariation_32 15
+
+Material SET_FLOAT _InteractionAmplitude 0
+Material SET_FLOAT _InteractionVariation 0

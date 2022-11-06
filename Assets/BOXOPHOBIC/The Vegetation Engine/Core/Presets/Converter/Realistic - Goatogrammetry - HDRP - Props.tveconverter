@@ -1,0 +1,31 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Goatogrammetry
+InfoPreset Use this preset to convert Goatogrammetry Castle Valley objects.
+InfoStatus ● ● ● ● ●
+https://assetstore.unity.com/publishers/47093
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh NONE
+
+*******************************************************************
+
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderClip 0
+Material SET_FLOAT _RenderCull 2
+
+*******************************************************************
+
+Include Unity Lit Commons
+
+
+
+
+
+
+

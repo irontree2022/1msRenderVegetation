@@ -1,0 +1,31 @@
+*******************************************************************
+*                            OVERRIDE                             *
+*******************************************************************
+
+InfoStatus Materials conversion set for DE ENVIRONMENT compatibility! Mesh conversion is skipped for this conversion!
+
+*******************************************************************
+
+// Set outputs
+OutputMesh NONE
+OutputMaterial DEFAULT
+OutputSuffix DE
+
+*******************************************************************
+
+Utility SET_CURRENT_MATERIAL_AS_BASE
+
+Material SET_SHADER_BY_NAME DE/Cutout/Cutout Simple
+
+if MATERIAL_FLOAT_EQUALS _RenderClip 0
+{
+	Material SET_SHADER_BY_NAME DE/Surface/Surface Simple
+}
+
+*******************************************************************
+
+Include DE Commons
+
+*******************************************************************
+
+Utility DELETE_FILES_BY_NAME MainMaskTex

@@ -1,0 +1,132 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle TriForge Valley Forest
+InfoPreset Use this preset to convert TriForge Valley Forest assets.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/real-landscapes-valley-forest-194338
+//InfoWarning The BK Billboards are not supported and they will be disabled after conversion! Amplify Impostors can be used as an alternative! 
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 1
+Mesh SetDetailMask GET_MASK_FROM_CHANNEL 0
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 2
+
+Mesh SetMotion1 GET_MASK_FROM_CHANNEL 9
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 1
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 1
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Leaf
+{
+	// Set Render Settings
+	Material SET_FLOAT _RenderCull 0
+	Material SET_FLOAT _RenderNormals 2
+	Material SET_FLOAT _RenderSpecular 0
+	Material SET_FLOAT _FadeGlancingValue 0
+
+	Material COPY_FLOAT _Cutoff _Cutoff
+	Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+	// Copy Main props
+	Material COPY_VECTOR _Color _MainColor
+	Material COPY_TEX _MainTex _MainAlbedoTex
+	Material COPY_TEX _Normal _MainNormalTex
+	Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+	Material COPY_FLOAT _NormalScale _MainNormalValue
+	Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+	Material COPY_FLOAT _DiffusionProfile _SubsurfaceDiffusion
+	Material COPY_FLOAT _DiffusionProfile_Asset _SubsurfaceDiffusion_Asset
+
+	Material SET_VECTOR _VertexOcclusionColor 0.5 0.5 0.5 1
+	Material SET_FLOAT _SubsurfaceValue 0.5
+
+	if PREFAB_PATH_CONTAINS Oak
+	{
+		Material SET_FLOAT _SubsurfaceValue 0
+	}
+
+	if MATERIAL_NAME_CONTAINS Cross
+	{
+		Material SET_SHADER SHADER_DEFAULT_CROSS
+		Material SET_FLOAT _FadeHorizontalValue 1
+	}
+
+	// Pack textures for mask
+	Texture PropName _MainMaskTex
+	Texture SetRed NONE
+	Texture SetGreen NONE
+	Texture SetBlue GET_GREEN _MaskMap
+	Texture SetAlpha GET_ALPHA _MaskMap
+	Utility START_TEXTURE_PACKING
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+{
+	// Set Render Settings
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderCull 2
+	Material SET_FLOAT _RenderClip 0
+
+	// Copy Main props
+	Material COPY_TEX _Albedo _MainAlbedoTex
+	Material COPY_TEX _Normal _MainNormalTex
+	Material COPY_ST_AS_VECTOR _Albedo _MainUVs
+	Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+	Material SET_FLOAT _VertexRollingMode 0
+
+	// Pack textures for mask
+	Texture PropName _MainMaskTex
+	Texture SetRed NONE
+	Texture SetGreen GET_GREEN _Mask
+	Texture SetBlue GET_ALPHA _Mask
+	Texture SetAlpha GET_RED _Mask
+	Utility START_TEXTURE_PACKING
+	
+	if SHADER_NAME_CONTAINS Bark Double
+	{
+		// Set Detail props
+		Material SET_FLOAT _DetailMode 1
+		Material SET_FLOAT _DetailBlendMode 1
+		Material SET_FLOAT _DetailMaskMode 0
+
+		Material SET_FLOAT _DetailMeshValue 0.5
+		Material SET_FLOAT _DetailBlendMinValue 0.2
+		Material SET_FLOAT _DetailBlendMaxValue 0.8
+
+		// Copy Main props
+		Material COPY_TEX _BottomAlbedo _SecondAlbedoTex
+		Material COPY_TEX _BottomNormal _SecondNormalTex
+		Material COPY_ST_AS_VECTOR _BottomAlbedo _SecondUVs
+		Material COPY_FLOAT _BottomSmoothness _SecondSmoothnessValue
+
+		// Pack textures for mask
+		Texture PropName _SecondMaskTex
+		Texture SetRed NONE
+		Texture SetGreen GET_GREEN _BottomMask
+		Texture SetBlue GET_ALPHA _BottomMask
+		Texture SetAlpha GET_RED _BottomMask
+		Utility START_TEXTURE_PACKING
+	}
+}
+
+*******************************************************************
+
+if PREFAB_PATH_CONTAINS Oak
+{
+	Material SET_FLOAT _MotionAmplitude_10 0.05
+	Material SET_FLOAT _MotionAmplitude_20 0.02
+	Material SET_FLOAT _MotionAmplitude_32 0.05
+}

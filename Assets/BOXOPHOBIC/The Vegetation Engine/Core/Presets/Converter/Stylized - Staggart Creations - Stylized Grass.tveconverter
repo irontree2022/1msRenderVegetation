@@ -1,0 +1,49 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Staggart Creations
+InfoPreset Use this preset to convert Staggart Creations' stylized grass meshes. The Staggart generated colorma can be used to color the vegetation.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/vfx/shaders/stylized-grass-shader-143830
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 4
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 4
+Mesh SetMotion3 GET_MASK_PROCEDURAL 4
+
+Mesh SetNormals GET_NORMALS_PROCEDURAL 2
+
+*******************************************************************
+
+Include Default Grass Settings
+
+*******************************************************************
+
+//Set properties
+Material SET_FLOAT _RenderNormals 2
+Material SET_VECTOR _VertexOcclusionColor 0.5 0.5 0.5 1.0
+Material SET_VECTOR _MotionHighlightColor 4 4 4 1.0
+Material SET_FLOAT _MainSmoothnessValue 0.1
+
+Material SET_FLOAT _ColorsMaskMinValue 0.0
+Material SET_FLOAT _ColorsMaskMaxValue 0.0
+
+//Copy properties
+Material COPY_TEX _BaseMap _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _BaseMap _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+
+Material COPY_COLOR _BaseColor _MainColor
+Material COPY_COLOR _BaseColor _SubsurfaceColor
+

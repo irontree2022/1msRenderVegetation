@@ -1,0 +1,94 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Pure Nature
+InfoPreset Use this preset to convert BK Prod - Pure Nature assets. The Details blending can be adjusted using the Detail Mask sliders!
+InfoStatus InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/pure-nature-188246
+InfoWarning The BK Billboards are not supported and they will be disabled after conversion! Amplify Impostors can be used as an alternative!
+
+*******************************************************************
+*                            PRESET                               *
+*******************************************************************
+
+OutputMesh NONE
+
+*******************************************************************                           
+
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+*******************************************************************
+
+if !SHADER_NAME_CONTAINS StandardLayered
+{
+	Include Unity Lit Commons
+	Include Unity Lit Packer
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS StandardLayered
+{
+	Material COPY_VECTOR _Color _MainColor
+	Material COPY_TEX _MainTex _MainAlbedoTex
+	Material COPY_TEX _BumpMap _MainNormalTex
+	Material COPY_TEX _MetallicGlossMap _MainMaskTex
+	Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+	Material COPY_FLOAT _NormalPower _MainNormalValue
+	Material COPY_FLOAT _MetallicPower _MainMetallicValue
+	Material COPY_FLOAT _OcclusionPower _MainOcclusionValue
+	Material COPY_FLOAT _SmoothnessPower _MainSmoothnessValue
+	
+	// Set Detail properties
+	Material SET_FLOAT _DetailMode 1
+	Material SET_FLOAT _DetailBlendMode 1
+	Material SET_FLOAT _DetailTypeMode 1
+	Material SET_FLOAT _DetailMaskMode 0
+
+	Material SET_FLOAT _DetailMeshValue 0.0
+	Material SET_FLOAT _DetailBlendMinValue 0.45
+	Material SET_FLOAT _DetailBlendMaxValue 0.55
+
+	// Copy Detail properties
+	Material COPY_TEX _DetailAlbedoMap _SecondAlbedoTex
+	Material COPY_TEX _DetailNormalMap _SecondNormalTex
+	Material COPY_ST_AS_VECTOR _DetailAlbedoMap _SecondUVs
+
+	Material COPY_FLOAT _2ndNormalPower _SecondNormalValue
+	Material COPY_FLOAT _LayerOcclusionPower _SecondOcclusionValue
+	Material COPY_FLOAT _LayerSmoothnessPower _SecondSmoothnessValue
+	
+	// Pack textures for mask
+	Texture PropName _MainMaskTex
+	Texture SetRed GET_RED _MetallicGlossMap
+	Texture SetGreen GET_GREEN _MetallicGlossMap
+	Texture SetBlue GET_GREEN _MetallicGlossMap ACTION_INVERT
+	Texture SetAlpha GET_ALPHA _MetallicGlossMap
+	Utility START_TEXTURE_PACKING
+	
+	// Pack textures for mask
+	Texture PropName _SecondMaskTex
+	Texture SetRed GET_RED _DetailMetallicGlossMap
+	Texture SetGreen GET_GREEN _DetailMetallicGlossMap
+	Texture SetBlue GET_GREEN _DetailMetallicGlossMap ACTION_INVERT
+	Texture SetAlpha GET_ALPHA _DetailMetallicGlossMap
+	Utility START_TEXTURE_PACKING
+	
+	if MATERIAL_FLOAT_EQUALS _LayerPower 0
+	{
+		Material SET_FLOAT _DetailMode 0
+	}
+}
+
+*******************************************************************
+
+Material SET_FLOAT _GlobalSize 0
+
+Material SET_FLOAT _OverlayMaskMinValue 0.75
+Material SET_FLOAT _OverlayMaskMaxValue 0.85
+Material SET_FLOAT _OverlayBottomValue 0
+Material SET_FLOAT _OverlayVariationValue 0

@@ -1,0 +1,43 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Staggart FAE
+InfoPreset Use this preset to convert Staggart Creations' FAE prefabs!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/fantasy-adventure-environment-70354
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh NONE
+
+*******************************************************************
+
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderClip 0
+Material SET_FLOAT _RenderCull 2
+
+*******************************************************************
+
+if !SHADER_NAME_CONTAINS Cliff coverage
+{
+	Include Unity Lit Commons
+	Include Unity Lit Packer
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Cliff coverage
+{
+	Material COPY_VECTOR _ObjectColor _MainColor
+	Material COPY_TEX _Objectalbedo _MainAlbedoTex
+	Material COPY_TEX _Objectnormals _MainNormalTex
+	Material COPY_ST_AS_VECTOR _Objectalbedo _MainUVs
+
+	Material SET_FLOAT _MainNormalValue 1
+	Material SET_FLOAT _MainMetallicValue 0
+	Material SET_FLOAT _MainOcclusionValue 1
+	Material SET_FLOAT _MainSmoothnessValue 0
+}

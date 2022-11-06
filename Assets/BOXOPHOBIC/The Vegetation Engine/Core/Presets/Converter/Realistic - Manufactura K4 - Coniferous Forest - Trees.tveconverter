@@ -1,0 +1,160 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Manufactura K4
+InfoPreset Use this preset to convert Manufactura K4 Coniferous Trees.
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/packages/3d/vegetation/coniferous-forest-119434
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask GET_MASK_FROM_CHANNEL 1 ACTION_INVERT
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 7
+Mesh SetMotion3 GET_MASK_FROM_TEXTURE 3 _TransGlossAOWind
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Standard
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+endif
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+endif
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _Mode 2
+
+Material SET_SHADER SHADER_DEFAULT_CROSS
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 1
+
+endif
+
+*******************************************************************
+
+// Copy Standard Pipeline Material Properties
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _BumpScale _MainNormalValue
+
+Material COPY_TEX _MetallicGlossMap _MainMaskTex
+Material COPY_FLOAT _Metallic _MainMetallicValue
+Material COPY_FLOAT _OcclusionStrength _MainOcclusionValue
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+Material COPY_FLOAT _GlossMapScale _MainSmoothnessValue
+
+*******************************************************************
+
+// Copy Leaves props
+Material COPY_TEX _TransGlossAOWind _SubsurfaceTex
+
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _Albedo _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _Albedo _MainUVs
+
+Material COPY_TEX _NormalMap _MainNormalTex
+Material COPY_FLOAT _NormalScale _MainNormalValue
+
+*******************************************************************
+
+// Copy Bark props
+Material COPY_TEX _Albedo _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _Albedo _MainUVs
+Material COPY_TEX _Normals _MainNormalTex
+Material COPY_FLOAT _NormalScale _MainNormalValue
+
+Material COPY_TEX _Moss _SecondAlbedoTex
+Material COPY_ST_AS_VECTOR _Moss _SecondUVs
+Material COPY_TEX _MossNormal _SecondNormalTex
+Material SET_FLOAT _SecondNormalValue -1
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+
+//Enable Betail shading
+Material SET_FLOAT _DetailMode 1
+Material SET_FLOAT _DetailBlendMode 1
+Material SET_FLOAT _DetailMaskMode 1
+
+Material SET_FLOAT _DetailMaskValue 0
+Material SET_FLOAT _DetailMeshValue 0
+Material SET_FLOAT _DetailBlendMinValue 0.45
+Material SET_FLOAT _DetailBlendMaxValue 0.55
+
+endif
+
+*******************************************************************
+
+// Set default props
+Material SET_FLOAT _RenderNormals 2
+Material SET_FLOAT _MainSmoothnessValue 1
+Material SET_FLOAT _SecondSmoothnessValue 0
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+
+*******************************************************************
+
+// Combine Texture for Leaves
+Texture SetRed NONE
+Texture SetGreen GET_BLUE _TransGlossAOWind
+Texture SetBlue GET_RED _TransGlossAOWind
+Texture SetAlpha GET_GREEN _TransGlossAOWind
+
+Utility START_TEXTURE_PACKING
+
+// Combine Texture for Bark
+Texture SetRed NONE
+Texture SetGreen GET_GREEN _Gloss_ao_mask
+Texture SetBlue GET_BLUE _Gloss_ao_mask
+Texture SetAlpha GET_RED _Gloss_ao_mask
+
+Utility START_TEXTURE_PACKING
+
+Texture PropName _SecondMaskTex
+
+Texture SetRed NONE
+Texture SetGreen NONE
+Texture SetBlue GET_ALPHA _Moss
+Texture SetAlpha NONE
+
+Utility START_TEXTURE_PACKING
+
+
+
+
+
+
+
+
+
+
+
+

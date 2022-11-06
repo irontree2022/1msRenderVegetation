@@ -1,0 +1,44 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Speedtree 8
+InfoPreset Use this preset to convert Speedtree 8 vegetation.
+InfoWarning SpeedTree assets cannot be converted directly, you will need to create a new prefab first!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/publishers/9474
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 7 ACTION_REMAP01
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 0
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 6
+Mesh SetMotion3 GET_MASK_3RD_PARTY 2
+
+*******************************************************************
+
+Include Bark by HD Clip Settings
+Include Unity Lit Commons
+
+// Set default settings
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _SubsurfaceMaskMinValue 1
+Material SET_FLOAT _SubsurfaceMaskMaxValue 0
+
+// Combine Texture Channels fot HD
+Texture SetRed GET_RED _MaskMap
+Texture SetGreen GET_GREEN _MaskMap
+Texture SetBlue GET_GRAY _ThicknessMap
+Texture SetAlpha GET_ALPHA _MaskMap
+
+Utility START_TEXTURE_PACKING
+

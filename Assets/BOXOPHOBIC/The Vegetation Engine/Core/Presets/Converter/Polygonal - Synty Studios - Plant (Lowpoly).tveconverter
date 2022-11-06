@@ -1,0 +1,53 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Synty
+InfoPreset Use this preset to convert Synty's polygonal vegetation. Tested with the POLYGON Nature Pack.
+InfoStatus ● ● ● ○ ○
+InfoOnline https://assetstore.unity.com/publishers/5217
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation NONE
+Mesh SetOcclusion GET_MASK_PROCEDURAL 5
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 5
+Mesh SetMotion2 GET_MASK_PROCEDURAL 5
+Mesh SetMotion3 GET_MASK_PROCEDURAL 0
+
+*******************************************************************
+
+// Enable Material Features
+Material SET_FLOAT _RenderNormals 2
+
+Material SET_FLOAT _MainSmoothnessValue 0
+Material SET_FLOAT _MainOcclusionValue 0
+
+*******************************************************************
+
+// Copy Standard Pipeline Material Properties
+Material COPY_COLOR _ColorTint _MainColor
+Material COPY_COLOR _ColorTint _MainColorVariation
+Material COPY_TEX _MainTexture _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTexture _MainUVs
+
+*******************************************************************
+
+// Copy Universal Pipeline Material Properties
+Material COPY_COLOR Color_369F793F _MainColor
+Material COPY_TEX Texture2D_CAD82441 _MainAlbedoTex
+
+*******************************************************************
+
+//Set Motion Values
+Material SET_FLOAT _MotionVariation_20 0
+Material SET_FLOAT _MotionScale_20 30
+Material SET_FLOAT _MotionVariation_32 0
+

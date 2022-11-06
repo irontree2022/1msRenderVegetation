@@ -1,0 +1,64 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle I Made It
+InfoPreset Use this preset to convert custom made vegetation. Use the BOXOPHOBIC > The Vegetation Engine > Helpers > I Made It shader to set up your maps for the converter to pack them. Use the following masksfor the mesh conversion: Per Branch or Per Leaf Variation (Vertex Red), Branches or Leaves Mask (Vertex Green), Leaves Mask or Leaves Edge (Vertex Blue), Vertex Occlusion (Vertex Alpha).
+InfoStatus ○ ○ ○ ○ ○
+InfoOnline https://docs.google.com/document/d/145JOVlJ1tE-WODW45YoJ6Ixg23mFc56EnB_8Tbwloz8/edit#heading=h.ltnk8tq0d4cg
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh DEFAULT
+OutputMaterial DEFAULT
+
+// Set Mesh Masks
+Mesh SetVariation GET_MASK_FROM_CHANNEL 0
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 1
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _ShaderMode 1
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _Motion_30 0
+	Material SET_FLOAT _Motion_32 0
+	Material SET_FLOAT _RenderClip 0
+}
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _SubsurfaceMode 1
+{
+	Material SET_FLOAT _SubsurfaceMaskMinValue 1
+	Material SET_FLOAT _SubsurfaceMaskMaxValue 0
+}
+
+*******************************************************************
+
+// Copy Textures
+Material COPY_TEX _AlbedoTex _MainAlbedoTex
+Material COPY_TEX _NormalTex _MainNormalTex
+
+Texture SetRed GET_RED _MaskTex
+Texture SetGreen GET_GREEN _MaskTex
+Texture SetAlpha GET_ALPHA _MaskTex
+
+Texture SetRed GET_GRAY _MetallicTex
+Texture SetGreen GET_GRAY _OcclusionTex
+Texture SetAlpha GET_GRAY _SmoothnessTex
+
+Texture SetBlue GET_GRAY _SubsurfaceTex
+Texture SetBlue GET_GRAY _HeightTex
+
+Utility START_TEXTURE_PACKING

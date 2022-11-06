@@ -1,0 +1,90 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Manufactura K4
+InfoPreset Use this preset to convert Manufactura K4 Plants.
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/packages/3d/vegetation/coniferous-forest-119434
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 5
+Mesh SetMotion2 GET_MASK_PROCEDURAL 5
+Mesh SetMotion3 GET_MASK_PROCEDURAL 5
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Standard
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+endif
+
+*******************************************************************
+
+if MATERIAL_RENDERTYPE_TAG_CONTAINS Standard
+
+Material SET_SHADER SHADER_DEFAULT_CROSS
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 1
+
+endif
+
+*******************************************************************
+
+// Copy Standard Pipeline Material Properties
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _BumpScale _MainNormalValue
+
+Material COPY_TEX _MetallicGlossMap _MainMaskTex
+Material COPY_FLOAT _Metallic _MainMetallicValue
+Material COPY_FLOAT _OcclusionStrength _MainOcclusionValue
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+Material COPY_FLOAT _GlossMapScale _MainSmoothnessValue
+
+*******************************************************************
+
+// Copy Leaves props
+Material COPY_TEX _TransGlossAOWind _SubsurfaceTex
+
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _Albedo _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _Albedo _MainUVs
+
+Material COPY_TEX _NormalMap _MainNormalTex
+Material COPY_FLOAT _NormalScale _MainNormalValue
+
+*******************************************************************
+
+// Set default props
+Material SET_FLOAT _RenderNormals 2
+Material SET_FLOAT _SubsurfaceValue 0.5
+Material SET_FLOAT _MainSmoothnessValue 1
+
+*******************************************************************
+
+// Combine Texture for Leaves
+Texture SetRed NONE
+Texture SetGreen GET_BLUE _TransGlossAOWind
+Texture SetBlue GET_RED _TransGlossAOWind
+Texture SetAlpha GET_GREEN _TransGlossAOWind
+
+Utility START_TEXTURE_PACKING

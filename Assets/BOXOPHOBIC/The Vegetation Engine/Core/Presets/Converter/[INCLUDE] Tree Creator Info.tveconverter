@@ -1,0 +1,4 @@
+InfoTitle Tree Creator
+InfoPreset Use this preset to convert Tree Creator vegetation.
+InfoWarning Tree Creator assets can not be converted directly, you will need to create a new prefab first! Tree Creator uses an unpacked normal map (green), make sure you uncheck sRGB for it to work correctly.
+InfoStatus ● ● ● ● ●

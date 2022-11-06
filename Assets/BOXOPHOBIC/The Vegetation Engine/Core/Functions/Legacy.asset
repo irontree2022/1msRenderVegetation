@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Legacy
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity Asset
+    Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=18806\n1920;1;1906;1021;2359.411;757.2985;1.601884;True;False\nNode;AmplifyShaderEditor.RangedFloatNode;9;-1152,-384;Inherit;False;Property;_material_batching;_material_batching;0;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;21;-1408,-128;Half;False;Property;_render_cutoff;_render_cutoff;18;1;[HideInInspector];Create;True;0;4;Alpha;0;Premultiply;1;Additive;2;Multiply;3;0;True;0;False;0.5;0.5;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;20;-576,-128;Half;False;Property;_render_zw;_render_zw;22;1;[HideInInspector];Create;True;0;2;Opaque;0;Transparent;1;0;True;0;False;1;1;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;23;-768,-128;Half;False;Property;_render_dst;_render_dst;21;1;[HideInInspector];Create;True;0;2;Opaque;0;Transparent;1;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;19;-1152,-128;Half;False;Property;_render_cull;_render_cull;19;1;[HideInInspector];Create;True;0;3;Both;0;Back;1;Front;2;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;22;-960,-128;Half;False;Property;_render_src;_render_src;20;1;[HideInInspector];Create;True;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;17;-160,-320;Half;False;Property;_MaskMode;_MaskMode;3;2;[HideInInspector];[Enum];Create;True;0;2;Main
+    Mask;0;Detail Mask;1;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;10;-352,-320;Inherit;False;Property;_render_priority;_render_priority;17;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;15;-544,-320;Inherit;False;Property;_render_normals;_render_normals;15;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;12;-720,-320;Inherit;False;Property;_render_blend;_render_blend;16;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;11;-896,-320;Inherit;False;Property;_render_mode;_render_mode;14;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;13;-1152,-320;Inherit;False;Property;_ObjectSmoothnessValue;_ObjectSmoothnessValue;6;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;2;-272,-384;Inherit;False;Property;_SubsurfaceMaxValue;_SubsurfaceMaxValue;13;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;3;560,-384;Inherit;False;Property;_GrassPerspectiveAngleValue;_GrassPerspectiveAngleValue;9;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;6;-32,-384;Inherit;False;Property;_GrassPerspectivePushValue;_GrassPerspectivePushValue;11;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;25;-1152,128;Inherit;False;Property;_IsVersion;_IsVersion;1;0;Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;24;-1408,128;Inherit;False;Property;_IsTVEShader;_IsTVEShader;2;0;Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;14;256,-384;Inherit;False;Property;_GrassPerspectiveNoiseValue;_GrassPerspectiveNoiseValue;10;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;8;-720,-384;Inherit;False;Property;_OverlayVariation;_OverlayVariation;8;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;7;-928,-384;Inherit;False;Property;_OverlayContrast;_OverlayContrast;4;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;5;-1408,-384;Inherit;False;Property;_ObjectOcclusionValue;_ObjectOcclusionValue;5;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;4;-512,-384;Inherit;False;Property;_SubsurfaceMinValue;_SubsurfaceMinValue;12;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;16;-1408,-320;Inherit;False;Property;_ObjectMetallicValue;_ObjectMetallicValue;7;1;[HideInInspector];Create;True;0;0;0;True;0;False;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;0;0,0;Inherit;False;True;-1;;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CommentaryNode;18;-1408,-512;Inherit;False;2689.641;100;Legacy
+    Props;0;;1,0.252,0,1;0;0\nASEEND*/\n//CHKSM=DCCA7C1D222AB5ED4A54A7FC90F2DED401F82A1D"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_customNodeCategory: The Vegetation Engine
+  m_previewPosition: 0
+  m_hidden: 0

@@ -1,0 +1,119 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Nature Manufacture
+InfoPreset Use this preset to convert Nature Manufacture Trees, Bushes and Plants. Variation is not supported, use the Elasticity motion parameters instead!
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/publishers/6887
+InfoWarning In order for the bark blending to work correctly, all _MASKA textures need to be set to Default type instead of Single Channel on the texture importer settings!
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_3RD_PARTY 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_3RD_PARTY 3
+Mesh SetMotion3 GET_MASK_3RD_PARTY 3
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+endif
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Cross
+
+Material SET_SHADER SHADER_DEFAULT_CROSS
+Material SET_FLOAT _RenderCull 1
+
+Material SET_FLOAT _SubsurfaceValue 0
+
+endif
+
+*******************************************************************
+
+//Enable Betail shading
+
+if MATERIAL_FLOAT_EQUALS _DetalUseUV3 1
+
+Material SET_FLOAT _DetailMode 1
+Material SET_FLOAT _DetailBlendMode 1
+Material SET_FLOAT _DetailMaskMode 0
+
+Material SET_FLOAT _DetailMeshValue 0
+Material SET_FLOAT _DetailBlendMinValue 0.50
+Material SET_FLOAT _DetailBlendMaxValue 0.75
+
+endif
+
+*******************************************************************
+
+// Set Default values
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _RenderNormals 2
+
+Material SET_FLOAT _MainSmoothnessValue 0
+Material SET_FLOAT _SubsurfaceViewValue 2
+
+*******************************************************************
+
+// Copy material props
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _HealthyColor _MainColor
+Material COPY_COLOR _DryColor _MainColorVariation
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _BumpScale _MainNormalValue
+Material COPY_TEX _AmbientOcclusionGSmoothnessA _MainMaskTex
+Material COPY_TEX _MetalicRAOGSmothnessA _MainMaskTex
+Material COPY_FLOAT _MetallicPower _MainMetallicValue
+Material COPY_FLOAT _AmbientOcclusionPower _MainOcclusionValue
+
+Material COPY_COLOR _Color _SecondColor
+Material COPY_TEX _DetailAlbedoMap _SecondAlbedoTex
+Material COPY_TEX _DetailNormalMap _SecondNormalTex
+Material COPY_FLOAT _DetailNormalMapScale _SecondNormalValue
+Material COPY_TEX _DetailMetalicRAOGSmothnessA _SecondMaskTex
+Material SET_FLOAT _SecondSmoothnessValue 0.2
+
+*******************************************************************
+// Combine Texture Channels
+
+if SHADER_NAME_CONTAINS Bark
+
+Texture SetRed GET_RED _MetalicRAOGSmothnessA
+Texture SetGreen GET_GREEN _MetalicRAOGSmothnessA
+Texture SetAlpha GET_ALPHA _MetalicRAOGSmothnessA
+Texture SetBlue GET_ALPHA _MetalicRAOGSmothnessA
+Texture SetBlue GET_ALPHA _DetailMask
+
+Utility START_TEXTURE_PACKING
+
+endif
+
+if SHADER_NAME_CONTAINS Leaves
+
+Texture SetGreen GET_GREEN _AmbientOcclusionGSmoothnessA
+Texture SetBlue GET_ALPHA _AmbientOcclusionGSmoothnessA
+Texture SetAlpha GET_ALPHA _AmbientOcclusionGSmoothnessA
+
+Utility START_TEXTURE_PACKING
+
+endif
+

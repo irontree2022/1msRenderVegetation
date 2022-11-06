@@ -1,0 +1,89 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Staggart FAE
+InfoPreset Use this preset to convert Staggart Creations' FAE prefabs!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/fantasy-adventure-environment-70354
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 0
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_FROM_CHANNEL 3
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+//Set default properties
+Material SET_FLOAT _RenderNormals 2
+Material SET_FLOAT _SubsurfaceViewValue 0
+Material SET_VECTOR _VertexOcclusionColor 0.5 0.5 0.5 1.0
+
+*******************************************************************
+
+// Copy Default properties
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+
+Material COPY_VECTOR _Color _MainColor
+Material COPY_VECTOR _TransmissionColor _SubsurfaceColor
+
+Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+Material SET_FLOAT _MainLightScatteringValue 0
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Trunk
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderCull 2
+	Material SET_FLOAT _RenderClip 0
+	
+	Material SET_FLOAT _VertexRollingMode 0
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Billboard
+{
+	Material SET_SHADER SHADER_DEFAULT_CROSS
+
+	Material COPY_TEX _Atlas _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _Atlas _MainUVs
+	Material COPY_TEX _Normals _MainNormalTex
+
+	Material SET_FLOAT _RenderCull 2
+	Material SET_FLOAT _MainSmoothnessValue 0
+}
+
+*******************************************************************
+
+Material SET_FLOAT _MotionAmplitude_10 0.05
+Material SET_FLOAT _MotionSpeed_10 2
+Material SET_FLOAT _MotionScale_10 0
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 0.1
+Material SET_FLOAT _MotionSpeed_20 6
+Material SET_FLOAT _MotionScale_20 0.5
+Material SET_FLOAT _MotionVariation_20 0
+
+Material SET_FLOAT _MotionAmplitude_32 0.2
+Material SET_FLOAT _MotionSpeed_32 20
+Material SET_FLOAT _MotionScale_32 19
+Material SET_FLOAT _MotionVariation_32 0
+
+Material SET_FLOAT _InteractionAmplitude 1
+Material SET_FLOAT _InteractionVariation 0

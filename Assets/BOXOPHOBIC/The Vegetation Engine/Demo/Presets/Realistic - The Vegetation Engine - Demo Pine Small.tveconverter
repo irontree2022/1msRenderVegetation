@@ -1,0 +1,34 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Book of the Dead Demo
+InfoPreset Preset used to convert Book of the Dead assets for the demo scene. Full procedural wind masks. Check the masks used under Conversion Settings > Custom Settings.
+InfoStatus ● ● ● ● ●
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask NONE
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 6
+Mesh SetMotion3 GET_MASK_PROCEDURAL 6
+
+*******************************************************************
+
+// Set Bark Settings
+Material FLOAT_TO_SHADER _ShaderMode 1 SHADER_DEFAULT_BARK
+Material FLOAT_TO_FLOAT _ShaderMode 1 _Motion_30 0
+Material FLOAT_TO_FLOAT _ShaderMode 1 _Motion_32 0
+Material FLOAT_TO_FLOAT _ShaderMode 1 _render_clip 0
+
+// Copy Textures
+Material COPY_TEX _AlbedoTex _MainAlbedoTex
+Material COPY_TEX _NormalTex _MainNormalTex
+Material COPY_TEX _MaskTex _MainMaskTex
+

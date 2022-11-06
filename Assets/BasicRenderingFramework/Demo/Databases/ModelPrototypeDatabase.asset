@@ -1,0 +1,376 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd3be346ffaa4d44bb684d4cf0eb844, type: 3}
+  m_Name: ModelPrototypeDatabase
+  m_EditorClassIdentifier: 
+  ModelPrototypeList:
+  - ID: 0
+    PrefabName: prefab_m_rock_02
+    Type: 1
+    PrefabObject: {fileID: 8649291891381590213, guid: d5d85acc22a349f438c7d8b7ca1b2c6d,
+      type: 3}
+    PrefabImpostor: {fileID: 8773627828340628999, guid: ff375f13777da7641bbbac0d1f04c66c,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.0022171438, y: 0.0030076355, z: 0.0017091334}
+      m_Extent: {x: 0.32428843, y: 0.27372217, z: 0.37068018}
+    isLODGroup: 1
+    lodCount: 3
+    LODLevels: {x: 0.8508877, y: 0.37497377, z: 0.022073222, w: 0}
+  - ID: 1
+    PrefabName: Prefab_mountain_rock_big_01_6
+    Type: 1
+    PrefabObject: {fileID: 5541548515953416810, guid: 26881c340649662448ad240544cb450c,
+      type: 3}
+    PrefabImpostor: {fileID: 3486624681820983082, guid: 25763948113171d44895229a92914afa,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.009914398, y: 0.021168232, z: 0.00737305}
+      m_Extent: {x: 0.51781034, y: 0.32801503, z: 0.47525674}
+    isLODGroup: 1
+    lodCount: 3
+    LODLevels: {x: 0.72267085, y: 0.26428708, z: 0.037072573, w: 0}
+  - ID: 2
+    PrefabName: Rock_15_LoDed_xiao
+    Type: 1
+    PrefabObject: {fileID: 7708839749136822205, guid: 35101b84da369464188bdd14817c070f,
+      type: 3}
+    PrefabImpostor: {fileID: 6228659792470346857, guid: b6fa27bd1db5fae44915287f8d084275,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.020598412, y: 0.101053774, z: 0.020942152}
+      m_Extent: {x: 0.9584265, y: 0.6089222, z: 0.9818892}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.6251685, y: 0.021810876, z: 0, w: 0}
+  - ID: 3
+    PrefabName: Aneityum_Palm_1
+    Type: 0
+    PrefabObject: {fileID: 8286635214942172111, guid: cbd807914f1d7f040ae17337d2d520f1,
+      type: 3}
+    PrefabImpostor: {fileID: 2168907967973765682, guid: 892e9ae20ac189b498f5c420535681ed,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: 0.15534163, y: 5.268853, z: 0.13510609}
+      m_Extent: {x: 4.1617184, y: 5.77363, z: 4.4616632}
+    isLODGroup: 0
+    lodCount: 0
+    LODLevels: {x: 0, y: 0, z: 0, w: 0}
+  - ID: 4
+    PrefabName: Arcea_palm1
+    Type: 0
+    PrefabObject: {fileID: 100000, guid: 85e3f9b590913b1489717b72761217db, type: 3}
+    PrefabImpostor: {fileID: 4994527926882421373, guid: c7b7aee2ac37f26498ff12eee84f9f4d,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.09942818, y: 1.5122025, z: -0.15234995}
+      m_Extent: {x: 2.5134335, y: 2.2687168, z: 2.3846416}
+    isLODGroup: 0
+    lodCount: 0
+    LODLevels: {x: 0, y: 0, z: 0, w: 0}
+  - ID: 5
+    PrefabName: Cocos_palm1
+    Type: 0
+    PrefabObject: {fileID: 100000, guid: 266dd981c479e0e41962031a39028c9c, type: 3}
+    PrefabImpostor: {fileID: 8998150628142109426, guid: 958a16fbb1221194cac5071721395611,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.17916584, y: 7.863122, z: 0.042811394}
+      m_Extent: {x: 4.9418755, y: 9.47371, z: 5.239485}
+    isLODGroup: 0
+    lodCount: 0
+    LODLevels: {x: 0, y: 0, z: 0, w: 0}
+  - ID: 6
+    PrefabName: Cocos_palm2
+    Type: 0
+    PrefabObject: {fileID: 100000, guid: e556a1a395cfba24ca8d26ad8be5e461, type: 3}
+    PrefabImpostor: {fileID: 9056010837256819002, guid: 4d534ba1088d3a541a2871bc150f875e,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -3.1552086, y: 8.9191885, z: 1.4082202}
+      m_Extent: {x: 4.854415, y: 9.157731, z: 5.055771}
+    isLODGroup: 0
+    lodCount: 0
+    LODLevels: {x: 0, y: 0, z: 0, w: 0}
+  - ID: 7
+    PrefabName: VS_Fir_03_Medium
+    Type: 0
+    PrefabObject: {fileID: 514547991145110885, guid: 14c0537b2e544ee45afd935e14621d86,
+      type: 3}
+    PrefabImpostor: {fileID: 3900990553585809006, guid: 802c6209ff7597e41b0c3835b860e7a4,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.0038204193, y: 5.4485354, z: 0.11607468}
+      m_Extent: {x: 2.8711886, y: 6.2591386, z: 2.9923902}
+    isLODGroup: 1
+    lodCount: 3
+    LODLevels: {x: 0.87407523, y: 0.52528435, z: 0.0042130137, w: 0}
+  - ID: 8
+    PrefabName: VS_Fir_05_Standalone_cheap
+    Type: 0
+    PrefabObject: {fileID: 7691092995589131840, guid: 298e187fc1a0b1740978cf022481fd06,
+      type: 3}
+    PrefabImpostor: {fileID: 5255638855244229870, guid: 79e06ec5cf9d00a43b840b43c7a6ba70,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.19916391, y: 8.582232, z: 0.06556368}
+      m_Extent: {x: 2.6546412, y: 9.269778, z: 2.711234}
+    isLODGroup: 1
+    lodCount: 3
+    LODLevels: {x: 1.9903482, y: 1.2956038, z: 0.041838843, w: 0}
+  - ID: 9
+    PrefabName: VS_prefab_00_Poplar_plant_C
+    Type: 0
+    PrefabObject: {fileID: 2582481654010328289, guid: 5eb7c52e4ef9aca45bab539919f54dd8,
+      type: 3}
+    PrefabImpostor: {fileID: 7461903832005719500, guid: 551aaf62c40f20845be2b8713f478f3a,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.31821692, y: 2.0701995, z: -0.28328526}
+      m_Extent: {x: 1.5511916, y: 2.0800824, z: 1.500179}
+    isLODGroup: 1
+    lodCount: 3
+    LODLevels: {x: 0.6, y: 0.3, z: 0.1, w: 0}
+  - ID: 10
+    PrefabName: VS_prefab_03_Poplar
+    Type: 0
+    PrefabObject: {fileID: 1184049820344003928, guid: 6d66693d95bdc17449d5f4a3594bd0d6,
+      type: 3}
+    PrefabImpostor: {fileID: 4248895996211242679, guid: 6a1498fba79f8c746884b9e773ec39be,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: -0.49687386, y: 8.04688, z: -1.1197319}
+      m_Extent: {x: 5.3792686, y: 9.103154, z: 5.804391}
+    isLODGroup: 1
+    lodCount: 4
+    LODLevels: {x: 4.9619536, y: 1.6716243, z: 0.62943685, w: 0.040986966}
+  - ID: 11
+    PrefabName: VS_prefab_04_Poplar
+    Type: 0
+    PrefabObject: {fileID: 3042116977040522638, guid: 338799d6ea90e3448bc48c3309b919b9,
+      type: 3}
+    PrefabImpostor: {fileID: 7745602328406657043, guid: 31cfd791e04e25146a90206b2015a3e7,
+      type: 3}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 1
+    Bounds:
+      m_Center: {x: 0.44825172, y: 10.095102, z: 0.88387585}
+      m_Extent: {x: 6.248296, y: 10.885853, z: 6.1789083}
+    isLODGroup: 1
+    lodCount: 4
+    LODLevels: {x: 0.79291934, y: 0.4903262, z: 0.19733919, w: 0.021810876}
+  - ID: 12
+    PrefabName: prefab_flower_brownray_knapweed_01_detailed_2
+    Type: 2
+    PrefabObject: {fileID: 1185423565847342, guid: a544a3d19c7f57e429e8d495a674ddf6,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.0020617843, y: 0.30825168, z: 0.005000502}
+      m_Extent: {x: 0.18710935, y: 0.33087343, z: 0.21395308}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.8556602, y: 0.015998593, z: 0, w: 0}
+  - ID: 13
+    PrefabName: prefab_flower_chamomile_01_detailed_1
+    Type: 2
+    PrefabObject: {fileID: 1149985028797610, guid: 3c4e821e0d742c64c8d2ce786d03e87b,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: -0.018092372, y: 0.22870108, z: 0.006129846}
+      m_Extent: {x: 0.17603913, y: 0.28706458, z: 0.178255}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.8413828, y: 0.01, z: 0, w: 0}
+  - ID: 14
+    PrefabName: prefab_flower_common_poppy_01_detailed_2
+    Type: 2
+    PrefabObject: {fileID: 1981527479238354, guid: acdece6b7d3fe7149b9a19b6d0d85481,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.0191845, y: 0.35362148, z: 0.004355699}
+      m_Extent: {x: 0.24621552, y: 0.37165666, z: 0.2213289}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.8413828, y: 0.01, z: 0, w: 0}
+  - ID: 15
+    PrefabName: prefab_flower_common_Saint_John's_wort_01_detailed_1
+    Type: 2
+    PrefabObject: {fileID: 1688519647985042, guid: ba3eec004b07dab4e9c35048fc6f0415,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.013122678, y: 0.15770149, z: -0.011801094}
+      m_Extent: {x: 0.15863374, y: 0.19461977, z: 0.19076675}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.87488335, y: 0.01, z: 0, w: 0}
+  - ID: 16
+    PrefabName: prefab_flower_goldenrod_01_detailed_1
+    Type: 2
+    PrefabObject: {fileID: 1579695990700162, guid: e585ede2dd6746c40a88e0f45aea2cee,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: -0.011756659, y: 0.67682505, z: -0.04491026}
+      m_Extent: {x: 0.23019883, y: 0.7205601, z: 0.27781045}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.90166354, y: 0.01, z: 0, w: 0}
+  - ID: 17
+    PrefabName: Prefab_grass_01_2
+    Type: 2
+    PrefabObject: {fileID: 2513340846503806887, guid: bf35190d449c2334ab18c77024622a20,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: -0.014443815, y: 0.36943644, z: 0.12801561}
+      m_Extent: {x: 0.9074174, y: 0.46208507, z: 0.91746867}
+    isLODGroup: 0
+    lodCount: 0
+    LODLevels: {x: 0, y: 0, z: 0, w: 0}
+  - ID: 18
+    PrefabName: prefab_grass_02_1_1_gai
+    Type: 2
+    PrefabObject: {fileID: 1559134496185669734, guid: 1b5efc85c9455a240bd13539f90c7038,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.0309695, y: 0.1419323, z: -0.066162795}
+      m_Extent: {x: 0.3577171, y: 0.20426999, z: 0.34030977}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.7627436, y: 0.019902887, z: 0, w: 0}
+  - ID: 19
+    PrefabName: Prefab_grass_02_A_5
+    Type: 2
+    PrefabObject: {fileID: 1716761217699583053, guid: 46a233c40c04f5c47a9ae68c6b58b9c6,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.042511135, y: 0.10563597, z: -0.004197836}
+      m_Extent: {x: 0.31312725, y: 0.13909262, z: 0.2605152}
+    isLODGroup: 0
+    lodCount: 0
+    LODLevels: {x: 0, y: 0, z: 0, w: 0}
+  - ID: 20
+    PrefabName: Prefab_grass_02_B_1
+    Type: 2
+    PrefabObject: {fileID: 5032654674312871395, guid: 11909ff8d0bdc3e4fb078301233efc81,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.0025457442, y: 0.15238455, z: 0.008029968}
+      m_Extent: {x: 0.23127985, y: 0.16180667, z: 0.2433753}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.8652451, y: 0.032306254, z: 0, w: 0}
+  - ID: 21
+    PrefabName: Prefab_heath_A_01
+    Type: 2
+    PrefabObject: {fileID: 3412567858953393953, guid: 78200ad62f89ff8408a53bdc887c1636,
+      type: 3}
+    PrefabImpostor: {fileID: 0}
+    layer: 0
+    receiveShadows: 1
+    shadowCastingMode: 1
+    enableRenderImpostor: 0
+    Bounds:
+      m_Center: {x: 0.018731266, y: 0.25742894, z: 0.0057231784}
+      m_Extent: {x: 0.35396183, y: 0.33486187, z: 0.37176773}
+    isLODGroup: 1
+    lodCount: 2
+    LODLevels: {x: 0.8413828, y: 0.031400003, z: 0, w: 0}

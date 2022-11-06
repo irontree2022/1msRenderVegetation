@@ -1,0 +1,342 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!43 &-4033284965372855328
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Cocos_palm2_Impostor
+  serializedVersion: 10
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 18
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: -0.13117886, y: -0.22177505, z: 0}
+      m_Extent: {x: 5.6324663, y: 9.9798975, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 070005000300030001000700070006000500050004000300030002000100010000000700
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 256
+    _typelessdata: c86fb8c0781dfe40000000000000000000000000000080bf944e583efbb1683f9d3999c03b7313c1000000000000000000000000000080bf4d2c853e10594a3d97c7fabf0d3a23c1000000000000000000000000000080bf38becd3e000000003b0395400d3a23c1000000000000000000000000000080bfa1b93b3f000000008c0ab040a0fa073f000000000000000000000000000080bfee8e463f37a8093f278faf4025d3fe40000000000000000000000000000080bf795d463fccfa683f3f72604045211c41000000000000000000000000000080bfccfa2c3f0000803fea1944c045211c41000000000000000000000000ffff7fbfc966b13e0000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: -3.1552086, y: 8.9191885, z: 1.40822}
+    m_Extent: {x: 4.854415, y: 9.157731, z: 5.055771}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+--- !u!21 &-1752998366924125854
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Cocos_palm2_Impostor
+  m_Shader: {fileID: 4800000, guid: fc5f27e8a12515748af34961b5f7215a, type: 3}
+  m_ValidKeywords:
+  - TVE_IS_VEGETATION_SHADER
+  m_InvalidKeywords:
+  - _HEMI_ON
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    NatureRendererInstancing: true
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: f867129754a3c494b85089c08d02a3cc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emissive:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: dcae52591b7255c418f6aaac059167a6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normals:
+        m_Texture: {fileID: 2800000, guid: 80594114a6c1b434bb9e75119b9fe61e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AI_Clip: 0.5
+    - _AI_DepthSize: 19.791845
+    - _AI_Frames: 8
+    - _AI_FramesX: 8
+    - _AI_FramesY: 8
+    - _AI_ImpostorSize: 19.959795
+    - _AI_Parallax: 1
+    - _AI_ShadowBias: 0.25
+    - _AI_ShadowView: 1
+    - _AI_TextureBias: -1
+    - _AlphaCutoff: 0.5
+    - _ColorsMaskMaxValue: 1
+    - _ColorsMaskMinValue: 0
+    - _ColorsVariationValue: 0
+    - _DetailBlendMode: 1
+    - _DetailCat: 0
+    - _DetailMode: 0
+    - _EmissiveCat: 1
+    - _EmissiveFlagMode: 0
+    - _GlobalAlpha: 1
+    - _GlobalCat: 0
+    - _GlobalColors: 1
+    - _GlobalEmissive1: 1
+    - _GlobalOverlay: 1
+    - _GlobalSize: 0
+    - _GlobalWetness: 1
+    - _ImpostorBarkSaturationValue: 1
+    - _ImpostorCat: 0
+    - _ImpostorGrassSaturationValue: 1
+    - _ImpostorLeafSaturationValue: 1
+    - _ImpostorSmoothnessValue: 1
+    - _InteractionAmplitude: 1
+    - _IsInitialized: 1
+    - _IsTVEAIShader: 1
+    - _IsVegetationShader: 1
+    - _IsVersion: 140
+    - _LayerColorsValue: 0
+    - _LayerExtrasValue: 0
+    - _LayerMotionValue: 0
+    - _LayerReactValue: 1
+    - _LayersSpace: 0
+    - _MainLightAngleValue: 8
+    - _MainLightNormalValue: 0.5
+    - _MainLightScatteringValue: 8
+    - _MaterialType: 10
+    - _MotionAmplitude_10: 0.1
+    - _MotionCat: 0
+    - _MotionScale_10: 0
+    - _MotionSpace: 0
+    - _MotionSpeed_10: 2
+    - _NoiseCat: 0
+    - _NoiseMaxValue: 1
+    - _NoiseMinValue: 0
+    - _NoiseScaleValue: 0.01
+    - _OverlayMaskMaxValue: 0.55
+    - _OverlayMaskMinValue: 0.45
+    - _OverlayVariationValue: 0
+    - _PivotsMessage: 0
+    - _RenderSpecular: 1
+    - _SizeFadeCat: 0
+    - _SizeFadeMessage: 0
+    - _SubsurfaceCat: 0
+    - _SubsurfaceDiffusion: 3.5648174
+    - _SubsurfaceMaskMaxValue: 1
+    - _SubsurfaceMaskMinValue: 0
+    - _SubsurfaceValue: 1
+    - _TranslucencyAmbientValue: 0.2
+    - _TranslucencyDirectValue: 1
+    - _TranslucencyHDMessage: 0
+    - _TranslucencyIntensityValue: 1
+    - _TranslucencyNormalValue: 0.1
+    - _TranslucencyScatteringValue: 2
+    - _TranslucencyShadowValue: 1
+    - _subsurface_shadow: 1
+    - _vertex_pivot_mode: 0
+    m_Colors:
+    - _AI_Offset: {r: -3.1552086, g: 8.9191885, b: 1.40822, a: 0.01111111}
+    - _AI_SizeOffset: {r: 19.959795, g: 19.791845, b: 0, a: -0.0013888888}
+    - _ColorsMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _DetailBlendRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _ImpostorBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ImpostorGrassColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ImpostorLeafColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MotionHighlightColor: {r: 2, g: 2, b: 2, a: 1}
+    - _NoiseColorOne: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseColorTwo: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _OverlayMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _SubsurfaceColor: {r: 0.33, g: 0.49, b: 0, a: 1}
+    - _SubsurfaceDiffusion_Asset: {r: 2.2888926e+38, g: 1.2389358e-26, b: 7.69327e-37,
+        a: 0.00018220427}
+    - _SubsurfaceDiffusion_asset: {r: 2.2888926e+38, g: 1.2389358e-26, b: 7.69327e-37,
+        a: 0.00018220427}
+    - _SubsurfaceMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ba7a43222473d4292f91ae936fe2cc, type: 3}
+  m_Name: Cocos_palm2_Impostor
+  m_EditorClassIdentifier: 
+  Material: {fileID: -1752998366924125854}
+  Mesh: {fileID: -4033284965372855328}
+  Version: 9711
+  ImpostorType: 2
+  LockedSizes: 1
+  SelectedSize: 1024
+  TexSize: {x: 1024, y: 1024}
+  DecoupleAxisFrames: 0
+  HorizontalFrames: 8
+  VerticalFrames: 8
+  PixelPadding: 16
+  MaxVertices: 8
+  Tolerance: 0.15
+  NormalScale: 0.01
+  ShapePoints:
+  - {x: 0.21123725, y: 0.09103423}
+  - {x: 0.2601036, y: 0.95059866}
+  - {x: 0.40184188, y: 1}
+  - {x: 0.7333012, y: 1}
+  - {x: 0.77561843, y: 0.462277}
+  - {x: 0.7748638, y: 0.08992314}
+  - {x: 0.67570186, y: 0}
+  - {x: 0.3464873, y: 0}
+  Preset: {fileID: 11400000, guid: 968b495bf56f4d940ba51cee77f7a371, type: 2}
+  OverrideOutput: []

@@ -1,0 +1,29 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle SpeedTree 7 (legacy)
+InfoPreset Use this preset to convert SpeedTree 7 vegetation.
+InfoWarning SpeedTree assets cannot be converted directly, you will need to create a new prefab first! SpeedTree 7 billboards are not supported!
+InfoStatus ● ● ● ○ ○
+InfoOnline https://assetstore.unity.com/publishers/9474
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 7 ACTION_REMAP01
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 0
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 6
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 6
+
+*******************************************************************
+
+// Set Material Shader
+Include SpeedTree Commons Extras Setup

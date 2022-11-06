@@ -1,0 +1,46 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Nature Hybrid Pack
+InfoPreset Use this preset to convert Nicrom - Nature - Hybrid Pack assets.
+InfoStatus InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/nature-hybrid-pack-181109
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 4
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 4
+Mesh SetMotion3 GET_MASK_PROCEDURAL 4
+
+*******************************************************************
+
+Include Use Default Grass Settings
+
+*******************************************************************
+
+Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+Material SET_FLOAT _RenderNormals 2
+
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material SET_FLOAT _MainOcclusionValue 0
+Material SET_FLOAT _MainSmoothnessValue 0
+
+Material COPY_COLOR _Color1 _GradientColorOne
+Material COPY_COLOR _Color2 _GradientColorTwo
+
+*******************************************************************
+
+Material SET_FLOAT _GlobalOverlay 0.5

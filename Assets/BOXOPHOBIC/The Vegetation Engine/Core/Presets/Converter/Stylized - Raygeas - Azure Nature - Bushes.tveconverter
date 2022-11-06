@@ -1,0 +1,85 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Raygeas Azure Nature
+InfoPreset Use this preset to convert Raygeas Azure Nature assets. Gradient and motion adjustments might be needed after conversion!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/azure-nature-167725
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask NONE
+Mesh SetMultiMask GET_MASK_PROCEDURAL 4
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 7
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 5
+
+*******************************************************************
+
+// Copy material props
+Material COPY_TEX _Texture00 _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _Texture00 _MainUVs
+Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+// Set dual color
+Material COPY_COLOR _Color2 _GradientColorOne
+Material COPY_COLOR _Color1 _GradientColorTwo
+
+Material SET_FLOAT _RenderNormals 2
+
+*******************************************************************
+
+if !SHADER_NAME_CONTAINS Vegetation
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _Motion_20 0
+	Material SET_FLOAT _GlobalOverlay 0.5
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+
+	Material COPY_COLOR _SurfaceColor _MainColor
+	Material COPY_TEX _SurfaceAlbedo _MainAlbedoTex
+	Material COPY_TEX _SurfaceNormal _MainNormalTex
+	Material COPY_ST_AS_VECTOR _SurfaceAlbedo _MainUVs
+
+	Material SET_FLOAT _MainNormalValue 1.5
+	Material COPY_FLOAT _SurfaceSmoothness _MainSmoothnessValue
+
+	Material COPY_COLOR _CoverageColor _SeconsColor
+	Material COPY_TEX _CoverageAlbedo _SecondAlbedoTex
+	Material COPY_TEX _CoverageNormal _SecondNormalTex
+	Material COPY_ST_AS_VECTOR _CoverageAlbedo _SecondUVs
+
+	Material SET_FLOAT _SecondNormalValue 1.5
+	Material COPY_FLOAT _CoverageSmoothness _SecondSmoothnessValue
+
+	Material SET_FLOAT _DetailNormalValue 1
+
+	Material SET_FLOAT _DetailMeshValue 0.1
+	Material SET_FLOAT _DetailBlendMinValue 0.49
+	Material SET_FLOAT _DetailBlendMaxValue 0.51
+	
+	if MATERIAL_KEYWORD_ENABLED _COVERAGE_ON
+	{
+		//Enable Betail shading
+		Material SET_FLOAT _DetailMode 1
+		Material SET_FLOAT _DetailBlendMode 1
+		Material SET_FLOAT _DetailMaskMode 1
+		
+		// Combine Texture
+		Texture PropName _SecondMaskTex
+		Texture SetRed NONE
+		Texture SetGreen NONE
+		Texture SetBlue GET_GRAY _CoverageMask
+		Texture SetAlpha NONE
+		Utility START_TEXTURE_PACKING
+	}
+}

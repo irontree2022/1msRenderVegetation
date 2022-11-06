@@ -1,0 +1,67 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Nature Manufacture
+InfoPreset Use this preset to convert URP/HDRP Nature Manufacture Grass (with Grass shaders). Variation is added automatically, but it might not work as expected! Set the Vertex Data to World for simple translation motion instead of bending!
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/publishers/6887
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 12
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 12
+Mesh SetMotion2 GET_MASK_PROCEDURAL 12
+Mesh SetMotion3 GET_MASK_PROCEDURAL 12
+
+*******************************************************************
+
+Include Use Default Grass Settings
+
+*******************************************************************
+
+// Set Default values
+Material SET_FLOAT _RenderNormals 2
+Material SET_COLOR _SubsurfaceColor 0.1 0.1 0.0 1.0
+Material SET_VECTOR _VertexOcclusionColor 0.5 0.5 0.5 0.5
+
+*******************************************************************
+
+Material COPY_FLOAT _DoubleSidedNormalMode _RenderNormals
+Material COPY_FLOAT _DiffusionProfileHash _SubsurfaceDiffusion
+Material COPY_VECTOR _DiffusionProfileAsset _SubsurfaceDiffusion_asset
+
+*******************************************************************
+
+if MATERIAL_FLOAT_EQUALS _DoubleSidedEnable 1
+
+Material SET_FLOAT _RenderCull 0
+
+endif
+
+*******************************************************************
+
+// Copy material props
+Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _HealthyColor _MainColor
+Material COPY_COLOR _DryColor _MainColorVariation
+
+Material COPY_TEX _BaseColorMap _MainAlbedoTex
+Material COPY_VECTOR _Tiling_and_Offset _MainUVs
+
+Material COPY_TEX _NormalMap _MainNormalTex
+
+Material COPY_TEX _MaskMap _MainMaskTex
+Material SET_FLOAT _MainMetallicValue 0.0
+Material SET_FLOAT _MainSmoothnessValue 0.5
+Material SET_FLOAT _MainOcclusionValue 1.0

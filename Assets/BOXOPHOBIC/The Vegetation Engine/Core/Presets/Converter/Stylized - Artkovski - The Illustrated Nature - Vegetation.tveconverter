@@ -1,0 +1,84 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle The Illustrated Nature
+InfoPreset Use this preset to convert Artkovski - The Illustrated Nature assets. Feel free add some Noise after the conversion is done!
+InfoStatus InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/publishers/44640
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 1
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 1
+
+*******************************************************************
+
+Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+Material SET_FLOAT _RenderNormals 2
+Material SET_FLOAT _FadeGlancingValue 1
+
+Material COPY_COLOR _Color _MainColor
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material SET_FLOAT _MainOcclusionValue 0
+Material SET_FLOAT _MainSmoothnessValue 0
+
+Material COPY_COLOR _Color _SubsurfaceColor
+
+Material SET_VECTOR _NoiseColorOne 0 1 0 1
+Material SET_VECTOR _NoiseColorTwo 1 1 1 1
+Material SET_FLOAT _NoiseMinValue 0.25
+Material SET_FLOAT _NoiseMaxValue 0.75
+Material SET_FLOAT _NoiseScaleValue 0.2
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Branch
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderCull 2
+	Material SET_FLOAT _RenderClip 0
+	
+	Material SET_FLOAT _VertexRollingMode 0
+}
+
+*******************************************************************
+
+Material SET_FLOAT _MotionAmplitude_10 0.1
+Material SET_FLOAT _MotionSpeed_10 2
+Material SET_FLOAT _MotionScale_10 0.1
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 0.1
+Material SET_FLOAT _MotionSpeed_20 6
+Material SET_FLOAT _MotionScale_20 0.2
+Material SET_FLOAT _MotionVariation_20 5
+
+Material SET_FLOAT _MotionAmplitude_32 0.1
+Material SET_FLOAT _MotionSpeed_32 30
+Material SET_FLOAT _MotionScale_32 18
+Material SET_FLOAT _MotionVariation_32 19
+
+Material SET_FLOAT _InteractionAmplitude 1
+Material SET_FLOAT _InteractionVariation 0
+
+*******************************************************************
+
+Material SET_FLOAT _OverlayMaskMinValue 1
+Material SET_FLOAT _OverlayMaskMaxValue 1
+Material SET_FLOAT _OverlayBottomValue 0
+Material SET_FLOAT _OverlayVariationValue 0.2
+

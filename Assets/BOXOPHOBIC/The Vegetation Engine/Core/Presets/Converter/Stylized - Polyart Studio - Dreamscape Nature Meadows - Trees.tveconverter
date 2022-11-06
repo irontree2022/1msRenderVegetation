@@ -1,0 +1,80 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Dreamscape Nature: Meadows
+InfoPreset Use this preset to convert Polyart Studio - Dreamscape Nature: Meadows assets. Gradient and motion adjustments might be needed after conversion!
+InfoStatus InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/dreamscape-nature-meadows-186894
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 14
+Mesh SetMotion3 GET_MASK_PROCEDURAL 14
+
+*******************************************************************
+
+Material SET_FLOAT _RenderNormals 2
+Material SET_FLOAT _SubsurfaceViewValue 0
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Foliage
+{
+	Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+	Material COPY_TEX _FoliageTexture _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _FoliageTexture _MainUVs
+	Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+	// Set dual color
+	Material COPY_VECTOR _ColorTop _GradientColorOne
+	Material COPY_VECTOR _ColorBottom _GradientColorTwo
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Masked
+{
+	Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+	Material COPY_TEX _ColorTexture _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _ColorTexture _MainUVs
+	Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+
+	Material COPY_VECTOR _ColorTint _MainColor
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Surface
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderCull 2
+	Material SET_FLOAT _RenderClip 0
+
+	Material SET_FLOAT _VertexRollingMode 0
+
+	Material COPY_TEX _AlbedoTexture _MainAlbedoTex
+	Material COPY_ST_AS_VECTOR _AlbedoTexture _MainUVs
+	Material COPY_TEX _NormalTexture _MainNormalTex
+
+	Material COPY_VECTOR _AlbedoTint _MainColor
+	Material COPY_FLOAT _SmoothnessMultiplier _MainSmoothnessValue
+	
+	Texture SetRed GET_GREEN _MetallicTexture
+	Texture SetGreen NONE
+	Texture SetBlue NONE
+	Texture SetAlpha GET_GRAY _SmoothnessTexture ACTION_INVERT
+	Utility START_TEXTURE_PACKING
+}

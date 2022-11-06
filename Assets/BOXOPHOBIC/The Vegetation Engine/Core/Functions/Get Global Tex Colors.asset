@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Get Global Tex Colors
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity
+    Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=18909\n1920;7;1906;1015;1345.496;-370.9167;1.106979;True;False\nNode;AmplifyShaderEditor.SimpleAddOpNode;75;-768,1024;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.Vector4Node;89;-512,768;Half;False;Global;TVE_ColorsParams;TVE_ColorsParams;203;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.2140411,0.2140411,0.2140411,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SwizzleNode;78;-1280,1184;Inherit;False;FLOAT2;0;2;2;2;1;0;FLOAT3;0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SwizzleNode;20;256,768;Inherit;False;FLOAT3;0;1;2;3;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.SwizzleNode;36;256,896;Inherit;False;FLOAT;3;1;2;3;1;0;COLOR;0,0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.LerpOp;88;0,768;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0\nNode;AmplifyShaderEditor.SwizzleNode;74;-1280,1024;Inherit;False;FLOAT2;2;3;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.GlobalArrayNode;84;-512,1280;Inherit;False;TVE_ColorsUsage;0;9;0;False;False;0;1;False;Object;-1;4;0;INT;0;False;2;INT;0;False;1;INT;0;False;3;INT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.Vector4Node;80;-1664,1024;Half;False;Global;TVE_ColorsCoord;TVE_ColorsCoord;50;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.0025,0.0025,0.5,0.5;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.GetLocalVarNode;79;-1664,1184;Inherit;False;58;Position;1;0;OBJECT;;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionInput;82;-768,1216;Inherit;False;Layer;1;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;58;-2048,1024;Inherit;False;Position;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionNode;43;-3072,1152;Inherit;False;Get
+    Object Position;0;;1789;24ce84305b9542249ab6e9982668aab0;0;0;4;FLOAT3;7;FLOAT;0;FLOAT;4;FLOAT;5\nNode;AmplifyShaderEditor.FunctionNode;44;-2816,1024;Inherit;False;Switch
+    by TVE VERTEX DATA BATCHED xyz;-1;;1794;5b40b68a21d90f04d8788ac1d606d090;0;2;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.WorldPosInputsNode;27;-3072,1024;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.SamplerNode;83;-512,1024;Inherit;True;Global;TVE_ColorsTex;TVE_ColorsTex;2;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;;True;0;False;gray;LockedToTexture2DArray;False;Object;-1;Auto;Texture2DArray;8;0;SAMPLER2DARRAY;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;77;-1024,1136;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SwizzleNode;76;-1280,1088;Inherit;False;FLOAT2;0;1;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FunctionInput;81;-2304,1024;Inherit;False;Position;3;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionOutput;34;512,896;Inherit;False;False;-1;A;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;0;512,768;Inherit;False;True;-1;RGB;0;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nWireConnection;75;0;74;0\nWireConnection;75;1;77;0\nWireConnection;78;0;79;0\nWireConnection;20;0;88;0\nWireConnection;36;0;88;0\nWireConnection;88;0;89;0\nWireConnection;88;1;83;0\nWireConnection;88;2;84;0\nWireConnection;74;0;80;0\nWireConnection;84;0;82;0\nWireConnection;58;0;81;0\nWireConnection;44;6;27;0\nWireConnection;44;7;43;7\nWireConnection;83;1;75;0\nWireConnection;83;6;82;0\nWireConnection;77;0;76;0\nWireConnection;77;1;78;0\nWireConnection;76;0;80;0\nWireConnection;81;0;44;0\nWireConnection;34;0;36;0\nWireConnection;0;0;20;0\nASEEND*/\n//CHKSM=480E99D819781C857C1C6BB611124D92F235C494"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_customNodeCategory: The Vegetation Engine
+  m_previewPosition: 0
+  m_hidden: 0

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Compute Motion Sine Noise
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity Asset
+    Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=18806\n1920;1;1906;1021;1205.896;3676.879;3.299121;True;False\nNode;AmplifyShaderEditor.DynamicAppendNode;344;1600,-2176;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FunctionInput;319;3072,-2304;Inherit;False;Turbulence;1;3;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;284;2688,-2304;Half;False;Motion_Variation;-1;True;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;408;2048,-896;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.RangedFloatNode;409;1776,-768;Inherit;False;Constant;_Float0;Float
+    0;1;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;407;1792,-896;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0.1,0.1;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;270;2304,-896;Half;False;Sine_OneToTwo;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;279;1280,-896;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FunctionInput;218;2432,-2304;Inherit;False;Variation;1;2;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;221;640,-2304;Inherit;False;Speed;1;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;287;1984,-2304;Float;False;Motion_Scale;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.GetLocalVarNode;293;896,-1232;Inherit;False;287;Motion_Scale;1;0;OBJECT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;348;1770.985,-2302.976;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.GetLocalVarNode;304;896,-1312;Inherit;False;284;Motion_Variation;1;0;OBJECT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;294;640,-896;Inherit;False;62;Input_Speed;1;0;OBJECT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;327;3264,-2304;Half;False;Input_Turbulence;-1;True;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.WorldPosInputsNode;288;1408,-2176;Float;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.GetLocalVarNode;328;640,-64;Inherit;False;327;Input_Turbulence;1;0;OBJECT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.LerpOp;321;960,-256;Inherit;False;3;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.GetLocalVarNode;318;640,-1408;Inherit;False;62;Input_Speed;1;0;OBJECT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;62;896,-2304;Half;False;Input_Speed;-1;True;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;222;1408,-2304;Inherit;False;Scale;1;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;283;1280,-1408;Inherit;False;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleTimeNode;374;896,-896;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;345;640,-176;Half;False;Constant;_Float2;Float
+    2;0;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.SinOpNode;282;1472,-896;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.RegisterLocalVarNode;281;1858,-1410;Half;False;Sine_MinusOneToOne;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.GetLocalVarNode;292;896,-688;Inherit;False;287;Motion_Scale;1;0;OBJECT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SinOpNode;277;1472,-1408;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.GetLocalVarNode;303;896,-768;Inherit;False;284;Motion_Variation;1;0;OBJECT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.GetLocalVarNode;325;640,-256;Inherit;False;281;Sine_MinusOneToOne;1;0;OBJECT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleTimeNode;373;896,-1408;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;324;1393,-263;Inherit;False;True;-1;;0;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nWireConnection;344;0;288;1\nWireConnection;344;1;288;3\nWireConnection;284;0;218;0\nWireConnection;408;0;407;0\nWireConnection;408;1;409;0\nWireConnection;407;0;282;0\nWireConnection;270;0;408;0\nWireConnection;279;0;374;0\nWireConnection;279;1;303;0\nWireConnection;279;2;292;0\nWireConnection;287;0;348;0\nWireConnection;348;0;222;0\nWireConnection;348;1;344;0\nWireConnection;327;0;319;0\nWireConnection;321;0;325;0\nWireConnection;321;1;345;0\nWireConnection;321;2;328;0\nWireConnection;62;0;221;0\nWireConnection;283;0;373;0\nWireConnection;283;1;304;0\nWireConnection;283;2;293;0\nWireConnection;374;0;294;0\nWireConnection;282;0;279;0\nWireConnection;281;0;277;0\nWireConnection;277;0;283;0\nWireConnection;373;0;318;0\nWireConnection;324;0;321;0\nASEEND*/\n//CHKSM=E238A00953107CE71FC76C01CDA5CD977A410C1E"
+  m_functionName: 
+  m_description: '
+
+'
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_customNodeCategory: The Vegetation Engine
+  m_previewPosition: 0
+  m_hidden: 0

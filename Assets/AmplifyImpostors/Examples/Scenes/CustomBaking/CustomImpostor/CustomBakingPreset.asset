@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f7caa019b8743459b7b0ab1fdc3bae, type: 3}
+  m_Name: CustomBakingPreset
+  m_EditorClassIdentifier: 
+  BakeShader: {fileID: 4800000, guid: 0468a79043ccbd34bba5631062ece8e2, type: 3}
+  RuntimeShader: {fileID: 4800000, guid: 8c0c55170fae60047b93e60e2999e382, type: 3}
+  AlphaIndex: 0
+  Output:
+  - Index: -1
+    OverrideMask: 0
+    Active: 1
+    Name: _AlbedoAlpha
+    Scale: 1
+    SRGB: 1
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: -1
+    OverrideMask: 0
+    Active: 1
+    Name: _NormalDepth
+    Scale: 1
+    SRGB: 0
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0
+  - Index: -1
+    OverrideMask: 0
+    Active: 1
+    Name: _Mask
+    Scale: 1
+    SRGB: 0
+    Channels: 0
+    Compression: 1
+    ImageFormat: 0

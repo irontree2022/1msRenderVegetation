@@ -1,0 +1,25 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Automatic
+InfoPreset Use this preset to convert Static Props if you want Detail Blend, Global Overaly and Global Wetness.
+InfoWarning The automatic conversion might not work as expected! The preset will convert the materials only if the Standard/Lit shaders are used!
+InfoStatus Mesh conversion is skipped for static props
+InfoOnline https://docs.google.com/document/d/145JOVlJ1tE-WODW45YoJ6Ixg23mFc56EnB_8Tbwloz8/edit#heading=h.1fsztsnbzbgj
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh NONE
+
+*******************************************************************
+
+Material SET_SHADER SHADER_DEFAULT_PROP
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _RenderClip 0
+
+// Include Unity Default Features
+Include Unity Lit Commons
+Include Unity Lit Packer

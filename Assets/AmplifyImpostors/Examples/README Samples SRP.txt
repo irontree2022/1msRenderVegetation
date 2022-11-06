@@ -1,0 +1,2 @@
+Samples contained at the 'SamplesHDRP.unitypackage' and 'SamplesLWRP.unitypackage' were created under the HD and LW SRP v4.9.0.
+Before unpacking these samples, their respective baking and runtime shaders must be imported. You can find these at AmplifyImpostors > Plugins > EditorResources > RenderPipelinePackages

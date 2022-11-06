@@ -1,0 +1,20 @@
+#pragma kernel Test
+
+struct TestBounds {
+    float3 center;
+    float3 extents;
+};
+
+uint testBoundsBufferCount;
+StructuredBuffer<TestBounds> testBoundsBuffer;
+AppendStructuredBuffer<TestBounds> testBoundsResultBuffer;
+
+[numthreads(64,1,1)]
+void Test(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= testBoundsBufferCount) return;
+    TestBounds bounds = testBoundsBuffer[id.x];
+    bounds.center *= 2;
+    bounds.extents *= 2;
+    testBoundsResultBuffer.Append(bounds);
+}

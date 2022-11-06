@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: ColorByPosition
+  m_Shader: {fileID: 4800000, guid: 1b6e398e864362c47959efca1aec9a7d, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AmbientOcclusion:
+        m_Texture: {fileID: 2800000, guid: 09eea9b1b26d9eb489d87839972a8ff3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 59b3ff16914d514459bb451015521dfe, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 7f1493c796ce4494cb3cca9fea5b6d4c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 93b159a83e4be0841bb1fd728cb94041, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecularSmoothness:
+        m_Texture: {fileID: 2800000, guid: d56a69fb0521f3246b44d8095fbfc1c8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample0:
+        m_Texture: {fileID: 2800000, guid: 93b159a83e4be0841bb1fd728cb94041, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample1:
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _prop_barrel_01_m:
+        m_Texture: {fileID: 2800000, guid: 7f1493c796ce4494cb3cca9fea5b6d4c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _prop_barrel_01_o:
+        m_Texture: {fileID: 2800000, guid: 09eea9b1b26d9eb489d87839972a8ff3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _prop_barrel_01_sg:
+        m_Texture: {fileID: 2800000, guid: d56a69fb0521f3246b44d8095fbfc1c8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Float1: 0.5
+    - _Float2: 0.6
+    - _Float3: -0.15
+    - _Float4: 0.35
+    - _Float5: 0.79
+    - _Float7: 0.65
+    - _Metallic: 0
+    - __dirty: 1
+    m_Colors:
+    - _Color1: {r: 0.94827586, g: 1, b: 0.8897059, a: 0}
+    - _Color2: {r: 0.7352941, g: 0.6034483, b: 0.36764705, a: 0}

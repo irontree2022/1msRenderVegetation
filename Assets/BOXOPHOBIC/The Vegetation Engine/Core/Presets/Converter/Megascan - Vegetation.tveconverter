@@ -1,0 +1,30 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Megascan
+InfoPreset Megascans asset work best if per object variation is added! TVE will add procedural variation but please note that it isn't working in all cases!
+InfoStatus ● ● ● ● ○
+InfoOnline https://quixel.com/megascans/home
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 0
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_FROM_CHANNEL 0
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 0
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 1 ACTION_INVERT
+
+*******************************************************************
+
+// Set Material
+Include Opaque by RenderType
+Include Unity Lit Commons
+Include Unity Lit Packer

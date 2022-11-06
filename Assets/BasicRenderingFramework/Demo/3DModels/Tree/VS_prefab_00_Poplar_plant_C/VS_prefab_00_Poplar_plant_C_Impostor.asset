@@ -1,0 +1,342 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ba7a43222473d4292f91ae936fe2cc, type: 3}
+  m_Name: VS_prefab_00_Poplar_plant_C_Impostor
+  m_EditorClassIdentifier: 
+  Material: {fileID: 6681497792340271547}
+  Mesh: {fileID: 1027649881397627986}
+  Version: 9711
+  ImpostorType: 2
+  LockedSizes: 1
+  SelectedSize: 1024
+  TexSize: {x: 1024, y: 1024}
+  DecoupleAxisFrames: 0
+  HorizontalFrames: 8
+  VerticalFrames: 8
+  PixelPadding: 16
+  MaxVertices: 8
+  Tolerance: 0.15
+  NormalScale: 0.01
+  ShapePoints:
+  - {x: 0.06725954, y: 0.7889041}
+  - {x: 0.3098442, y: 1}
+  - {x: 0.646621, y: 1}
+  - {x: 0.9145372, y: 0.85660625}
+  - {x: 0.9083975, y: 0.49520034}
+  - {x: 0.8258408, y: 0}
+  - {x: 0.23423746, y: 0}
+  - {x: 0.12702218, y: 0.25536782}
+  Preset: {fileID: 11400000, guid: 968b495bf56f4d940ba51cee77f7a371, type: 2}
+  OverrideOutput: []
+--- !u!43 &1027649881397627986
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: VS_prefab_00_Poplar_plant_C_Impostor
+  serializedVersion: 10
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 18
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: -0.052547038, y: 0.099948406, z: 0}
+      m_Extent: {x: 1.9289157, y: 2.2766042, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 070005000300030001000700070006000500050004000300030002000100010000000700
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 256
+    _typelessdata: 93a0fdbf3d959bbf000000000000000000000000000080bf5fbf893d8829583e1e7e60bf544e0bc0000000000000000000000000000080bfe6a39e3e00000000c30f283f544e0bc0000000000000000000000000000080bff488253f00000000da2cf03f5f0ac3bf000000000000000000000000000080bf1c1f6a3fd0d5123ed098ec3f8373f93d000000000000000000000000000080bfbd8c683f8d3a013f647bbc3f70191840000000000000000000000000000080bf4d6a533f0000803f8c4f9cbf70191840000000000000000000000000ffff7fbff2db6f3e0000803f05ccdabf1e5e9b3f000000000000000000000000000080bf1a12023e37a03e3f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: -0.31821692, y: 2.0655637, z: -0.28328526}
+    m_Extent: {x: 1.5511916, y: 2.0735426, z: 1.500179}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+--- !u!21 &6681497792340271547
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: VS_prefab_00_Poplar_plant_C_Impostor
+  m_Shader: {fileID: 4800000, guid: fc5f27e8a12515748af34961b5f7215a, type: 3}
+  m_ValidKeywords:
+  - TVE_IS_VEGETATION_SHADER
+  m_InvalidKeywords:
+  - _HEMI_ON
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    NatureRendererInstancing: true
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 1b10c0b5e846adf4786ee29337e08157, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emissive:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 013a6ea322239404ea60fc58c6c8432b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normals:
+        m_Texture: {fileID: 2800000, guid: 22d54231e67325e499fc0c57cab43f13, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AI_Clip: 0.5
+    - _AI_DepthSize: 4.58394
+    - _AI_Frames: 8
+    - _AI_FramesX: 8
+    - _AI_FramesY: 8
+    - _AI_ImpostorSize: 4.5532084
+    - _AI_Parallax: 1
+    - _AI_ShadowBias: 0.25
+    - _AI_ShadowView: 1
+    - _AI_TextureBias: -1
+    - _AlphaCutoff: 0.5
+    - _ColorsMaskMaxValue: 1
+    - _ColorsMaskMinValue: 0
+    - _ColorsVariationValue: 0
+    - _DetailBlendMode: 1
+    - _DetailCat: 0
+    - _DetailMode: 0
+    - _EmissiveCat: 1
+    - _EmissiveFlagMode: 0
+    - _GlobalAlpha: 1
+    - _GlobalCat: 0
+    - _GlobalColors: 1
+    - _GlobalEmissive1: 1
+    - _GlobalOverlay: 1
+    - _GlobalSize: 0
+    - _GlobalWetness: 1
+    - _ImpostorBarkSaturationValue: 1
+    - _ImpostorCat: 0
+    - _ImpostorGrassSaturationValue: 1
+    - _ImpostorLeafSaturationValue: 1
+    - _ImpostorSmoothnessValue: 1
+    - _InteractionAmplitude: 1
+    - _IsInitialized: 1
+    - _IsTVEAIShader: 1
+    - _IsVegetationShader: 1
+    - _IsVersion: 140
+    - _LayerColorsValue: 0
+    - _LayerExtrasValue: 0
+    - _LayerMotionValue: 0
+    - _LayerReactValue: 0
+    - _LayersSpace: 0
+    - _MainLightAngleValue: 8
+    - _MainLightNormalValue: 0.5
+    - _MainLightScatteringValue: 8
+    - _MaterialType: 10
+    - _MotionAmplitude_10: 0.3
+    - _MotionCat: 0
+    - _MotionScale_10: 0
+    - _MotionSpace: 0
+    - _MotionSpeed_10: 2
+    - _NoiseCat: 0
+    - _NoiseMaxValue: 1
+    - _NoiseMinValue: 0
+    - _NoiseScaleValue: 0.01
+    - _OverlayMaskMaxValue: 0.55
+    - _OverlayMaskMinValue: 0.45
+    - _OverlayVariationValue: 0
+    - _PivotsMessage: 0
+    - _RenderSpecular: 1
+    - _SizeFadeCat: 0
+    - _SizeFadeMessage: 0
+    - _SubsurfaceCat: 0
+    - _SubsurfaceDiffusion: 3.5648174
+    - _SubsurfaceMaskMaxValue: 1
+    - _SubsurfaceMaskMinValue: 0
+    - _SubsurfaceValue: 1
+    - _TranslucencyAmbientValue: 0.2
+    - _TranslucencyDirectValue: 1
+    - _TranslucencyHDMessage: 0
+    - _TranslucencyIntensityValue: 1
+    - _TranslucencyNormalValue: 0.1
+    - _TranslucencyScatteringValue: 2
+    - _TranslucencyShadowValue: 1
+    - _subsurface_shadow: 1
+    - _vertex_pivot_mode: 0
+    m_Colors:
+    - _AI_Offset: {r: -0.31821692, g: 2.0655637, b: -0.28328526, a: -0.02195122}
+    - _AI_SizeOffset: {r: 4.5532084, g: 4.58394, b: -0.00030487805, a: 0.0027439026}
+    - _ColorsMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _DetailBlendRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _ImpostorBarkColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ImpostorGrassColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ImpostorLeafColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MotionHighlightColor: {r: 2, g: 2, b: 2, a: 1}
+    - _NoiseColorOne: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseColorTwo: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _OverlayMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _SubsurfaceColor: {r: 0.33, g: 0.49, b: 0, a: 1}
+    - _SubsurfaceDiffusion_Asset: {r: 2.2888926e+38, g: 1.2389358e-26, b: 7.69327e-37,
+        a: 0.00018220427}
+    - _SubsurfaceDiffusion_asset: {r: 2.2888926e+38, g: 1.2389358e-26, b: 7.69327e-37,
+        a: 0.00018220427}
+    - _SubsurfaceMaskRemap: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

@@ -1,0 +1,80 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle MTree
+InfoPreset Use this preset to convert MTree assets. MTree is in preview mode, better motion quality will come with future updates! MTree assets must be saved as prefabs to be able to convert them.
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/packages/tools/modeling/mtree-tree-creation-132433
+InfoWarning MTree shaders are only working properly in Standard RP. Converting in SRPs will lead to wrong conversion. As an alternative, you can convert MTree in Standard RP, then copy the files to your SRP project!
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 1
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4 
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+}
+
+*******************************************************************
+
+// Copy Material Properties
+Material COPY_COLOR _Color _MainColor
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _BumpScale _MainNormalValue
+
+Material COPY_FLOAT _Metallic _MainMetallicValue
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+Material SET_FLOAT _VertexOcclusionValue 0.1
+
+Material COPY_FLOAT _CullMode _RenderCull
+Material COPY_FLOAT _DoubleSidedNormalMode _RenderNormals
+
+Material SET_COLOR _SubsurfaceColor 0.33 0.50 0 0
+
+// Copy Bark Base Props
+Material COPY_COLOR _DetailColor _SecondColor
+Material COPY_TEX _DetailAlbedoMap _SecondAlbedoTex
+Material COPY_ST_AS_VECTOR _DetailAlbedoMap _SecondUVs
+
+Material COPY_TEX _DetailNormalMap _SecondNormalTex
+
+*******************************************************************
+
+//Enable Betail shading
+if MATERIAL_FLOAT_EQUALS _BaseDetail 1
+{
+	Material SET_FLOAT _DetailMode 1
+	Material SET_FLOAT _DetailBlendMode 1
+	Material SET_FLOAT _DetailMaskMode 0
+
+	Material SET_FLOAT _DetailMeshValue 0
+	Material SET_FLOAT _DetailBlendMinValue 0.50
+	Material SET_FLOAT _DetailBlendMaxValue 0.75
+}
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Billboard
+{
+	Material SET_SHADER SHADER_DEFAULT_CROSS
+}

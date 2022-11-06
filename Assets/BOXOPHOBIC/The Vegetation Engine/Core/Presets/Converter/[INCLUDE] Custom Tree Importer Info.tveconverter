@@ -1,0 +1,3 @@
+InfoPreset Use this preset to convert vegetation powered by CTI.
+InfoStatus ● ● ● ● ○
+InfoWarning CTI uses an unpacked normal map (green), make sure you uncheck sRGB for it to work correctly. Texture Arrays are not supported, you will need to add a new bark texture after conversion! Billboards are not supported!

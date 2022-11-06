@@ -1,0 +1,34 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Book of the Dead Demo
+InfoPreset Preset used to convert Book of the Dead assets for the demo scene. InfoStatus Custom vertex color painted used for wind masks. Check the masks used under Conversion Settings > Custom Settings.
+InfoStatus ● ● ● ● ●
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 0
+Mesh SetOcclusion GET_MASK_PROCEDURAL 5
+Mesh SetDetailMask GET_MASK_FROM_CHANNEL 1
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 1
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 7
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+// Set Bark Settings
+Material FLOAT_TO_SHADER _ShaderMode 1 SHADER_DEFAULT_BARK
+Material FLOAT_TO_FLOAT _ShaderMode 1 _Motion_30 0
+Material FLOAT_TO_FLOAT _ShaderMode 1 _Motion_32 0
+Material FLOAT_TO_FLOAT _ShaderMode 1 _render_clip 0
+
+// Copy Textures
+Material COPY_TEX _AlbedoTex _MainAlbedoTex
+Material COPY_TEX _NormalTex _MainNormalTex
+Material COPY_TEX _MaskTex _MainMaskTex
+

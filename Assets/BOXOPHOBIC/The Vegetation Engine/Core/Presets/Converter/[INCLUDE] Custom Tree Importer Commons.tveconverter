@@ -1,0 +1,75 @@
+
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+Mesh SetMultiMask NONE
+
+Mesh SetVariation GET_MASK_3RD_PARTY 1 ACTION_REMAP01
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_3RD_PARTY 0
+Mesh SetMotion3 GET_MASK_3RD_PARTY 0
+
+*******************************************************************
+
+// Set Features for Bark
+if SHADER_NAME_CONTAINS Bark
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+
+	Material SET_FLOAT _VertexRollingMode 0
+}
+
+*******************************************************************
+
+// Enable Material Features
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _GlobalLeaves 0
+
+Material COPY_FLOAT _Culling _RenderCull
+
+*******************************************************************
+
+// Copy Standard Pipeline Material Properties
+Material SET_FLOAT _Cutoff 0.3
+
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+
+Material COPY_TEX _BumpSpecMap _MainNormalTex
+Material COPY_TEX _BumpSpecAOMap _MainNormalTex
+
+Material COPY_TEX _TranslucencyMap _MainMaskTex
+Material SET_FLOAT _MainMetallicValue 0
+Material SET_FLOAT _MainOcclusionValue 1
+Material SET_FLOAT _MainSmoothnessValue 0
+
+
+Material SET_VECTOR _MainColor 0.5 0.5 0.5 1
+
+Material SET_FLOAT _MainLightScatteringValue 0
+
+*******************************************************************
+
+//SRP Setup
+Material COPY_TEX _BumpMap _MainNormalTex
+
+Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+Material COPY_FLOAT _BumpScale _MainNormalValue
+
+*******************************************************************
+
+//if SHADER_NAME_CONTAINS Leaves
+
+// Combine Texture Channels
+Texture SetRed NONE
+Texture SetGreen GET_BLUE _BumpSpecAOMap
+Texture SetBlue GET_ALPHA _DispTex
+Texture SetAlpha GET_ALPHA _MainTex
+
+Utility START_TEXTURE_PACKING
+
+//endif

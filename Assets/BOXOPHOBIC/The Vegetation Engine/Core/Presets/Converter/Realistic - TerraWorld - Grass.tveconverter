@@ -1,0 +1,30 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle TerraWorld
+InfoPreset Use this preset to convert TeraWorld Grass objects. The converted prefabs/meshes can be used with GPU Instanced Layer or Grass layer. Both Quad and FromMesh Garss layer are supported. Set the Vertex Data to World for simple translation motion instead of bending!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/tools/terrain/terraworld-automated-level-designer-156561
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 12
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 12
+Mesh SetMotion2 GET_MASK_PROCEDURAL 12
+Mesh SetMotion3 GET_MASK_PROCEDURAL 12
+
+*******************************************************************
+
+// Include Unity Default Features
+Include Unity Lit Commons
+Include Unity Lit Packer
+Include Use Default Grass Settings

@@ -1,0 +1,16 @@
+Material SET_SHADER SHADER_DEFAULT_GRASS
+
+Material SET_FLOAT _SizeFadeMode 1
+material SET_FLOAT _RenderNormals 2
+
+Material SET_FLOAT _MotionAmplitude_10 0.2
+Material SET_FLOAT _MotionSpeed_10 6
+Material SET_FLOAT _MotionScale_10 2
+Material SET_FLOAT _MotionVariation_10 3
+
+Material SET_FLOAT _MotionAmplitude_32 0.1
+Material SET_FLOAT _MotionSpeed_32 30
+Material SET_FLOAT _MotionScale_32 10
+Material SET_FLOAT _MotionVariation_32 10
+
+Material SET_FLOAT _InteractionAmplitude 1

@@ -1,0 +1,50 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Angry Mesh
+InfoPreset Use this preset to convert Angry Mesh Grass prefabs. Variation is added automatically, but it might not work as expected! Set the Vertex Data to World for simple translation motion instead of bending!
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/publishers/32104
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 12
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 12
+Mesh SetMotion2 GET_MASK_PROCEDURAL 12
+Mesh SetMotion3 GET_MASK_PROCEDURAL 12
+
+*******************************************************************
+
+Include Use Default Grass Settings
+
+*******************************************************************
+
+// Set default values
+Material SET_COLOR _SubsurfaceColor 0.1 0.2 0.1 1.0
+Material SET_FLOAT _RenderNormals 0
+
+Material SET_VECTOR _VertexOcclusionColor 0.2 0.2 0.2 0.2
+Material SET_FLOAT _MainOcclusionValue 0.5
+Material SET_FLOAT _SecondOcclusionValue 0.5
+
+*******************************************************************
+
+// Copy material props
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _BumpScale _MainNormalValue
+Material COPY_TEX _MetalicRAOGSmothnessA _MainMaskTex
+Material SET_FLOAT _MainMetallicValue 0
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue

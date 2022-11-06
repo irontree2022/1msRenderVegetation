@@ -1,0 +1,39 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Infinity PBR
+InfoPreset Use this preset to convert Small Plants, Ferns, Bushes from: New Textures & Standard Pipeline Conversion for Book of the Dead FREE package by Infinity PBR. The conversion might not work as expected!
+InfoStatus ● ● ● ○ ○
+InfoOnline https://assetstore.unity.com/publishers/4645
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 5
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 5
+Mesh SetMotion2 GET_MASK_PROCEDURAL 5
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 5
+
+*******************************************************************
+
+// Enable Material Features
+Material SET_COLOR _SubsurfaceColor 0.1 0.1 0.0 0.0
+Material SET_COLOR _RenderNormals 0
+
+// Copy Material Properties
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _Diffuse _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _Diffuse _MainUVs
+
+Material COPY_TEX _Normal _MainNormalTex
+Material COPY_TEX _Maskmap _MainMaskTex
+

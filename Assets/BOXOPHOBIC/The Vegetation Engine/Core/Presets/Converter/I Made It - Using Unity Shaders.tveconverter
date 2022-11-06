@@ -1,0 +1,35 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle I Made It
+InfoPreset Use this preset to convert custom made vegetation. Use the BOXOPHOBIC > The Vegetation Engine > Helpers > I Made It shader to set up your maps for the converter to pack them. Use the following masksfor the mesh conversion: Per Branch or Per Leaf Variation (Vertex Red), Branches or Leaves Mask (Vertex Green), Leaves Mask or Leaves Edge (Vertex Blue), Vertex Occlusion (Vertex Alpha).
+InfoStatus ○ ○ ○ ○ ○
+InfoOnline https://docs.google.com/document/d/145JOVlJ1tE-WODW45YoJ6Ixg23mFc56EnB_8Tbwloz8/edit#heading=h.ltnk8tq0d4cg
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+OutputMesh DEFAULT
+OutputMaterial DEFAULT
+
+// Set Mesh Masks
+Mesh SetVariation GET_MASK_FROM_CHANNEL 0
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 1
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+// Include Unity Default Features
+Include Bark by RenderType
+Include Bark by HD Clip Settings
+Include Unity Lit Commons
+Include Unity Lit Packer

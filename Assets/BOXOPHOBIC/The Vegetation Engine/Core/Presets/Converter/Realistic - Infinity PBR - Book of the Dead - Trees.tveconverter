@@ -1,0 +1,43 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Infinity PBR
+InfoPreset Use this preset to convert Tree and Pine objects from: New Textures & Standard Pipeline Conversion for Book of the Dead FREE package by Infinity PBR. The conversion might not work as expected!
+InfoStatus ● ● ● ○ ○
+InfoOnline https://assetstore.unity.com/publishers/4645
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 7
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 5
+
+*******************************************************************
+
+// Enable Material Features
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_COLOR _SubsurfaceColor 0.1 0.1 0.0 0.0
+Material SET_COLOR _RenderNormals 0
+
+// Include Unity Default Features
+Include Bark by RenderType
+
+// Copy Material Properties
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _Diffuse _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _Diffuse _MainUVs
+
+Material COPY_TEX _Normal _MainNormalTex
+Material COPY_TEX _Maskmap _MainMaskTex

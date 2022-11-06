@@ -1,0 +1,28 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Visual Design Cafe
+InfoPreset Use this preset to convert Visual Design Cafe's Open World Nature Kit Plants.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/landscapes/open-world-nature-kit-150748
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 1
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 5
+Mesh SetMotion2 GET_MASK_PROCEDURAL 5
+Mesh SetMotion3 GET_MASK_PROCEDURAL 5
+
+*******************************************************************
+
+// Set Material Shader
+Include Nature Renderer Commons

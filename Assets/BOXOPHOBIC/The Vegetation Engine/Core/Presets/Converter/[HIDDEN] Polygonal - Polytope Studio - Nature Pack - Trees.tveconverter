@@ -1,0 +1,32 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Polytope Studio
+InfoPreset Use this preset to convert Polytope Studio -  Lowpoly Environment - Nature Pack assets.
+InfoStatus InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/lowpoly-environment-nature-pack-185195
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_FROM_CHANNEL 1
+Mesh SetOcclusion NONE
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_FROM_CHANNEL 0
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+Material SET_FLOAT _RenderNormals 2
+
+Material COPY_TEX _BaseTexture _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _BaseTexture _MainUVs

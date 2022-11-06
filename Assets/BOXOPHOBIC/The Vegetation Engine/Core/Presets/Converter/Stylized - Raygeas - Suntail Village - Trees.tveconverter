@@ -1,0 +1,109 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Raygeas Suntail Village
+InfoPreset Use this preset to convert Raygeas Suntail Village assets.
+InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/fantasy/suntail-village-203303
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion NONE
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 5
+Mesh SetMotion3 GET_MASK_PROCEDURAL 4
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Suntail Foliage
+{
+	Material SET_FLOAT _RenderNormals 2
+	Material SET_FLOAT _RenderSpecular 0
+
+	Material SET_FLOAT _FadeGlancingValue 1
+
+	Material COPY_FLOAT _AlphaCutoff _Cutoff
+
+	Material COPY_VECTOR _MainColor _MainColor
+	Material COPY_TEX _Albedo _MainAlbedoTex
+	Material COPY_FLOAT_AS_VECTOR_X _Tiling _MainUVs
+	Material COPY_FLOAT_AS_VECTOR_Y _Tiling _MainUVs
+
+	Material COPY_FLOAT _Smoothness _MainSmoothnessValue
+	Material COPY_VECTOR _MainColor _SubsurfaceColor
+
+	// Combine Texture Channels
+	Texture PropName _MainMaskTex
+	Texture SetRed NONE
+	Texture SetGreen NONE
+	Texture SetBlue NONE
+	Texture SetAlpha GET_RED _SmoothnessTexture
+	Utility START_TEXTURE_PACKING	
+}
+
+if SHADER_NAME_CONTAINS Suntail Surface
+{
+	Material SET_SHADER SHADER_DEFAULT_BARK
+	Material SET_FLOAT _RenderClip 0
+	Material SET_FLOAT _RenderCull 2
+
+	Material COPY_COLOR _Color _MainColor
+	Material COPY_TEX _Albedo _MainAlbedoTex
+	Material COPY_TEX _Normal _MainNormalTex
+	Material COPY_TEX _MetallicSmoothness _MainMaskTex
+	Material COPY_FLOAT_AS_VECTOR_X _Tiling _MainUVs
+	Material COPY_FLOAT_AS_VECTOR_Y _Tiling _MainUVs
+
+	Material COPY_FLOAT _NormalScale _MainNormalValue
+	Material COPY_FLOAT _Metallic _MainMetallicValue
+	Material COPY_FLOAT _SurfaceSmoothness _MainSmoothnessValue
+
+	Material SET_FLOAT _MainOcclusionValue 0
+
+	Material COPY_VECTOR _EmissionColor _EmissiveColor
+	Material COPY_TEX _Emission _EmissiveTex
+	Material COPY_FLOAT_AS_VECTOR_X _Tiling _EmissiveUVs
+	Material COPY_FLOAT_AS_VECTOR_Y _Tiling _EmissiveUVs
+	
+	Material SET_FLOAT _VertexRollingMode 0
+
+	// Combine Texture Channels
+	if MATERIAL_KEYWORD_ENABLED _SMOOTHNESSSOURCE_ALBEDO_ALPHA
+	{
+		Texture PropName _MainMaskTex
+		Texture SetRed GET_RED _MetallicSmoothness
+		Texture SetGreen NONE
+		Texture SetBlue NONE
+		Texture SetAlpha GET_ALPHA _Albedo
+		Utility START_TEXTURE_PACKING
+	}
+}
+*******************************************************************
+
+Material SET_FLOAT _MotionAmplitude_10 0.135
+Material SET_FLOAT _MotionSpeed_10 2
+Material SET_FLOAT _MotionScale_10 0.1
+Material SET_FLOAT _MotionVariation_10 0
+
+Material SET_FLOAT _MotionAmplitude_20 0.05
+Material SET_FLOAT _MotionSpeed_20 6
+Material SET_FLOAT _MotionScale_20 1
+Material SET_FLOAT _MotionVariation_20 2.5
+
+Material SET_FLOAT _MotionAmplitude_32 0.5
+Material SET_FLOAT _MotionSpeed_32 10
+Material SET_FLOAT _MotionScale_32 19
+Material SET_FLOAT _MotionVariation_32 20
+
+Material SET_FLOAT _InteractionAmplitude 1
+Material SET_FLOAT _InteractionVariation 0
+

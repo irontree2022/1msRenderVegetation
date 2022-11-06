@@ -1,0 +1,37 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Automatic
+InfoPreset Use this preset to convert Coniferous assets (Fir, Juniper, Spruce). Add variation for better motion quality.
+InfoWarning The automatic conversion might not work as expected! The preset will convert the materials only if the Standard/Lit shaders are used!
+InfoStatus ● ● ● ○ ○
+InfoOnline https://docs.google.com/document/d/145JOVlJ1tE-WODW45YoJ6Ixg23mFc56EnB_8Tbwloz8/edit#heading=h.1fsztsnbzbgj
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 7
+Mesh SetDetailMask GET_MASK_PROCEDURAL 8
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 0
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_PROCEDURAL 7
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 5
+
+Mesh Pivots NONE
+
+*******************************************************************
+
+// Enable Material Features
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+
+// Include Unity Default Features
+Include Bark by RenderType
+Include Unity Lit Commons
+Include Unity Lit Packer

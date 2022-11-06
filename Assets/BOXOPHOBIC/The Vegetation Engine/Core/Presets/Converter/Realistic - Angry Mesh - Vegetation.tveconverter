@@ -1,0 +1,101 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Angry Mesh
+InfoPreset Use this preset to convert Angry Mesh Trees, Bushes and Plants. Variation is added automatically, but it might not work as expected!
+InfoStatus ● ● ● ● ○
+InfoOnline https://assetstore.unity.com/publishers/32104
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_FROM_CHANNEL 3
+Mesh SetDetailMask GET_MASK_FROM_CHANNEL 2
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_FROM_CHANNEL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 4
+Mesh SetMotion2 GET_MASK_FROM_CHANNEL 2
+Mesh SetMotion3 GET_MASK_FROM_CHANNEL 2
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Bark
+
+Material SET_SHADER SHADER_DEFAULT_BARK
+Material SET_FLOAT _RenderClip 0
+Material SET_FLOAT _RenderCull 2
+Material SET_FLOAT _DetailMode 1
+Material SET_FLOAT _DetailBlendMode 1
+
+endif
+
+*******************************************************************
+
+if SHADER_NAME_CONTAINS Cross
+
+Material SET_SHADER SHADER_DEFAULT_CROSS
+Material SET_FLOAT _RenderCull 1
+
+endif
+
+*******************************************************************
+
+Material SET_FLOAT _GlobalSize 0
+Material SET_FLOAT _SizeFadeMode 0
+Material SET_FLOAT _RenderNormals 0
+Material SET_FLOAT _MotionAmplitude_20 0
+
+*******************************************************************
+
+// The proper way to use the Detail Mask as a lerp mask
+Material SET_FLOAT _DetailMaskValue 0
+Material SET_FLOAT _DetailMeshValue 0
+Material SET_FLOAT _DetailBlendMinValue 0
+Material SET_FLOAT _DetailBlendMaxValue 1
+
+*******************************************************************
+
+// Set default values
+Material SET_COLOR _SubsurfaceColor 0.05 0.1 0.05 1.0
+Material SET_VECTOR _VertexOcclusionColor 0.2 0.2 0.2 0.2
+Material SET_FLOAT _MainOcclusionValue 0.5
+Material SET_FLOAT _SecondOcclusionValue 0.5
+
+*******************************************************************
+
+// Copy material props
+Material COPY_COLOR _Color _MainColor
+Material COPY_COLOR _Color _MainColorVariation
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material COPY_TEX _BumpMap _MainNormalTex
+Material COPY_FLOAT _BumpScale _MainNormalValue
+Material COPY_TEX _MetalicRAOGSmothnessA _MainMaskTex
+Material SET_FLOAT _MainMetallicValue 0
+Material COPY_FLOAT _Glossiness _MainSmoothnessValue
+
+*******************************************************************
+
+Material COPY_COLOR _Color _SecondColor
+Material COPY_TEX _MainTex _SecondAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _SecondUVs
+Material COPY_TEX _BumpMap _SecondNormalTex
+Material COPY_FLOAT _BumpScale _SecondNormalValue
+Material COPY_TEX _MainMaskTex _SecondMaskTex
+Material SET_FLOAT _SecondMetallicValue 0
+Material COPY_FLOAT _Glossiness _SecondSmoothnessValue
+
+*******************************************************************
+
+// Combine Texture Channels
+Texture SetRed NONE
+Texture SetGreen GET_RED _OcclusionMap
+Texture SetBlue NONE
+Texture SetAlpha NONE
+
+Utility START_TEXTURE_PACKING

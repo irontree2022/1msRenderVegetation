@@ -1,0 +1,49 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Pure Nature
+InfoPreset Use this preset to convert BK Prod - Pure Nature assets. <b>Matching colors is not possible with the current preset, generic colors are added! Feel free to adjust them after the conversion!</b>
+InfoStatus InfoStatus ● ● ● ● ●
+InfoOnline https://assetstore.unity.com/packages/3d/environments/pure-nature-188246
+InfoWarning The BK Billboards are not supported and they will be disabled after conversion! Amplify Impostors can be used as an alternative!
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 12
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord GET_COORD_PROCEDURAL 3
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 12
+Mesh SetMotion2 GET_MASK_PROCEDURAL 12
+Mesh SetMotion3 GET_MASK_PROCEDURAL 12
+
+*******************************************************************
+
+Include Use Default Grass Settings
+
+*******************************************************************
+
+Material SET_FLOAT _RenderCull 0
+Material SET_FLOAT _RenderNormals 0
+
+Material COPY_TEX _MainTex _MainAlbedoTex
+Material COPY_ST_AS_VECTOR _MainTex _MainUVs
+Material SET_FLOAT _MainSmoothnessValue 0
+
+// Set Subsurface
+Material SET_VECTOR _SubsurfaceColor 0.38 0.60 0 1
+Material SET_FLOAT _SubsurfaceViewValue 0.5
+Material SET_FLOAT _SubsurfaceMaskMinValue 0.0
+Material SET_FLOAT _SubsurfaceMaskMaxValue 0.1
+
+// Set dual color
+Material SET_VECTOR _GradientColorOne 0.38 0.60 0 1
+Material SET_VECTOR _GradientColorTwo 0.03 0.18 0 1
+Material SET_FLOAT _GradientMinValue 0.5
+Material SET_FLOAT _GradientMaxValue 1

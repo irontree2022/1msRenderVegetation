@@ -1,0 +1,18 @@
+*******************************************************************
+*                            OVERRIDE                             *
+*******************************************************************
+
+InfoStatus Mesh conversion is set to Automaic Plants setup!
+
+*******************************************************************
+
+Mesh SetVariation GET_MASK_PROCEDURAL 3
+Mesh SetOcclusion GET_MASK_PROCEDURAL 5
+Mesh SetDetailMask NONE
+Mesh SetMultiMask NONE
+
+Mesh SetDetailCoord NONE
+
+Mesh SetMotion1 GET_MASK_PROCEDURAL 5
+Mesh SetMotion2 GET_MASK_PROCEDURAL 5
+Mesh SetMotion3 GET_MASK_PROCEDURAL 5
