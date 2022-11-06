@@ -1,6 +1,9 @@
 # 1msRenderVegetation
 基于Unity，在1ms内渲染大规模植被
 
+## 课程辅助的Unity插件获取
+https://cloud.189.cn/t/bei6JbqQ7zYz (访问码:3vvv)
+
 ## 整体课程安排
 ### 技术验证Demo
 1. 基于Job System实现GPU Instancing
