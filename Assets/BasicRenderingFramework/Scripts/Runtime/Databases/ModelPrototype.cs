@@ -17,10 +17,22 @@ namespace RenderVegetationIn1ms
         public string PrefabName;
         [Header("类型")]
         public VegetationType Type;
+
+        [Header("模型本身数据")]
         [Header("预制体")]
         public GameObject PrefabObject;
         [Header("面片")]
         public GameObject PrefabImpostor;
+        [Header("PrefabObject包围盒")]
+        public Bounds Bounds;
+        [Header("PrefabObject是否存在LODGroup")]
+        public bool isLODGroup;
+        [Header("PrefabObject LOD数量")]
+        public int lodCount;
+        [Header("PrefabObject LOD值")]
+        public Vector4 LODLevels;
+
+        [Header("渲染数据")]
         [Header("植被模型原型layer")]
         public int layer;
         [Header("是否接收阴影？")]
@@ -29,18 +41,8 @@ namespace RenderVegetationIn1ms
         public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
         [Header("渲染面片?")]
         public bool enableRenderImpostor;
-        [Header("PrefabObject包围盒")]
-        public Bounds Bounds;
 
-        [Header("PrefabObject是否存在LODGroup")]
-        public bool isLODGroup;
-        [Header("PrefabObject LOD数量")]
-        public int lodCount;
-        [Header("PrefabObject LOD值")]
-        public Vector4 LODLevels;
-        
-        
-        
+
         public ModelPrototype(int id) => Init(id, PrefabObject);
         public ModelPrototype(int id, GameObject prefab) => Init(id, prefab);
         public void Init(int id) => Init(id, PrefabObject);
