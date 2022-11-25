@@ -267,18 +267,36 @@ namespace RenderVegetationIn1ms
                 Vector2 scaleRange = default;
                 if (randome < treep * 100)
                 {
+                    if(treeModelPrototypeList.Count == 0)
+                    {
+                        --i;
+                        continue;
+                    }
+
                     modelPrototype = treeModelPrototypeList[Random.Range(0, treeModelPrototypeList.Count)];
                     ++tree;
                     scaleRange = scaleRange_Tree;
                 }
                 else if(randome < stonep * 100)
                 {
+                    if (stoneModelPrototypeList.Count == 0)
+                    {
+                        --i;
+                        continue;
+                    }
+
                     modelPrototype = stoneModelPrototypeList[Random.Range(0, stoneModelPrototypeList.Count)];
                     ++stone;
                     scaleRange = scaleRange_Stone;
                 }
                 else
                 {
+                    if (grassModelPrototypeList.Count == 0)
+                    {
+                        --i;
+                        continue;
+                    }
+
                     modelPrototype = grassModelPrototypeList[Random.Range(0, grassModelPrototypeList.Count)];
                     ++grass;
                     scaleRange = scaleRange_Grass;
