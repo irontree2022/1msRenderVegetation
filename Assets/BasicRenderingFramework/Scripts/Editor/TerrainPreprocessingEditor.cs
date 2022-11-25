@@ -208,9 +208,15 @@ namespace RenderVegetationIn1ms
             AssetDatabase.SaveAssets();
 
             // 开始自动生成原始的植被数据
+            if (ModelPrototypeDatabase.ModelPrototypeList.Count == 0)
+            {
+                Debug.LogError("[RenderVegetationIn1ms] 模型原型数据库中不存在任何模型原型，请先添加模型原型！");
+                return;
+            }
             List<ModelPrototype> treeModelPrototypeList = new List<ModelPrototype>();
             List<ModelPrototype> stoneModelPrototypeList = new List<ModelPrototype>();
             List<ModelPrototype> grassModelPrototypeList = new List<ModelPrototype>();
+            List<ModelPrototype> otherModelPrototypeList = new List<ModelPrototype>();
             for (var _i = 0; _i < ModelPrototypeDatabase.ModelPrototypeList.Count; _i++)
             {
                 var modelPrototype = ModelPrototypeDatabase.ModelPrototypeList[_i];
@@ -225,9 +231,18 @@ namespace RenderVegetationIn1ms
                     case VegetationType.Grass:
                         grassModelPrototypeList.Add(modelPrototype);
                         break;
+                    case VegetationType.None:
+                        otherModelPrototypeList.Add(modelPrototype);
+                        break;
                 }
             }
-            
+            if (treeModelPrototypeList.Count == 0 && grassModelPrototypeList.Count == 0 && stoneModelPrototypeList.Count == 0)
+            {
+                Debug.LogError("[RenderVegetationIn1ms] 模型原型数据库中不存在任何树、石头或草的模型原型，请调整模型原型数据中的模型原型的植被类型！");
+                return;
+            }
+
+
             var fixedTime = System.DateTime.Parse("2022/10/18 23:56:59");
             var dtime = System.DateTime.Now - fixedTime;
             Random.InitState((int)dtime.TotalMilliseconds);
@@ -265,6 +280,7 @@ namespace RenderVegetationIn1ms
                 var stonep = generatingPossibility.y / genPossibility + treep;
                 ModelPrototype modelPrototype = null;
                 Vector2 scaleRange = default;
+
                 if (randome < treep * 100)
                 {
                     if(treeModelPrototypeList.Count == 0)
