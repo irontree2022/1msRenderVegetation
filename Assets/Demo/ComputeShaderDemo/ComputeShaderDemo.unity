@@ -520,7 +520,7 @@ MonoBehaviour:
   useRandomPositionInstances: 1
   use2DPositionInstance: 0
   use3DPositionInstance: 0
-  showInstanceBounds_GetData: 1
+  showInstanceBounds_GetData: 0
   showInstanceBounds_Async: 0
 --- !u!114 &1634564960
 MonoBehaviour:

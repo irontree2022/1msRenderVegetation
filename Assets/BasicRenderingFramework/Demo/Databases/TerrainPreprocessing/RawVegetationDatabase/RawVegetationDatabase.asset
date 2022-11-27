@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: RawVegetationDatabase
   m_EditorClassIdentifier: 
   RawTotal: 100000
-  RawTreeTotal: 6027
-  RawStoneTotal: 2063
-  RawGrassTotal: 91910
+  RawTreeTotal: 5969
+  RawStoneTotal: 1976
+  RawGrassTotal: 92055
   rawVegetationInstanceDatabases:
   - {fileID: 11400000, guid: 7640410ab94bb16438cea5c913f96329, type: 2}

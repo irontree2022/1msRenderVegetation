@@ -284,7 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 1770079051}
   Prefab: {fileID: 6318120317857089692, guid: 9b12bc9664e69ce41b97a67629f6183e, type: 3}
-  InstanceCount: 100000
+  InstanceCount: 1000000
   InstanceExtents: {x: 500, y: 500, z: 500}
   RandomeMaxScaleValue: 5
   outputLength: 0
@@ -339,7 +339,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5
