@@ -429,6 +429,10 @@ namespace RenderVegetationIn1ms
             throw new System.Exception("[RenderVegetationIn1ms] 取消操作！");
         }
 
+
+        /// <summary>
+        /// 查看生成的原始植被
+        /// </summary>
         private void LookAutoGenRawVegetationDatas()
         {
             if (rawVegetationDatabase == null || ModelPrototypeDatabase == null) return;
