@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -9,31 +9,34 @@ namespace RenderVegetationIn1ms
     {
         static TerrainPreprocessingEditor window;
 
-        [MenuItem("RenderVegetationIn1ms/Ö²±»Ô¤´¦Àí")]
+        [MenuItem("RenderVegetationIn1ms/æ¤è¢«é¢„å¤„ç†")]
         public static void OpenWindow()
         {
-            window = GetWindow<TerrainPreprocessingEditor>("Ö²±»Ô¤´¦Àí");
+            window = GetWindow<TerrainPreprocessingEditor>("æ¤è¢«é¢„å¤„ç†");
             window.minSize = new Vector2(400, 800);
         }
 
         static string curScenePath;
         static SceneAsset curScene;
-        Settings settings;
         ModelPrototypeDatabase ModelPrototypeDatabase;
         Terrain terrain;
+        
         int generationInstancesCount = 2000000;
         Vector3 generatingPossibility = new Vector3(0.05f, 0.02f, 0.9f);
         Vector2 scaleRange_Tree = new Vector2(1f, 3f);
         Vector2 scaleRange_Stone = new Vector2(3f, 8f);
         Vector2 scaleRange_Grass = new Vector2(5f, 10f);
+        
         DefaultAsset vegetationDatabaseDirAsset = null;
         string vegetationDatabaseDir = null;
         string rawVegetationDatabaseFilename = "RawVegetationDatabase";
         string rawVegetationDatabaseFileExtension = ".asset";
-        int maxInstanceCountPerDatabase = 1000000;// Ã¿¸öÊı¾İ¿â´ïµ½×î´óÈİÁ¿Ê±£¬Ô¼Îª400M
-        RawVegetationDatabase rawVegetationDatabase;
+        int maxInstanceCountPerDatabase = 1000000;// æ¯ä¸ªæ•°æ®åº“è¾¾åˆ°æœ€å¤§å®¹é‡æ—¶ï¼Œçº¦ä¸º400M
         int MaxLookAutoGenRawVegetationDatasCount = 10000;
+        
+        RawVegetationDatabase rawVegetationDatabase;
 
+        Settings settings;
         int minBlockSize = 8;
         int nextBlockReductionFactor = 2;
 
@@ -42,7 +45,7 @@ namespace RenderVegetationIn1ms
             var originColor = GUI.color;
             GUI.color = Color.green;
             EditorGUILayout.Space(10);
-            if (GUILayout.Button("Çå³ı½ø¶ÈÌõ", GUILayout.Height(30)))
+            if (GUILayout.Button("æ¸…é™¤è¿›åº¦æ¡", GUILayout.Height(30)))
                 EditorUtility.ClearProgressBar();
             EditorGUILayout.Space(10);
             GUI.color = Color.white;
@@ -50,41 +53,46 @@ namespace RenderVegetationIn1ms
 
             EditorGUILayout.Space(10);
             GUI.enabled = false;
-            GUILayout.Button("Ëæ»úÉú³ÉÔ­Ê¼Ö²±»Êı¾İ", GUILayout.Height(30));
+            GUILayout.Button("éšæœºç”ŸæˆåŸå§‹æ¤è¢«æ•°æ®", GUILayout.Height(30));
             GUI.enabled = true;
 
             GUI.color = Color.white;
             EditorGUILayout.Space(10);
+            // è®¡ç®—å½“å‰åœºæ™¯
             if (curScene == null || UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path != curScenePath)
             {
                 curScenePath = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
                 curScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(curScenePath);
             }
-            curScene = EditorGUILayout.ObjectField("µ±Ç°³¡¾°: ", curScene, typeof(SceneAsset), true) as SceneAsset;
+            curScene = EditorGUILayout.ObjectField("å½“å‰åœºæ™¯: ", curScene, typeof(SceneAsset), true) as SceneAsset;
+            
+            // è®¡ç®—åœ°å½¢å¯¹è±¡
             if (terrain == null)
                 terrain = GetTerrainInScene();
 
-            ModelPrototypeDatabase = EditorGUILayout.ObjectField("Ä£ĞÍÔ­ĞÍÊı¾İ¿â: ", ModelPrototypeDatabase, typeof(ModelPrototypeDatabase), true) as ModelPrototypeDatabase;
-            terrain = EditorGUILayout.ObjectField("µØĞÎ¶ÔÏó: ", terrain, typeof(Terrain), true) as Terrain;
+            ModelPrototypeDatabase = EditorGUILayout.ObjectField("æ¨¡å‹åŸå‹æ•°æ®åº“: ", ModelPrototypeDatabase, typeof(ModelPrototypeDatabase), true) as ModelPrototypeDatabase;
+            terrain = EditorGUILayout.ObjectField("åœ°å½¢å¯¹è±¡: ", terrain, typeof(Terrain), true) as Terrain;
 
-            generationInstancesCount = EditorGUILayout.IntField("Ô¤¼ÆÉú³ÉÊµÀı×ÜÊı: ", generationInstancesCount);
-            generatingPossibility = EditorGUILayout.Vector3Field("Éú³É¸ÅÂÊ(x:Ê÷£¬y:Ê¯Í·£¬z:²İ£¬x+y+z=1): ", generatingPossibility);
+            generationInstancesCount = EditorGUILayout.IntField("é¢„è®¡ç”Ÿæˆå®ä¾‹æ€»æ•°: ", generationInstancesCount);
+            generatingPossibility = EditorGUILayout.Vector3Field("ç”Ÿæˆæ¦‚ç‡(x:æ ‘ï¼Œy:çŸ³å¤´ï¼Œz:è‰ï¼Œx+y+z=1): ", generatingPossibility);
+            // è®¾ç½®â€‹é»˜è®¤çš„ç”Ÿæˆæ¦‚ç‡
             if (generatingPossibility.x <= 0) generatingPossibility.x = 0.3f;
             if (generatingPossibility.y <= 0) generatingPossibility.y = 0.1f;
             if (generatingPossibility.z <= 0) generatingPossibility.z = 0.6f;
-            if (GUILayout.Button("ÖØĞÂ¼ÆËãÉú³É¸ÅÂÊ"))
+            if (GUILayout.Button("é‡æ–°è®¡ç®—ç”Ÿæˆæ¦‚ç‡"))
             {
                 var genPossibility = generatingPossibility.x + generatingPossibility.y + generatingPossibility.z;
                 generatingPossibility.x /= genPossibility;
                 generatingPossibility.y /= genPossibility;
                 generatingPossibility.z /= genPossibility;
             }
-            scaleRange_Tree = EditorGUILayout.Vector2Field("Éú³É´óĞ¡_Ê÷(x£º×îĞ¡Ëõ·ÅÖµ£¬y: ×î´óËõ·ÅÖµ): ", scaleRange_Tree);
-            scaleRange_Stone = EditorGUILayout.Vector2Field("Éú³É´óĞ¡_Ê¯Í·(x£º×îĞ¡Ëõ·ÅÖµ£¬y: ×î´óËõ·ÅÖµ): ", scaleRange_Stone);
-            scaleRange_Grass = EditorGUILayout.Vector2Field("Éú³É´óĞ¡_²İ(x£º×îĞ¡Ëõ·ÅÖµ£¬y: ×î´óËõ·ÅÖµ): ", scaleRange_Grass);
+            scaleRange_Tree = EditorGUILayout.Vector2Field("ç”Ÿæˆå¤§å°_æ ‘(xï¼šæœ€å°ç¼©æ”¾å€¼ï¼Œy: æœ€å¤§ç¼©æ”¾å€¼): ", scaleRange_Tree);
+            scaleRange_Stone = EditorGUILayout.Vector2Field("ç”Ÿæˆå¤§å°_çŸ³å¤´(xï¼šæœ€å°ç¼©æ”¾å€¼ï¼Œy: æœ€å¤§ç¼©æ”¾å€¼): ", scaleRange_Stone);
+            scaleRange_Grass = EditorGUILayout.Vector2Field("ç”Ÿæˆå¤§å°_è‰(xï¼šæœ€å°ç¼©æ”¾å€¼ï¼Œy: æœ€å¤§ç¼©æ”¾å€¼): ", scaleRange_Grass);
 
+            // è®¾ç½®ç”Ÿæˆå®ä¾‹æ€»æ•°é»˜è®¤æœ€å°‘1000ä¸ª
             if (generationInstancesCount < 0) generationInstancesCount = 1000;
-
+            // è®¾ç½®æ ‘ã€çŸ³å¤´å’Œè‰é»˜è®¤æœ€å°å°ºå¯¸
             if (scaleRange_Tree.x <= 0) scaleRange_Tree.x = 0.5f;
             if (scaleRange_Tree.y <= 0) scaleRange_Tree.y = 5f;
             if (scaleRange_Stone.x <= 0) scaleRange_Stone.x = 0.3f;
@@ -92,46 +100,50 @@ namespace RenderVegetationIn1ms
             if (scaleRange_Grass.x <= 0) scaleRange_Grass.x = 1f;
             if (scaleRange_Grass.y <= 0) scaleRange_Grass.y = 2f;
 
-            vegetationDatabaseDirAsset = EditorGUILayout.ObjectField("´æ´¢ÎÄ¼ş¼ĞÂ·¾¶: ", vegetationDatabaseDirAsset, typeof(DefaultAsset), allowSceneObjects: false) as DefaultAsset;
+            vegetationDatabaseDirAsset = EditorGUILayout.ObjectField("å­˜å‚¨æ–‡ä»¶å¤¹è·¯å¾„: ", vegetationDatabaseDirAsset, typeof(DefaultAsset), allowSceneObjects: false) as DefaultAsset;
             if (vegetationDatabaseDirAsset != null) vegetationDatabaseDir = AssetDatabase.GetAssetPath(vegetationDatabaseDirAsset);
             else vegetationDatabaseDir = null;
-            rawVegetationDatabaseFilename = EditorGUILayout.TextField("´æ´¢ÎÄ¼şÃû³Æ:", rawVegetationDatabaseFilename);
+            rawVegetationDatabaseFilename = EditorGUILayout.TextField("å­˜å‚¨æ–‡ä»¶åç§°:", rawVegetationDatabaseFilename);
 
 
-            maxInstanceCountPerDatabase = EditorGUILayout.IntField("µ¥¸öÊı¾İ¿âÈİÁ¿ÉÏÏŞ(¸ö): ", maxInstanceCountPerDatabase);
+            maxInstanceCountPerDatabase = EditorGUILayout.IntField("å•ä¸ªæ•°æ®åº“å®¹é‡ä¸Šé™(ä¸ª): ", maxInstanceCountPerDatabase);
             if (maxInstanceCountPerDatabase < 0) maxInstanceCountPerDatabase = 1000000;
-            List<VegetationInstanceData> vids = null;
-            try
-            {
-                vids = new List<VegetationInstanceData>(maxInstanceCountPerDatabase);
-            }
-            catch
-            {
-                while (true)
-                {
-                    --maxInstanceCountPerDatabase;
-                    try
-                    {
-                        vids = new List<VegetationInstanceData>(maxInstanceCountPerDatabase);
-                        break;
-                    }
-                    catch { };
-                    if(maxInstanceCountPerDatabase <= 0) break;
-                }
-            }
-            GUI.color = Color.green;
-            if (GUILayout.Button("¿ªÊ¼Ëæ»úÉú³ÉÔ­Ê¼Ö²±»Êı¾İ", GUILayout.Height(35)))
-                StartAutoGenRawVegetationDatabase(vids);
 
+            GUI.color = Color.green;
+            if (GUILayout.Button("å¼€å§‹éšæœºç”ŸæˆåŸå§‹æ¤è¢«æ•°æ®", GUILayout.Height(35)))
+            {
+                // ä¸´æ—¶å®¹å™¨
+                List<VegetationInstanceData> vids = null;
+                // ä¿è¯ä¸´æ—¶å®¹å™¨æˆåŠŸç”Ÿæˆ
+                try
+                {
+                    vids = new List<VegetationInstanceData>(maxInstanceCountPerDatabase);
+                }
+                catch
+                {
+                    while (true)
+                    {
+                        --maxInstanceCountPerDatabase;
+                        try
+                        {
+                            vids = new List<VegetationInstanceData>(maxInstanceCountPerDatabase);
+                            break;
+                        }
+                        catch { };
+                        if (maxInstanceCountPerDatabase <= 0) break;
+                    }
+                }
+                StartAutoGenRawVegetationDatabase(vids);
+            }
 
             GUI.color = Color.white;
             EditorGUILayout.Space(10);
             GUILayout.Button("", GUILayout.Height(1));
             EditorGUILayout.Space(10);
-            rawVegetationDatabase = EditorGUILayout.ObjectField("Ô­Ê¼Ö²±»Êı¾İ¿â: ", rawVegetationDatabase, typeof(RawVegetationDatabase), true) as RawVegetationDatabase;
-            MaxLookAutoGenRawVegetationDatasCount = EditorGUILayout.IntField("×î¶à²é¿´Ö²±»ÊµÀıµÄ×ÜÊı: ", MaxLookAutoGenRawVegetationDatasCount);
+            rawVegetationDatabase = EditorGUILayout.ObjectField("åŸå§‹æ¤è¢«æ•°æ®åº“: ", rawVegetationDatabase, typeof(RawVegetationDatabase), true) as RawVegetationDatabase;
+            MaxLookAutoGenRawVegetationDatasCount = EditorGUILayout.IntField("æœ€å¤šæŸ¥çœ‹æ¤è¢«å®ä¾‹çš„æ€»æ•°: ", MaxLookAutoGenRawVegetationDatasCount);
             if (MaxLookAutoGenRawVegetationDatasCount <= 0) MaxLookAutoGenRawVegetationDatasCount = 10000;
-            if (GUILayout.Button("²é¿´Éú³ÉµÄÔ­Ê¼Ö²±»", GUILayout.Height(35)))
+            if (GUILayout.Button("æŸ¥çœ‹ç”Ÿæˆçš„åŸå§‹æ¤è¢«", GUILayout.Height(35)))
                 LookAutoGenRawVegetationDatas();
 
 
@@ -140,20 +152,20 @@ namespace RenderVegetationIn1ms
             GUILayout.Button("", GUILayout.Height(1));
             EditorGUILayout.Space(10);
             GUI.enabled = false;
-            GUILayout.Button("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", GUILayout.Height(30));
+            GUILayout.Button("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", GUILayout.Height(30));
             GUI.enabled = true;
             GUI.color = Color.white;
             settings = EditorGUILayout.ObjectField("Settings: ", settings, typeof(Settings), true) as Settings;
-            terrain = EditorGUILayout.ObjectField("µØĞÎ¶ÔÏó: ", terrain, typeof(Terrain), true) as Terrain;
-            minBlockSize = EditorGUILayout.IntField("Çø¿é×îĞ¡³ß´ç(2µÄÃİ)£º", minBlockSize);
+            terrain = EditorGUILayout.ObjectField("åœ°å½¢å¯¹è±¡: ", terrain, typeof(Terrain), true) as Terrain;
+            minBlockSize = EditorGUILayout.IntField("åŒºå—æœ€å°å°ºå¯¸(2çš„å¹‚)ï¼š", minBlockSize);
             if (minBlockSize <= 2) minBlockSize = 2;
             else minBlockSize = Tool.GetPowerOf2Value(minBlockSize);
-            nextBlockReductionFactor = EditorGUILayout.IntField("ÏÂÒ»²ãÇø¿éËõĞ¡±¶Êı£º", nextBlockReductionFactor);
+            nextBlockReductionFactor = EditorGUILayout.IntField("ä¸‹ä¸€å±‚åŒºå—ç¼©å°å€æ•°ï¼š", nextBlockReductionFactor);
             if (nextBlockReductionFactor <= 2) nextBlockReductionFactor = 2;
             else nextBlockReductionFactor = Tool.GetPowerOf2Value(nextBlockReductionFactor);
-            vegetationDatabaseDirAsset = EditorGUILayout.ObjectField("´æ´¢ÎÄ¼ş¼ĞÂ·¾¶: ", vegetationDatabaseDirAsset, typeof(DefaultAsset), allowSceneObjects: false) as DefaultAsset;
+            vegetationDatabaseDirAsset = EditorGUILayout.ObjectField("å­˜å‚¨æ–‡ä»¶å¤¹è·¯å¾„: ", vegetationDatabaseDirAsset, typeof(DefaultAsset), allowSceneObjects: false) as DefaultAsset;
             GUI.color = Color.green;
-            if (GUILayout.Button("¿ªÊ¼Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", GUILayout.Height(35)))
+            if (GUILayout.Button("å¼€å§‹ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", GUILayout.Height(35)))
                 StartGenBlockTreeAndVegetationDatabase();
 
 
@@ -178,25 +190,25 @@ namespace RenderVegetationIn1ms
 
         private Dictionary<int, GameObject> modelPrototypeDic = new Dictionary<int, GameObject>();
         /// <summary>
-        /// ¿ªÊ¼×Ô¶¯Éú³ÉÔ­Ê¼Ö²±»Êı¾İ¿â
+        /// å¼€å§‹è‡ªåŠ¨ç”ŸæˆåŸå§‹æ¤è¢«æ•°æ®åº“
         /// </summary>
-        /// <param name="vids">ÁÙÊ±ÈİÆ÷</param>
+        /// <param name="vids">ä¸´æ—¶å®¹å™¨</param>
         private void StartAutoGenRawVegetationDatabase(List<VegetationInstanceData> vids)
         {
             if (terrain == null || ModelPrototypeDatabase == null) return; 
             if (string.IsNullOrEmpty(vegetationDatabaseDir) || string.IsNullOrEmpty(rawVegetationDatabaseFilename)) return;
             var dateTime = System.DateTime.Now;
 
-            // ´´½¨ÎÄ¼ş¼ĞÈç¹û²»´æÔÚµÄ»°
+            // åˆ›å»ºæ–‡ä»¶å¤¹å¦‚æœä¸å­˜åœ¨çš„è¯
             var fileDir = System.IO.Path.Combine(vegetationDatabaseDir, "RawVegetationDatabase");
             System.IO.Directory.CreateDirectory(fileDir);
-            // ÇåÀíÖ®Ç°²ĞÓàµÄÎÄ¼ş
+            // æ¸…ç†ä¹‹å‰æ®‹ä½™çš„æ–‡ä»¶
             var dirinfo = new System.IO.DirectoryInfo(fileDir);
             foreach (var file in dirinfo.GetFiles())
                 System.IO.File.Delete(file.FullName);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            // Éú³ÉÔ­Ê¼Ö²±»Êı¾İ¿â
+            // ç”ŸæˆåŸå§‹æ¤è¢«æ•°æ®åº“
             var fullFilename = fileDir;
             if (rawVegetationDatabaseFilename.EndsWith(rawVegetationDatabaseFileExtension))
                 fullFilename = System.IO.Path.Combine(fullFilename, rawVegetationDatabaseFilename);
@@ -207,10 +219,10 @@ namespace RenderVegetationIn1ms
             EditorUtility.SetDirty(database);
             AssetDatabase.SaveAssets();
 
-            // ¿ªÊ¼×Ô¶¯Éú³ÉÔ­Ê¼µÄÖ²±»Êı¾İ
+            // å¼€å§‹è‡ªåŠ¨ç”ŸæˆåŸå§‹çš„æ¤è¢«æ•°æ®
             if (ModelPrototypeDatabase.ModelPrototypeList.Count == 0)
             {
-                Debug.LogError("[RenderVegetationIn1ms] Ä£ĞÍÔ­ĞÍÊı¾İ¿âÖĞ²»´æÔÚÈÎºÎÄ£ĞÍÔ­ĞÍ£¬ÇëÏÈÌí¼ÓÄ£ĞÍÔ­ĞÍ£¡");
+                Debug.LogError("[RenderVegetationIn1ms] æ¨¡å‹åŸå‹æ•°æ®åº“ä¸­ä¸å­˜åœ¨ä»»ä½•æ¨¡å‹åŸå‹ï¼Œè¯·å…ˆæ·»åŠ æ¨¡å‹åŸå‹ï¼");
                 return;
             }
             List<ModelPrototype> treeModelPrototypeList = new List<ModelPrototype>();
@@ -238,7 +250,7 @@ namespace RenderVegetationIn1ms
             }
             if (treeModelPrototypeList.Count == 0 && grassModelPrototypeList.Count == 0 && stoneModelPrototypeList.Count == 0)
             {
-                Debug.LogError("[RenderVegetationIn1ms] Ä£ĞÍÔ­ĞÍÊı¾İ¿âÖĞ²»´æÔÚÈÎºÎÊ÷¡¢Ê¯Í·»ò²İµÄÄ£ĞÍÔ­ĞÍ£¬Çëµ÷ÕûÄ£ĞÍÔ­ĞÍÊı¾İÖĞµÄÄ£ĞÍÔ­ĞÍµÄÖ²±»ÀàĞÍ£¡");
+                Debug.LogError("[RenderVegetationIn1ms] æ¨¡å‹åŸå‹æ•°æ®åº“ä¸­ä¸å­˜åœ¨ä»»ä½•æ ‘ã€çŸ³å¤´æˆ–è‰çš„æ¨¡å‹åŸå‹ï¼Œè¯·è°ƒæ•´æ¨¡å‹åŸå‹æ•°æ®ä¸­çš„æ¨¡å‹åŸå‹çš„æ¤è¢«ç±»å‹ï¼");
                 return;
             }
 
@@ -271,7 +283,7 @@ namespace RenderVegetationIn1ms
             for (var i = 0; i < generationInstancesCount; i++)
             {
                 var progress = (float)(i + 1) / generationInstancesCount;
-                if (EditorUtility.DisplayCancelableProgressBar($"ÕıÔÚÉú³ÉµÚ {i} ¸öÊµÀı {(progress * 100).ToString("f2")}%", $"Tree: {tree}¸ö£¬Stone: {stone}¸ö£¬Grass: {grass}¸ö", progress))
+                if (EditorUtility.DisplayCancelableProgressBar($"æ­£åœ¨ç”Ÿæˆç¬¬ {i} ä¸ªå®ä¾‹ {(progress * 100).ToString("f2")}%", $"Tree: {tree}ä¸ªï¼ŒStone: {stone}ä¸ªï¼ŒGrass: {grass}ä¸ª", progress))
                     clancleButtonClicked();
                 var x = Random.Range(0, terrain.terrainData.size.x);
                 var z = Random.Range(0, terrain.terrainData.size.z);
@@ -338,7 +350,7 @@ namespace RenderVegetationIn1ms
                 vids.Clear();
             }
 
-            EditorUtility.DisplayProgressBar("Ô­Ê¼Ö²±»Êı¾İÒÑÈ«²¿Éú³É 100%", $"Tree: {tree}¸ö£¬Stone: {stone}¸ö£¬Grass: {grass}¸ö", 1);
+            EditorUtility.DisplayProgressBar("åŸå§‹æ¤è¢«æ•°æ®å·²å…¨éƒ¨ç”Ÿæˆ 100%", $"Tree: {tree}ä¸ªï¼ŒStone: {stone}ä¸ªï¼ŒGrass: {grass}ä¸ª", 1);
 
 
             foreach (var kv in modelPrototypeDic)
@@ -354,7 +366,7 @@ namespace RenderVegetationIn1ms
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
 
-            Debug.Log($"[RenderVegetationIn1ms] Ëæ»úÉú³ÉÔ­Ê¼Ö²±»Êı¾İ, Tree: {tree}¸ö£¬Stone: {stone}¸ö£¬Grass: {grass}¸ö ºÄÊ±£º{(System.DateTime.Now - dateTime).TotalSeconds}s");
+            Debug.Log($"[RenderVegetationIn1ms] éšæœºç”ŸæˆåŸå§‹æ¤è¢«æ•°æ®, Tree: {tree}ä¸ªï¼ŒStone: {stone}ä¸ªï¼ŒGrass: {grass}ä¸ª è€—æ—¶ï¼š{(System.DateTime.Now - dateTime).TotalSeconds}s");
         }
         private VegetationInstanceData GetVegetationInstanceData(Vector3 pos, Vector2 scaleRange, ModelPrototype modelPrototype, int NextInstanceID)
         {
@@ -414,7 +426,7 @@ namespace RenderVegetationIn1ms
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
-            throw new System.Exception("[RenderVegetationIn1ms] È¡Ïû²Ù×÷£¡");
+            throw new System.Exception("[RenderVegetationIn1ms] å–æ¶ˆæ“ä½œï¼");
         }
 
         private void LookAutoGenRawVegetationDatas()
@@ -440,7 +452,7 @@ namespace RenderVegetationIn1ms
 
 
         /// <summary>
-        /// ¿ªÊ¼Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â
+        /// å¼€å§‹ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“
         /// </summary>
         private void StartGenBlockTreeAndVegetationDatabase()
         {
@@ -448,8 +460,8 @@ namespace RenderVegetationIn1ms
             if (string.IsNullOrEmpty(vegetationDatabaseDir)) return;
             var dateTime = System.DateTime.Now;
 
-            // ÇåÀíÖ®Ç°²ĞÓàµÄÎÄ¼ş
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ÇåÀíÖ®Ç°²ĞÓàµÄÎÄ¼ş...", 0);
+            // æ¸…ç†ä¹‹å‰æ®‹ä½™çš„æ–‡ä»¶
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"æ¸…ç†ä¹‹å‰æ®‹ä½™çš„æ–‡ä»¶...", 0);
             var fileDir = System.IO.Path.Combine(vegetationDatabaseDir, settings.StorageFoldername);
             var streamingAssetsFileDir = System.IO.Path.Combine(Application.streamingAssetsPath, settings.StorageFoldername);
             Tool.DeleteDir(fileDir);
@@ -458,15 +470,15 @@ namespace RenderVegetationIn1ms
             System.IO.Directory.CreateDirectory(streamingAssetsFileDir);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"²ĞÓàµÄÎÄ¼şÇåÀíÍê±Ï£¡", 1f);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"æ®‹ä½™çš„æ–‡ä»¶æ¸…ç†å®Œæ¯•ï¼", 1f);
 
-            // ·Ö¸îÇø¿é²¢Éú³ÉÇø¿éÊ÷
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"·Ö¸îÇø¿é²¢Éú³ÉÇø¿éÊ÷...", 0);
+            // åˆ†å‰²åŒºå—å¹¶ç”ŸæˆåŒºå—æ ‘
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åˆ†å‰²åŒºå—å¹¶ç”ŸæˆåŒºå—æ ‘...", 0);
             var blockTree = BlockTree.CreateBlockTree(terrain.terrainData.bounds, nextBlockReductionFactor, minBlockSize);
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"Çø¿éÊ÷ÒÑÉú³É£¡", 1);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åŒºå—æ ‘å·²ç”Ÿæˆï¼", 1);
 
-            // ÖğÒ»·ÖÅäÖ²±»Êı¾İ
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ÖğÒ»·ÖÅäÖ²±»Êı¾İ", 0);
+            // é€ä¸€åˆ†é…æ¤è¢«æ•°æ®
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"é€ä¸€åˆ†é…æ¤è¢«æ•°æ®", 0);
             var notMatchCount = 0;
             var database = new VegetationDatabase();
             var oneMbytes = 1024 * 1024;
@@ -475,7 +487,7 @@ namespace RenderVegetationIn1ms
             rawVegetationDatabase.Each((index, total, vid) =>
             {
                 var progress = (index + 1) / (float)total;
-                if (EditorUtility.DisplayCancelableProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ÕıÔÚ·ÖÅäÖ²±»Êı¾İ... {progress * 100}%", progress))
+                if (EditorUtility.DisplayCancelableProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"æ­£åœ¨åˆ†é…æ¤è¢«æ•°æ®... {progress * 100}%", progress))
                     clancleButtonClicked();
                 if (!blockTree.RootBlockNode.MatchVegetationData(vid, blockVegetationDatas, maxDataCountInSingleBlock))
                 {
@@ -483,43 +495,43 @@ namespace RenderVegetationIn1ms
                     ++notMatchCount;
                 }
             });
-            Debug.Log($"[RenderVegetationIn1ms] Ã»ÓĞÖ±½ÓÆ¥ÅäµÄÖ²±»ÊıÁ¿£º{notMatchCount}£¬ÏÖÒÑ½«ËüÃÇ·ÖÅäµ½ÁÙ½üµÄÇø¿éÖĞ¡£");
+            Debug.Log($"[RenderVegetationIn1ms] æ²¡æœ‰ç›´æ¥åŒ¹é…çš„æ¤è¢«æ•°é‡ï¼š{notMatchCount}ï¼Œç°å·²å°†å®ƒä»¬åˆ†é…åˆ°ä¸´è¿‘çš„åŒºå—ä¸­ã€‚");
             database.TotalDataCount = blockTree.RootBlockNode.TotalDataCount;
             database.NextInstanceID = database.TotalDataCount;
             database.BlockVegetationDatasDatabaseFilepath = settings.BlockVegetationDatasDatabaseFilename;
             database.BlockVegetationDatasDatabaseInfoFilepath = settings.BlockVegetationDatasDatabaseInfoFilename;
             database.AllBlockVegetationDatas = blockVegetationDatas;
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ËùÓĞÖ²±»Êı¾İÒÑ·ÖÅäÍê±Ï£¡", 1);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"æ‰€æœ‰æ¤è¢«æ•°æ®å·²åˆ†é…å®Œæ¯•ï¼", 1);
 
-            // ĞòÁĞ»¯Çø¿éÊ÷ºÍÖ²±»Êı¾İ¿â
+            // åºåˆ—åŒ–åŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             var filepath = System.IO.Path.Combine(fileDir, settings.BlockTreeFilename);
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ĞòÁĞ»¯Çø¿éÊ÷...", 0f);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åºåˆ—åŒ–åŒºå—æ ‘...", 0f);
             blockTree.Write(filepath, (isdone, progress) =>
             {
-                if(EditorUtility.DisplayCancelableProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ĞòÁĞ»¯Çø¿éÊ÷...{progress * 100}%", progress))
+                if(EditorUtility.DisplayCancelableProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åºåˆ—åŒ–åŒºå—æ ‘...{progress * 100}%", progress))
                     clancleButtonClicked();
             });
 
             filepath = System.IO.Path.Combine(fileDir, settings.VegetationDatabaseFilename);
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ĞòÁĞ»¯Ö²±»Êı¾İ¿â...", 0f);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åºåˆ—åŒ–æ¤è¢«æ•°æ®åº“...", 0f);
             database.Write(filepath, (isdone, progress) =>
             {
-                if(EditorUtility.DisplayCancelableProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"ĞòÁĞ»¯Ö²±»Êı¾İ¿â...{progress * 100}%", progress))
+                if(EditorUtility.DisplayCancelableProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åºåˆ—åŒ–æ¤è¢«æ•°æ®åº“...{progress * 100}%", progress))
                     clancleButtonClicked();
             });
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"Çø¿éÊ÷ºÍÖ²±»Êı¾İ¿âÒÑ¾­ĞòÁĞ»¯Íê³É£¡", 1);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"åŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“å·²ç»åºåˆ—åŒ–å®Œæˆï¼", 1);
 
 
 
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"Write To StreamingAssets...", 0);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"Write To StreamingAssets...", 0);
             Tool.CopyDir(fileDir, streamingAssetsFileDir, true, copyingfilename=>
             {
-                if(EditorUtility.DisplayCancelableProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"Write To StreamingAssets...{copyingfilename}", Random.Range(0f, 1f)))
+                if(EditorUtility.DisplayCancelableProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"Write To StreamingAssets...{copyingfilename}", Random.Range(0f, 1f)))
                     clancleButtonClicked();
             });
-            EditorUtility.DisplayProgressBar("Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â", $"Write To StreamingAssets... Done!", 1);
+            EditorUtility.DisplayProgressBar("ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“", $"Write To StreamingAssets... Done!", 1);
 
 
 
@@ -528,7 +540,7 @@ namespace RenderVegetationIn1ms
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
             var dtime = System.DateTime.Now - dateTime;
-            Debug.Log($"[RenderVegetationIn1ms] Éú³ÉÇø¿éÊ÷ºÍÖ²±»Êı¾İ¿â ºÄÊ±£º{dtime.TotalSeconds}s, {dtime.TotalMinutes}m");
+            Debug.Log($"[RenderVegetationIn1ms] ç”ŸæˆåŒºå—æ ‘å’Œæ¤è¢«æ•°æ®åº“ è€—æ—¶ï¼š{dtime.TotalSeconds}s, {dtime.TotalMinutes}m");
         }
     }
 }
