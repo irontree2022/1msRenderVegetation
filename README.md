@@ -52,3 +52,6 @@ https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 ## Unity中文课堂
 目前课程已在Unity中文课堂上上架，可以在 [https://learn.u3d.cn/tutorial/1ms-render-vegetation](https://learn.u3d.cn/tutorial/1ms-render-vegetation) 购买学习。
 
+# 联系我
+irontree2022@163.com
+
