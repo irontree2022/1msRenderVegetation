@@ -38,7 +38,7 @@ https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 # 技术讨论群
 QQ群：263192020
 
-![QQ群：263192020](https://github.com/irontree2022/1msRenderVegetation/blob/main/%E3%80%901ms%E5%86%85%E6%B8%B2%E6%9F%93%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A4%8D%E8%A2%AB%E3%80%91%E6%8A%80%E6%9C%AF%E8%AE%A8%E8%AE%BA%E7%BE%A4%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png?raw=true)
+![QQ群：263192020](https://github.com/irontree2022/1msRenderVegetation/blob/main/Images/%E3%80%901ms%E5%86%85%E6%B8%B2%E6%9F%93%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A4%8D%E8%A2%AB%E3%80%91%E6%8A%80%E6%9C%AF%E8%AE%A8%E8%AE%BA%E7%BE%A4%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png?raw=true)
 
 
 # 获得最新内容
@@ -60,4 +60,49 @@ QQ群：263192020
 
 # 联系我
 irontree2022@163.com
+
+# 疑难杂症汇总
+## HDRP 复刻时 shader 修改后报错
+![HDRP 复刻时 shader修改后报错.png](https://github.com/irontree2022/1msRenderVegetation/blob/main/Images/HDRP%20%E5%A4%8D%E5%88%BB%E6%97%B6%20shader%E4%BF%AE%E6%94%B9%E5%90%8E%E6%8A%A5%E9%94%99.png?raw=true)
+
+我查了这个问题是因为HDRP在 Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl 中 将 unity_ObjectToWorld  和 unity_WorldToObject 重定义为：
+
+// To get instancing working, we must use UNITY_MATRIX_M / UNITY_MATRIX_I_M as UnityInstancing.hlsl redefine them
+#define unity_ObjectToWorld Use_Macro_UNITY_MATRIX_M_instead_of_unity_ObjectToWorld
+#define unity_WorldToObject Use_Macro_UNITY_MATRIX_I_M_instead_of_unity_WorldToObject
+
+你可以在GPUInstancing_indirect.cginc中的setup()上面添加两行：
+
+//...//
+
+#define unity_ObjectToWorld unity_ObjectToWorld
+
+#define unity_WorldToObject unity_WorldToObject
+
+// setup函数作用是给每个实例数据在渲染前得到实际矩阵和逆矩阵，相当于每个实例数据的初始化操作。
+
+void setup()
+
+// ... //
+
+
+这两行：
+
+#define unity_ObjectToWorld unity_ObjectToWorld
+
+#define unity_WorldToObject unity_WorldToObject
+
+是将那两个变量用宏重新定义回来
+
+我通过 https://forum.unity.com/threads/problem-with-drawmeshinstance-with-hdrp-or-lwrp.646723/ 这里面找的解决办法。
+
+刚才试了ok，运行能够正常渲染出来。你可以试试看
+
+## Linux Vulkan ComputeShader报错
+![Linux Vulkan ComputeShader报错.png](https://github.com/irontree2022/1msRenderVegetation/blob/main/Images/Linux%20Vulkan%20ComputeShader%E6%8A%A5%E9%94%99.png?raw=true)
+你说得：Shader error in 'FrustumCulling': glslang: 'input' : Reserved word. at kernel FrustumCulling at line 31 (on vulkan) 你看，它提示说input是保留字，你把这个input属性名改成inputDatas 之类得名称，然后在C#代码里面原来给 input 赋值的地方改成给 inputDatas赋值，我想这样就可以解决了.
+
+## 找不到float3的定义
+![找不到float3的定义.png](https://github.com/irontree2022/1msRenderVegetation/blob/main/Images/%E6%89%BE%E4%B8%8D%E5%88%B0float3%E7%9A%84%E5%AE%9A%E4%B9%89.png?raw=true)
+C# 中使用的 float3 不是Unity 常见的结构体，是项目添加的包：Mathematics，使用这个包里面的数学相关的结构体。
 
