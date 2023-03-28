@@ -35,8 +35,11 @@ https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 ## 高性能渲染框架
 1. 梳理渲染逻辑
 
-# 学习群
+# 技术讨论群
 QQ群：263192020
+
+![QQ群：263192020](https://github.com/irontree2022/1msRenderVegetation/blob/main/%E3%80%901ms%E5%86%85%E6%B8%B2%E6%9F%93%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A4%8D%E8%A2%AB%E3%80%91%E6%8A%80%E6%9C%AF%E8%AE%A8%E8%AE%BA%E7%BE%A4%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png?raw=true)
+
 
 # 获得最新内容
 ## 微信公众号
