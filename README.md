@@ -72,17 +72,31 @@ irontree2022@163.com
 #define unity_WorldToObject Use_Macro_UNITY_MATRIX_I_M_instead_of_unity_WorldToObject
 
 你可以在GPUInstancing_indirect.cginc中的setup()上面添加两行：
+
 //...//
+
 #define unity_ObjectToWorld unity_ObjectToWorld
+
 #define unity_WorldToObject unity_WorldToObject
+
 // setup函数作用是给每个实例数据在渲染前得到实际矩阵和逆矩阵，相当于每个实例数据的初始化操作。
+
 void setup()
+
 // ... //
 
+
 这两行：
+
 #define unity_ObjectToWorld unity_ObjectToWorld
+
 #define unity_WorldToObject unity_WorldToObject
-是将那两个变量用宏重新定义回来，我通过 https://forum.unity.com/threads/problem-with-drawmeshinstance-with-hdrp-or-lwrp.646723/ 这里面找的解决办法。刚才试了ok，运行能够正常渲染出来。你可以试试看
+
+是将那两个变量用宏重新定义回来
+
+我通过 https://forum.unity.com/threads/problem-with-drawmeshinstance-with-hdrp-or-lwrp.646723/ 这里面找的解决办法。
+
+刚才试了ok，运行能够正常渲染出来。你可以试试看
 
 ## Linux Vulkan ComputeShader报错
 ![Linux Vulkan ComputeShader报错.png](https://github.com/irontree2022/1msRenderVegetation/blob/main/Images/Linux%20Vulkan%20ComputeShader%E6%8A%A5%E9%94%99.png?raw=true)
