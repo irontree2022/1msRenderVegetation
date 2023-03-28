@@ -6,7 +6,7 @@ https://cloud.189.cn/t/bei6JbqQ7zYz (访问码:3vvv)
 
 https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 
-## 整体课程安排
+# 整体课程安排
 ### 技术验证Demo
 1. 基于Job System实现GPU Instancing
 2. 基于ComputeShader 实现GPU Instancing
@@ -34,6 +34,9 @@ https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 7. 超量草皮渲染
 ### 高性能渲染框架
 1. 梳理渲染逻辑
+
+# 学习群
+QQ群：263192020
 
 # 获得最新内容
 ## 微信公众号
