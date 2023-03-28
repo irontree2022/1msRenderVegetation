@@ -6,11 +6,11 @@ https://cloud.189.cn/t/bei6JbqQ7zYz (访问码:3vvv)
 
 https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 
-## 整体课程安排
-### 技术验证Demo
+# 整体课程安排
+## 技术验证Demo
 1. 基于Job System实现GPU Instancing
 2. 基于ComputeShader 实现GPU Instancing
-### 基础渲染框架
+## 基础渲染框架
 1. 管理模型原型
 2. 植被预处理
     - 数据存储结构、序列化以及反序列化
@@ -24,7 +24,7 @@ https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 4. GPU 实例渲染
     - 处理复杂模型
     - 渲染复杂模型
-### 渲染技术进阶
+## 渲染技术进阶
 1. 阴影优化
 2. 遮挡剔除
 3. BVH 树
@@ -32,8 +32,11 @@ https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 5. 运行时植被增删改查
 6. 世界迁移
 7. 超量草皮渲染
-### 高性能渲染框架
+## 高性能渲染框架
 1. 梳理渲染逻辑
+
+# 学习群
+QQ群：263192020
 
 # 获得最新内容
 ## 微信公众号
