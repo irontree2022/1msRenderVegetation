@@ -199,7 +199,8 @@ namespace RenderVegetationIn1ms
             if (string.IsNullOrEmpty(vegetationDatabaseDir) || string.IsNullOrEmpty(rawVegetationDatabaseFilename)) return;
             var dateTime = System.DateTime.Now;
 
-            // 创建文件夹如果不存在的话
+            // 如果不存在的话创建文件夹
+            // 将在存储路径下，再创建一个文件夹: RawVegetationDatabase
             var fileDir = System.IO.Path.Combine(vegetationDatabaseDir, "RawVegetationDatabase");
             System.IO.Directory.CreateDirectory(fileDir);
             // 清理之前残余的文件
