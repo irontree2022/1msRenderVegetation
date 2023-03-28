@@ -61,3 +61,6 @@ QQ群：263192020
 # 联系我
 irontree2022@163.com
 
+# 疑难杂症汇总
+## 我在尝试用HDRP复刻时在Shader修改后有报错，报错索引到了GPUInstancing_indirect中的41行unity_ObjectToWorld = IndirectShaderDataBuffer[unity_InstanceID]，求教这个地方怎么修复。[给心心]
+
