@@ -441,7 +441,7 @@ namespace RenderVegetationIn1ms
             if (lookGos == null) lookGos = new GameObject("lookRawVegetationDatas");
             if(MaxLookAutoGenRawVegetationDatasCount > 0)
             {
-                for (var i = 0; i < MaxLookAutoGenRawVegetationDatasCount; i++)
+                for (var i = 0; i < MaxLookAutoGenRawVegetationDatasCount && i < rawVegetationDatabase.RawTotal; i++)
                 {
                     EditorUtility.DisplayProgressBar($"查看生成的原始植被 {i}/{MaxLookAutoGenRawVegetationDatasCount}", "正在生成中...", i / (float)MaxLookAutoGenRawVegetationDatasCount);
                     var rawVegetationDatabaseIndex = Random.Range(0, rawVegetationDatabase.rawVegetationInstanceDatabases.Count);
