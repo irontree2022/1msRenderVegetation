@@ -332,7 +332,7 @@ namespace RenderVegetationIn1ms
                 }
 
                 var pos = new Vector3(x, 0, z);
-                var vd = GetVegetationInstanceData(pos, scaleRange_Tree, modelPrototype, i);
+                var vd = GetVegetationInstanceData(pos, scaleRange, modelPrototype, i);
                 vids.Add(vd);
 
                 if (vids.Count >= maxInstanceCountPerDatabase)
