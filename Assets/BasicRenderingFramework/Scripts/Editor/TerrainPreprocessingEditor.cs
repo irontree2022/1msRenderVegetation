@@ -142,7 +142,7 @@ namespace RenderVegetationIn1ms
             EditorGUILayout.Space(10);
             rawVegetationDatabase = EditorGUILayout.ObjectField("原始植被数据库: ", rawVegetationDatabase, typeof(RawVegetationDatabase), true) as RawVegetationDatabase;
             MaxLookAutoGenRawVegetationDatasCount = EditorGUILayout.IntField("最多查看植被实例的总数: ", MaxLookAutoGenRawVegetationDatasCount);
-            if (MaxLookAutoGenRawVegetationDatasCount <= 0) MaxLookAutoGenRawVegetationDatasCount = 10000;
+            if (MaxLookAutoGenRawVegetationDatasCount >= 0 && MaxLookAutoGenRawVegetationDatasCount < 10000) MaxLookAutoGenRawVegetationDatasCount = 10000;
             if (GUILayout.Button("查看生成的原始植被", GUILayout.Height(35)))
                 LookAutoGenRawVegetationDatas();
 
@@ -439,20 +439,38 @@ namespace RenderVegetationIn1ms
             if (rawVegetationDatabase == null || ModelPrototypeDatabase == null) return;
             GameObject lookGos = GameObject.Find("lookRawVegetationDatas");
             if (lookGos == null) lookGos = new GameObject("lookRawVegetationDatas");
-            for(var i = 0; i < MaxLookAutoGenRawVegetationDatasCount; i++)
+            if(MaxLookAutoGenRawVegetationDatasCount > 0)
             {
-                var rawVegetationDatabaseIndex = Random.Range(0, rawVegetationDatabase.rawVegetationInstanceDatabases.Count);
-                var datas = rawVegetationDatabase.rawVegetationInstanceDatabases[rawVegetationDatabaseIndex];
-                var rawVegetationIndex = Random.Range(0, datas.database.Count);
-                var rawVegetationData = datas.database[rawVegetationIndex];
-                var modelPrototype = ModelPrototypeDatabase.ModelPrototypeList[rawVegetationData.ModelPrototypeID];
-                Tool.ExtractMatrix(rawVegetationData.matrix, out Vector3 pos, out Quaternion r, out Vector3 s);
-                var go = Instantiate(modelPrototype.PrefabObject);
-                go.transform.position = pos;
-                go.transform.rotation = r;
-                go.transform.localScale = s;
-                go.transform.parent = lookGos.transform;
+                for (var i = 0; i < MaxLookAutoGenRawVegetationDatasCount; i++)
+                {
+                    EditorUtility.DisplayProgressBar($"查看生成的原始植被 {i}/{MaxLookAutoGenRawVegetationDatasCount}", "正在生成中...", i / (float)MaxLookAutoGenRawVegetationDatasCount);
+                    var rawVegetationDatabaseIndex = Random.Range(0, rawVegetationDatabase.rawVegetationInstanceDatabases.Count);
+                    var datas = rawVegetationDatabase.rawVegetationInstanceDatabases[rawVegetationDatabaseIndex];
+                    var rawVegetationIndex = Random.Range(0, datas.database.Count);
+                    var rawVegetationData = datas.database[rawVegetationIndex];
+                    var modelPrototype = ModelPrototypeDatabase.ModelPrototypeList[rawVegetationData.ModelPrototypeID];
+                    Tool.ExtractMatrix(rawVegetationData.matrix, out Vector3 pos, out Quaternion r, out Vector3 s);
+                    var go = Instantiate(modelPrototype.PrefabObject);
+                    go.transform.position = pos;
+                    go.transform.rotation = r;
+                    go.transform.localScale = s;
+                    go.transform.parent = lookGos.transform;
+                }
             }
+            else
+            {
+                rawVegetationDatabase.Each((index, total, vegetationData) => {
+                    EditorUtility.DisplayProgressBar($"查看生成的原始植被 {index}/{total}", "正在生成中...", index / (float)total);
+                    var modelPrototype = ModelPrototypeDatabase.ModelPrototypeList[vegetationData.ModelPrototypeID];
+                    Tool.ExtractMatrix(vegetationData.matrix, out Vector3 pos, out Quaternion r, out Vector3 s);
+                    var go = Instantiate(modelPrototype.PrefabObject);
+                    go.transform.position = pos;
+                    go.transform.rotation = r;
+                    go.transform.localScale = s;
+                    go.transform.parent = lookGos.transform;
+                });
+            }
+            EditorUtility.ClearProgressBar();
         }
 
 
