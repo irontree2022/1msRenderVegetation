@@ -30,7 +30,7 @@ namespace RenderVegetationIn1ms.BasicRenderingFrameworkDemo
         private bool _Initialized;
         private int _TitlleTextFontSize;
         private float _TimeInterval;
-        private bool _TitlleTextAnimationDone;
+        private bool _TitleTextAnimationDone;
         private bool _RenderingSystemStarted;
         private string _TitileStr;
         private string _DetailsStr;
@@ -133,11 +133,11 @@ namespace RenderVegetationIn1ms.BasicRenderingFrameworkDemo
         private void Update()
         {
             if (!_Initialized) Init();
-            if (!_TitlleTextAnimationDone)
+            if (!_TitleTextAnimationDone)
             {
                 if (_TimeInterval >= TitlleTextAnimationTimeInterval)
                 {
-                    _TitlleTextAnimationDone = true;
+                    _TitleTextAnimationDone = true;
                     _TimeInterval = 0;
                     SetTitleTextAlpha(1);
                     TitleText.fontSize = _TitlleTextFontSize;
@@ -151,7 +151,7 @@ namespace RenderVegetationIn1ms.BasicRenderingFrameworkDemo
                     _TimeInterval += Time.deltaTime;
                 }
             }
-            if(_TitlleTextAnimationDone && !_RenderingSystemStarted && RenderingAPI.Initialized)
+            if(_TitleTextAnimationDone && !_RenderingSystemStarted && RenderingAPI.Initialized)
                 StartRenderingSystem();
 
             if (_RenderingSystemStarted)
