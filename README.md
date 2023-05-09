@@ -6,6 +6,8 @@ https://cloud.189.cn/t/bei6JbqQ7zYz (访问码:3vvv)
 
 https://pan.baidu.com/s/18CAa6Di16U9_LwPZZL6LIA (提取码：qoba)
 
+https://115.com/s/sw6porx3wfq (访问码:c523)
+
 # 整体课程安排
 ## 技术验证Demo
 1. 基于Job System实现GPU Instancing
