@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace RenderVegetationIn1ms
 {
