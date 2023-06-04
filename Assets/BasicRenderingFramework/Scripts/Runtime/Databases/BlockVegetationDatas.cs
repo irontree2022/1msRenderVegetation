@@ -80,7 +80,6 @@ namespace RenderVegetationIn1ms
         /// </summary>
         /// <param name="buffer">缓冲</param>
         /// <param name="startIndex">开始位置</param>
-        /// <param name="action">进度回调</param>
         public void ReadFromBuffer(byte[] buffer, int startIndex)
         {
             ID = BitConverter.ToInt32(buffer, startIndex); startIndex += sizeof(int);
