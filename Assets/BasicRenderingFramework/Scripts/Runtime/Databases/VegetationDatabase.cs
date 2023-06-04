@@ -59,6 +59,8 @@ namespace RenderVegetationIn1ms
 
             var dir = System.IO.Path.GetDirectoryName(filepath);
             System.IO.Directory.CreateDirectory(dir);
+
+            // 写入植被数据库
             var length = AllBlockVegetationDatas == null ? 0 : AllBlockVegetationDatas.Length;
             using (FileStream fs = new FileStream(filepath, FileMode.Create))
             {
@@ -91,7 +93,7 @@ namespace RenderVegetationIn1ms
             BlockVegetationDatasDatabaseInfo.IDIndexs = new BlockVegetationDatasDatabaseIndex[count];
 
             
-            
+            // 写入所有区块的植被数据
             var blockVegetationDatasFilepath = System.IO.Path.Combine(dir, BlockVegetationDatasDatabaseFilepath);
             dir = System.IO.Path.GetDirectoryName(blockVegetationDatasFilepath);
             System.IO.Directory.CreateDirectory(dir);
@@ -124,7 +126,7 @@ namespace RenderVegetationIn1ms
 
 
 
-
+            // 写入所有区块的索引数据
             if (progressAction != null)
                 progressAction(false, 0);
             var blockVegetationDatasDatabaseInfoFilepath = System.IO.Path.Combine(dir, BlockVegetationDatasDatabaseInfoFilepath);
