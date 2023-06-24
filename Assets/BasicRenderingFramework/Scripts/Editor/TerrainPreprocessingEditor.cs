@@ -497,7 +497,7 @@ namespace RenderVegetationIn1ms
 
             // 分割区块并生成区块树
             EditorUtility.DisplayProgressBar("生成区块树和植被数据库", $"分割区块并生成区块树...", 0);
-            var blockTree = BlockTree.CreateBlockTree(terrain.terrainData.bounds, nextBlockReductionFactor, minBlockSize);
+            var blockTree = BlockTree.CreateBlockTree(terrain.GetComponent<TerrainCollider>().bounds, nextBlockReductionFactor, minBlockSize);
             EditorUtility.DisplayProgressBar("生成区块树和植被数据库", $"区块树已生成！", 1);
 
             // 逐一分配植被数据
