@@ -286,8 +286,8 @@ namespace RenderVegetationIn1ms
                 var progress = (float)(i + 1) / generationInstancesCount;
                 if (EditorUtility.DisplayCancelableProgressBar($"正在生成第 {i} 个实例 {(progress * 100).ToString("f2")}%", $"Tree: {tree}个，Stone: {stone}个，Grass: {grass}个", progress))
                     clancleButtonClicked();
-                var x = Random.Range(0, terrain.terrainData.size.x);
-                var z = Random.Range(0, terrain.terrainData.size.z);
+                var x = Random.Range(0, terrain.terrainData.size.x) + terrain.transform.position.x;
+                var z = Random.Range(0, terrain.terrainData.size.z) + terrain.transform.position.z;
                 var randome = Random.Range(0, 100);
                 var treep = generatingPossibility.x / genPossibility;
                 var stonep = generatingPossibility.y / genPossibility + treep;
