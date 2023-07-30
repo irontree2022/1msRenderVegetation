@@ -12,41 +12,41 @@ namespace RenderVegetationIn1ms
     public class BlockNode
     {
         /// <summary>
-        /// µ±Ç°Çø¿é½Úµã±àºÅ
+        /// å½“å‰åŒºå—èŠ‚ç‚¹ç¼–å·
         /// </summary>
         public int ID;
         /// <summary>
-        /// µ±Ç°Çø¿éÉî¶È
+        /// å½“å‰åŒºå—æ·±åº¦
         /// </summary>
         public int Depth;
         /// <summary>
-        /// ÊÇ·ñÊÇÒ¶×Ó½Úµã
+        /// æ˜¯å¦æ˜¯å¶å­èŠ‚ç‚¹
         /// </summary>
         public bool IsLeaf;
         /// <summary>
-        /// Çø¿éÊı¾İ
+        /// åŒºå—æ•°æ®
         /// </summary>
         public Block Block;
         /// <summary>
-        /// ¸¸½Úµã
+        /// çˆ¶èŠ‚ç‚¹
         /// </summary>
         public BlockNode Parent;
         /// <summary>
-        /// ×Ó½Úµã
+        /// å­èŠ‚ç‚¹
         /// </summary>
         public BlockNode[] Childs;
         /// <summary>
-        /// Ã»ÓĞ¿ÕµÄ×Ó×Ó½Úµã
+        /// æ²¡æœ‰ç©ºçš„å­å­èŠ‚ç‚¹
         /// </summary>
         public BlockNode[] NoEmptyChilds;
 
         /// <summary>
-        /// ¿Õ½Úµã£¿
-        /// <para>Èç¹ûÄÚ²¿²»´æÔÚÖ²±»Êı¾İ£¬ÔòÊÓÎª¿Õ½Úµã£¬·´Ö®²»ÊÇ¿Õ½Úµã¡£</para>
+        /// ç©ºèŠ‚ç‚¹ï¼Ÿ
+        /// <para>å¦‚æœå†…éƒ¨ä¸å­˜åœ¨æ¤è¢«æ•°æ®ï¼Œåˆ™è§†ä¸ºç©ºèŠ‚ç‚¹ï¼Œåä¹‹ä¸æ˜¯ç©ºèŠ‚ç‚¹ã€‚</para>
         /// </summary>
         public bool Empty;
         /// <summary>
-        /// °üº¬µÄÖ²±»Êı¾İ×ÜÁ¿
+        /// åŒ…å«çš„æ¤è¢«æ•°æ®æ€»é‡
         /// </summary>
         public int TotalDataCount;
 
@@ -54,18 +54,18 @@ namespace RenderVegetationIn1ms
         public override string ToString()
         {
             var parent = Parent == null ? "null" : Parent.ID.ToString();
-            return $"(ID: {ID}, Depth: {Depth}, Êı¾İ×ÜÁ¿: {TotalDataCount}, Parent£º{parent}, Size: {Block.Bounds.size}, TrueSize: {Block.TrueBounds.size})";
+            return $"(ID: {ID}, Depth: {Depth}, æ•°æ®æ€»é‡: {TotalDataCount}, Parentï¼š{parent}, Size: {Block.Bounds.size}, TrueSize: {Block.TrueBounds.size})";
         }
 
 
         /// <summary>
-        /// ´´½¨Çø¿é½Úµã
+        /// åˆ›å»ºåŒºå—èŠ‚ç‚¹
         /// </summary>
-        /// <param name="nodeBounds">Çø¿é°üÎ§ºĞ</param>
-        /// <param name="nextBlockReductionFactor">ÏÂÒ»²ãÇø¿éËõĞ¡±¶Êı</param>
-        /// <param name="minBlockSize">×îĞ¡Çø¿é³ß´ç</param>
-        /// <param name="blockNodes">ÊÕ¼¯Çø¿é½ÚµãµÄÈİÆ÷</param>
-        /// <returns>·µ»Ø´´½¨µÄÇø¿é½Úµã</returns>
+        /// <param name="nodeBounds">åŒºå—åŒ…å›´ç›’</param>
+        /// <param name="nextBlockReductionFactor">ä¸‹ä¸€å±‚åŒºå—ç¼©å°å€æ•°</param>
+        /// <param name="minBlockSize">æœ€å°åŒºå—å°ºå¯¸</param>
+        /// <param name="blockNodes">æ”¶é›†åŒºå—èŠ‚ç‚¹çš„å®¹å™¨</param>
+        /// <returns>è¿”å›åˆ›å»ºçš„åŒºå—èŠ‚ç‚¹</returns>
         public static BlockNode CreateBlockNode(Bounds nodeBounds, int depth, int nextBlockReductionFactor, int minBlockSize, List<BlockNode> blockNodes)
         {
             var blockNode = new BlockNode();
@@ -101,18 +101,18 @@ namespace RenderVegetationIn1ms
             else
             {
                 blockNode.IsLeaf = true;
-                blockNode.Block.IsLeaf = false;
+                blockNode.Block.IsLeaf = true;
             }
             return blockNode;
         }
         /// <summary>
-        /// Æ¥ÅäÖ²±»Êı¾İ
-        /// <para>ÅĞ¶ÏÖ²±»Êı¾İÎ»ÓÚÄÄ¸öÇø¿éÖĞ£¬²¢ÇÒ½«Ö²±»Êı¾İ·ÖÅä¸øÕâ¸öÇø¿é</para>
+        /// åŒ¹é…æ¤è¢«æ•°æ®
+        /// <para>åˆ¤æ–­æ¤è¢«æ•°æ®ä½äºå“ªä¸ªåŒºå—ä¸­ï¼Œå¹¶ä¸”å°†æ¤è¢«æ•°æ®åˆ†é…ç»™è¿™ä¸ªåŒºå—</para>
         /// </summary>
-        /// <param name="vid">Ö²±»Êı¾İ</param>
-        /// <param name="blockVegetationDatas">½«Ö²±»Êı¾İ·ÖÅä¸øºÏÊÊµÄÇø¿éÖĞ</param>
-        /// <param name="maxDataCountInSingleBlock">µ¥¸öÇø¿éÖ²±»ÊıÁ¿×î´óÖµ</param>
-        /// <returns>Æ¥Åä³É¹¦£¿ture£º±íÊ¾£¬´ËÖ²±»Ò»Ö±Æ¥Åäµ½Ò¶×Ó½Úµã£»false£º±íÊ¾²»ÄÜÆ¥Åäµ½Ò¶×Ó½Úµã</returns>
+        /// <param name="vid">æ¤è¢«æ•°æ®</param>
+        /// <param name="blockVegetationDatas">å°†æ¤è¢«æ•°æ®åˆ†é…ç»™åˆé€‚çš„åŒºå—ä¸­</param>
+        /// <param name="maxDataCountInSingleBlock">å•ä¸ªåŒºå—æ¤è¢«æ•°é‡æœ€å¤§å€¼</param>
+        /// <returns>åŒ¹é…æˆåŠŸï¼Ÿtureï¼šè¡¨ç¤ºï¼Œæ­¤æ¤è¢«ä¸€ç›´åŒ¹é…åˆ°å¶å­èŠ‚ç‚¹ï¼›falseï¼šè¡¨ç¤ºä¸èƒ½åŒ¹é…åˆ°å¶å­èŠ‚ç‚¹</returns>
         public bool MatchVegetationData(VegetationInstanceData vid, BlockVegetationDatas[] blockVegetationDatas, int maxDataCountInSingleBlock)
         {
             var match = Tool.IsInBounds(vid.center, Block.Bounds.min, Block.Bounds.max);
@@ -133,12 +133,12 @@ namespace RenderVegetationIn1ms
             return match;
         }
         /// <summary>
-        /// Æ¥ÅäÖ²±»Êı¾İ
-        /// <para>ÅĞ¶ÏÖ²±»Êı¾İ¾àÀëÄÄ¸öÇø¿é×î½ü£¬½«Ö²±»Êı¾İ·ÖÅä¸øÕâ¸öÇø¿é</para>
+        /// åŒ¹é…æ¤è¢«æ•°æ®
+        /// <para>åˆ¤æ–­æ¤è¢«æ•°æ®è·ç¦»å“ªä¸ªåŒºå—æœ€è¿‘ï¼Œå°†æ¤è¢«æ•°æ®åˆ†é…ç»™è¿™ä¸ªåŒºå—</para>
         /// </summary>
-        /// <param name="vid">Ö²±»Êı¾İ</param>
-        /// <param name="blockVegetationDatas">½«Ö²±»Êı¾İ·ÖÅä¸øºÏÊÊµÄÇø¿éÖĞ</param>
-        /// <param name="maxDataCountInSingleBlock">µ¥¸öÇø¿éÖ²±»ÊıÁ¿×î´óÖµ</param>
+        /// <param name="vid">æ¤è¢«æ•°æ®</param>
+        /// <param name="blockVegetationDatas">å°†æ¤è¢«æ•°æ®åˆ†é…ç»™åˆé€‚çš„åŒºå—ä¸­</param>
+        /// <param name="maxDataCountInSingleBlock">å•ä¸ªåŒºå—æ¤è¢«æ•°é‡æœ€å¤§å€¼</param>
         public void MatchVegetationDataByDistance(VegetationInstanceData vid, BlockVegetationDatas[] blockVegetationDatas, int maxDataCountInSingleBlock)
         {
             AddVegetationData(vid, blockVegetationDatas, maxDataCountInSingleBlock);
@@ -230,7 +230,7 @@ namespace RenderVegetationIn1ms
             }
         }
         /// <summary>
-        /// ½«Êı¾İĞ´ÈëÎÄ¼ş
+        /// å°†æ•°æ®å†™å…¥æ–‡ä»¶
         /// </summary>
         public void Write(BinaryWriter binaryWriter, System.Action action = null)
         {
@@ -258,12 +258,12 @@ namespace RenderVegetationIn1ms
                 Childs[i].Write(binaryWriter, action);
         }
         /// <summary>
-        /// ´Ó»º³åÖĞ¶ÁÈ¡Êı¾İ
+        /// ä»ç¼“å†²ä¸­è¯»å–æ•°æ®
         /// </summary>
-        /// <param name="buffer">»º³å</param>
-        /// <param name="startIndex">¿ªÊ¼Î»ÖÃ</param>
-        /// <param name="allBlockNodes">ÊÕ¼¯ËùÓĞÇø¿é¶ÔÏóµÄÈİÆ÷</param>
-        /// <param name="action">½ø¶È»Øµ÷</param>
+        /// <param name="buffer">ç¼“å†²</param>
+        /// <param name="startIndex">å¼€å§‹ä½ç½®</param>
+        /// <param name="allBlockNodes">æ”¶é›†æ‰€æœ‰åŒºå—å¯¹è±¡çš„å®¹å™¨</param>
+        /// <param name="action">è¿›åº¦å›è°ƒ</param>
         public int ReadFromBuffer(byte[] buffer, int startIndex, List<BlockNode> allBlockNodes = null, System.Action action = null)
         {
             var bytesStartIndex = startIndex;
