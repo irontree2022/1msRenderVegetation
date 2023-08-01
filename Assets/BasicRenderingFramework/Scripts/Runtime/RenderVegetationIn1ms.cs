@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace RenderVegetationIn1ms
 {
@@ -64,7 +62,7 @@ namespace RenderVegetationIn1ms
         public bool ShowVisibleBlock;
         [Header("调试：显示本地区块树")]
         public bool ShowLocalBlockTree;
-        [Header("调试：仅显示包含的区块ID；x: blockID, y: 递归显示子节点？")]
+        [Header("调试：仅显示包含的区块ID")]
         public List<int> OnlyShowBlockIDs;
         public bool[] BlockTreeDepths;
 

@@ -57,9 +57,8 @@ namespace RenderVegetationIn1ms
                             else blockTreeDetails = $"加载区块树... {(progress * 100).ToString("f2")}%";
                             detail = $"{blockTreeDetails}\n{vegetationDatabseDetails}";
                         }
-                        RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(
-                                _RenderVars.identity,
-                                false, _progress, "正在加载本地植被数据...", detail);
+                        RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(false, _progress, 
+                            "正在加载本地植被数据...", detail);
                         if (isDone)
                             lock (doneSync)
                             {
@@ -89,9 +88,8 @@ namespace RenderVegetationIn1ms
                             else vegetationDatabseDetails = $"加载植被数据库... {(progress * 100).ToString("f2")}%";
                             detail = $"{blockTreeDetails}\n{vegetationDatabseDetails}";
                         }
-                        RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(
-                           _RenderVars.identity,
-                           false, _progress, "正在加载本地植被数据...", detail);
+                        RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(false, _progress,
+                           "正在加载本地植被数据...", detail);
 
                         if (isDone)
                             lock (doneSync)
@@ -114,9 +112,7 @@ namespace RenderVegetationIn1ms
             Debug.Log($"[RenderVegetationIn1ms] 本地植被数据加载完成！耗时：{dtime.TotalSeconds}s/{dtime.TotalMinutes}m");
             _RenderVars.LocalVegetationDataLoaded = true;
             _RenderVars.IsLoadingLocalVegetationData = false;
-            RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(
-                            _RenderVars.identity,
-                            true, 1, info, details);
+            RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(true, 1, info, details);
         }
         /// <summary>
         /// 初始化区块数据

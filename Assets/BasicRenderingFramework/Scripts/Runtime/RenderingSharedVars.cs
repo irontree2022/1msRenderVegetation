@@ -23,18 +23,7 @@ namespace RenderVegetationIn1ms
         /// 渲染系统初始化完成？
         /// </summary>
         public bool Initialized;
-        /// <summary>
-        /// 身份证明
-        /// <para>当有些函数或属性不得不设置成外部可见时，可以验证 identity，防止外部系统误调用内部专用的函数。</para>
-        /// </summary>
-        public int identity;
-        /// <summary>
-        /// 能否通过身份验证
-        /// <para>true：表示可以安全的调用渲染系统内部专用的函数或属性</para>
-        /// <para>false: 表示外部其他系统误调用</para>
-        /// </summary>
-        /// <param name="_identity">待验证的身份</param>
-        public bool identityPassed(int _identity) => identity == _identity; 
+
         #region 植被数据加载
         /// <summary>
         /// 本地植被数据是否正在加载中？
@@ -141,13 +130,6 @@ namespace RenderVegetationIn1ms
         #endregion
 
 
-        public RenderingSharedVars()
-        {
-            var datatime = System.DateTime.Parse(identityStr);
-            var dtime = System.DateTime.Now - datatime;
-            UnityEngine.Random.InitState((int)dtime.TotalMinutes);
-            identity = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-        }
         /// <summary>
         /// 初始化所有共享的渲染变量
         /// </summary>

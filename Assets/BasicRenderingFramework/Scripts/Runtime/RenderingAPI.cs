@@ -32,14 +32,17 @@ namespace RenderVegetationIn1ms
             _RenderParams = renderParams;
             _RenderVars = new RenderingSharedVars();
         }
-
+        public static void OnDestroy()
+        {
+            _RenderParams = null;
+            _RenderVars = null;
+        }
 
 
         /// <summary>
         /// 渲染系统是否初始化完毕？
         /// </summary>
         public static bool Initialized => _RenderVars != null && _RenderVars.Initialized;
-
 
 
         /// <summary>
@@ -52,29 +55,13 @@ namespace RenderVegetationIn1ms
         public static event System.Action<bool, float, string, string> E_LocalVegetationDataLoadingSituation;
         /// <summary>
         /// 触发事件：本地植被数据库异步加载状态
-        /// <para>【警告】此函数为渲染系统专用函数，不能被其他系统调用，否则调用无响应，并触发警告。</para>
-        /// <para>_identity: 身份验证信息</para>
         /// <para>bool: isDone 是否加载完成</para>
         /// <para>float: progress 加载进度</para>
         /// <para>string: info 加载信息</para>
         /// <para>string: details 加载详细信息</para>
         /// </summary>
-        public static void TriggerEvent_E_LocalVegetationDataLoadingSituation(int _identity, bool isDone, float progress, string info, string details)
-        {
-            if(_RenderVars == null || !_RenderVars.identityPassed(_identity))
-            {
-                Debug.LogWarning($"[RenderVegetationIn1ms] 身份验证失败！此函数为渲染系统专用函数，不能被其他系统调用。");
-                return;
-            }
+        public static void TriggerEvent_E_LocalVegetationDataLoadingSituation(bool isDone, float progress, string info, string details) =>
             E_LocalVegetationDataLoadingSituation?.Invoke(isDone, progress, info, details);
-        }
 
-
-
-        public static void OnDestroy()
-        {
-            _RenderParams = null;
-            _RenderVars = null;
-        }
     }
 }
