@@ -23,15 +23,8 @@ namespace RenderVegetationIn1ms
 
 
         #region Unity 事件消息
-        public static void OnEnable()
-        {
-            if (_RenderVars == null || !_RenderVars.Initialized) return;
-
-        }
-        public static void OnDisable()
-        {
-            
-        }
+        public static void OnEnable() { }
+        public static void OnDisable() { }
         public static void Awake(RenderVegetationIn1ms renderParam) => _RenderParams = renderParam;
         public static void Start()
         {
@@ -225,8 +218,8 @@ namespace RenderVegetationIn1ms
             jobhandle.Complete();
 
 
-            NativeArray<Block>.Copy(_RenderVars.AfterCullingBlocksNativeArray, _RenderVars.AfterCullingBlocks, _RenderVars.CollectedBlocksLength);
-
+            NativeArray<Block>.Copy(_RenderVars.AfterCullingBlocksNativeArray, 
+                _RenderVars.AfterCullingBlocks, _RenderVars.CollectedBlocksLength);
             var collectedBlocksLength = _RenderVars.CollectedBlocksLength;
             _RenderVars.CollectedBlocksLength = 0;
             for (var i = 0; i < collectedBlocksLength; i++)

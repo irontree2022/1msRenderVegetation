@@ -12,29 +12,15 @@ namespace RenderVegetationIn1ms
     public struct CullBlocksJob : IJobParallelFor
     {
         [ReadOnly] public NativeArray<Block> CollectedBlocksNativeArray;
+        [ReadOnly] public NativeArray<float4> FrustumPlanes;
+        [NativeDisableParallelForRestriction] public NativeArray<Block> AfterCullingBlocksNativeArray;
         [ReadOnly] public float MaxRenderingDistance;
         [ReadOnly] public float MaxCoreRenderingDistance;
         [ReadOnly] public float ImpostorBlockMaxSize;
         [ReadOnly] public float ImpostorBlockMinSize;
         [ReadOnly] public Vector3 CameraPosition;
-        [ReadOnly] public NativeArray<float4> FrustumPlanes;
 
-        [NativeDisableParallelForRestriction] public NativeArray<Block> AfterCullingBlocksNativeArray;
 
-        float Distance(float3 center, float3 min, float3 max)
-        {
-            var x = center.x;
-            var y = center.y;
-            var z = center.z;
-            if (x < min.x) x = min.x;
-            else if (x > max.x) x = max.x;
-            if (y < min.y) y = min.y;
-            else if (y > max.y) y = max.y;
-            if (z < min.z) z = min.z;
-            else if (z > max.z) z = max.z;
-            return math.abs(math.distance(new float3(x, y, z), center));
-        }
-        bool IsInBounds(float3 center, float3 min, float3 max) => center.x > min.x && center.y > min.y && center.z > min.z && center.x < max.x && center.y < max.y && center.z < max.z;
         bool IsOutPlane(float4 plane, float3 pointPosition) => (math.dot(plane.xyz, pointPosition) + plane.w > 0);
         bool IsCulled(in NativeArray<float3> boundVerts)
         {
@@ -51,6 +37,21 @@ namespace RenderVegetationIn1ms
             }
             return false;
         }
+
+        float Distance(float3 center, float3 min, float3 max)
+        {
+            var x = center.x;
+            var y = center.y;
+            var z = center.z;
+            if (x < min.x) x = min.x;
+            else if (x > max.x) x = max.x;
+            if (y < min.y) y = min.y;
+            else if (y > max.y) y = max.y;
+            if (z < min.z) z = min.z;
+            else if (z > max.z) z = max.z;
+            return math.abs(math.distance(new float3(x, y, z), center));
+        }
+        bool IsInBounds(float3 center, float3 min, float3 max) => center.x > min.x && center.y > min.y && center.z > min.z && center.x < max.x && center.y < max.y && center.z < max.z;
         bool IsAllInPlanesWhenNotCulled(in NativeArray<float3> boundVerts)
         {
             for (int i = 0; i < 6; i++)
@@ -102,13 +103,15 @@ namespace RenderVegetationIn1ms
             if (isCoreBlock)
                 block.IsCoreAllInPlanes = IsAllInPlanesWhenNotCulled(boundVerts);
 
-            if (isImpostorBlock && (blockSize > ImpostorBlockMaxSize || (blockSize > ImpostorBlockMinSize && !IsAllInPlanesWhenNotCulled(boundVerts))))
+            if (isImpostorBlock && !block.IsLeaf 
+                && (blockSize > ImpostorBlockMaxSize || (blockSize > ImpostorBlockMinSize && !IsAllInPlanesWhenNotCulled(boundVerts))))
                 block.IsImpostorNeedCollected = true;
 
             block.IsCore = isCoreBlock;
             block.IsImpostor = isImpostorBlock;
-            AfterCullingBlocksNativeArray[index] = block;
 
+
+            AfterCullingBlocksNativeArray[index] = block;
             boundVerts.Dispose();
         }
     }

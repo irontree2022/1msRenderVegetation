@@ -14,7 +14,6 @@ namespace RenderVegetationIn1ms
     {
         private static RenderVegetationIn1ms _RenderParams;
         private static RenderingSharedVars _RenderVars;
-
         public static void Init()
         {
             _RenderParams = RenderingAPI.RenderParams;

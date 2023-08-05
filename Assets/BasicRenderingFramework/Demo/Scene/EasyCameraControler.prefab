@@ -49,6 +49,6 @@ MonoBehaviour:
   paramater: 0.25
   useMouse: 1
   useUp_down_left_and_rightArrows: 1
-  xspeed: 100
-  yspeed: 100
+  xspeed: 10
+  yspeed: 10
   stopKeyCode: 27

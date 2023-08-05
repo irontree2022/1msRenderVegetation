@@ -14,7 +14,6 @@ namespace RenderVegetationIn1ms
     /// </summary>
     public class RenderingSharedVars
     {
-        private const string identityStr = "2022/10/23 17:22:30";
         private static RenderVegetationIn1ms _RenderParams;
         
 
@@ -47,6 +46,19 @@ namespace RenderVegetationIn1ms
         public VegetationDatabase Database;
         #endregion
 
+        #region 区块剔除
+        public bool BlockDatasInitialized;
+        public int CollectedBlocksLength;
+        public Block[] CollectedBlocks;
+        public NativeArray<Block> CollectedBlocksNativeArray;
+        public NativeArray<Block> AfterCullingBlocksNativeArray;
+        public Block[] AfterCullingBlocks;
+        public int CoreBlocksLength;
+        public int ImpostorBlocksLength;
+        public Block[] CoreBlocks;
+        public Block[] ImpostorBlocks;
+        #endregion
+
         #region 摄像机数据
         private Transform _cameraTransform;
         private Quaternion _cameraRotation;
@@ -68,18 +80,7 @@ namespace RenderVegetationIn1ms
                _RenderParams.Camera.farClipPlane != CameraFar;
         #endregion
 
-        #region 区块剔除
-        public bool BlockDatasInitialized;
-        public int CollectedBlocksLength;
-        public Block[] CollectedBlocks;
-        public NativeArray<Block> CollectedBlocksNativeArray;
-        public NativeArray<Block> AfterCullingBlocksNativeArray;
-        public Block[] AfterCullingBlocks;
-        public int CoreBlocksLength;
-        public int ImpostorBlocksLength;
-        public Block[] CoreBlocks;
-        public Block[] ImpostorBlocks;
-        #endregion
+
 
         #region 植被剔除和渲染
         public ModelRenderingData[] ModelRenderingDatas;
@@ -138,9 +139,9 @@ namespace RenderVegetationIn1ms
         {
             Initialized = false;
             _RenderParams = renderParam;
-            InitCameraDatas();
             BlockTree = new BlockTree();
             Database = new VegetationDatabase();
+            InitCameraDatas();
             ModelRenderingDatas = new ModelRenderingData[_RenderParams.ModelPrototypeDatabase.ModelPrototypeList.Count];
             for(var i = 0; i < ModelRenderingDatas.Length; i++)
             {
@@ -151,6 +152,31 @@ namespace RenderVegetationIn1ms
             }
             InitShaderIDs();
         }
+        public void OnDestroy()
+        {
+            BlockTree = null;
+            BlockNodesDepths = null;
+            Database = null;
+
+            if (CollectedBlocksNativeArray.IsCreated)
+                CollectedBlocksNativeArray.Dispose();
+            if (AfterCullingBlocksNativeArray.IsCreated)
+                AfterCullingBlocksNativeArray.Dispose();
+
+            if (FrustumPlanesNativeArray.IsCreated)
+                FrustumPlanesNativeArray.Dispose();
+
+            for (var i = 0; i < ModelRenderingDatas.Length; i++)
+            {
+                if (ModelRenderingDatas[i] == null) continue;
+                ModelRenderingDatas[i].Clear();
+                ModelRenderingDatas[i] = null;
+            }
+            ModelRenderingDatas = null;
+
+            _RenderParams = null;
+        }
+
         /// <summary>
         /// 初始化摄像机数据
         /// </summary>
@@ -163,6 +189,28 @@ namespace RenderVegetationIn1ms
             FrustumPlanesNativeArray = new NativeArray<float4>(6, Allocator.Persistent);
             UpdateCameraDatas();
             CameraFar -= 1;
+        }
+        /// <summary>
+        /// 更新摄像机数据
+        /// </summary>
+        public void UpdateCameraDatas()
+        {
+            CameraPosition = _cameraTransform.position;
+            _cameraRotation = _cameraTransform.rotation;
+            CameraFOV = _RenderParams.Camera.fieldOfView;
+            CameraNear = _RenderParams.Camera.nearClipPlane;
+            CameraFar = _RenderParams.Camera.farClipPlane;
+
+            TanHalfAngle = Mathf.Tan(Mathf.Deg2Rad * CameraFOV * 0.5f);
+            FrustumPlanes = Tool.GetFrustumPlanes(_RenderParams.Camera, FrustumPlanes);
+            for (var i = 0; i < FrustumPlanes.Length; i++)
+                FrustumPlanesNativeArray[i] = new float4(
+                        FrustumPlanes[i].x,
+                        FrustumPlanes[i].y,
+                        FrustumPlanes[i].z,
+                        FrustumPlanes[i].w);
+            DrawBounds.center = CameraPosition;
+            DrawBounds.extents = Vector3.one * CameraFar;
         }
         /// <summary>
         /// 初始化shader属性ID值
@@ -190,28 +238,7 @@ namespace RenderVegetationIn1ms
             ShaderName_VegetationBoundsAppendStructuredBuffer_ID = Shader.PropertyToID(ShaderName_VegetationBoundsAppendStructuredBuffer);
 
         }
-        /// <summary>
-        /// 更新摄像机数据
-        /// </summary>
-        public void UpdateCameraDatas()
-        {
-            CameraPosition = _cameraTransform.position;
-            _cameraRotation = _cameraTransform.rotation;
-            CameraFOV = _RenderParams.Camera.fieldOfView;
-            CameraNear = _RenderParams.Camera.nearClipPlane;
-            CameraFar = _RenderParams.Camera.farClipPlane;
 
-            TanHalfAngle = Mathf.Tan(Mathf.Deg2Rad * CameraFOV * 0.5f);                
-            FrustumPlanes = Tool.GetFrustumPlanes(_RenderParams.Camera, FrustumPlanes);
-            for (var i = 0; i < FrustumPlanes.Length; i++)
-                FrustumPlanesNativeArray[i] = new float4(
-                        FrustumPlanes[i].x,
-                        FrustumPlanes[i].y,
-                        FrustumPlanes[i].z,
-                        FrustumPlanes[i].w);
-            DrawBounds.center = CameraPosition;
-            DrawBounds.extents = Vector3.one * CameraFar;
-        }
         /// <summary>
         /// 重置模型渲染数据
         /// </summary>
@@ -231,28 +258,6 @@ namespace RenderVegetationIn1ms
             }
         }
 
-        public void OnDestroy()
-        {
-            BlockTree = null;
-            BlockNodesDepths = null;
-            Database = null;
-            for (var i = 0; i < ModelRenderingDatas.Length; i++)
-            {
-                if(ModelRenderingDatas[i] == null) continue;
-                ModelRenderingDatas[i].Clear();
-                ModelRenderingDatas[i] = null;
-            }
-            ModelRenderingDatas = null;
 
-            if (FrustumPlanesNativeArray.IsCreated)
-                FrustumPlanesNativeArray.Dispose();
-
-            if (CollectedBlocksNativeArray.IsCreated)
-                CollectedBlocksNativeArray.Dispose();
-            if (AfterCullingBlocksNativeArray.IsCreated)
-                AfterCullingBlocksNativeArray.Dispose();
-
-            _RenderParams = null;
-        }
     }
 }
