@@ -5,20 +5,20 @@ using UnityEngine;
 namespace RenderVegetationIn1ms
 {
     /// <summary>
-    /// ¹¤¾ßÀà
-    /// <para>Ò»Ğ©¹¤¾ßº¯Êı</para>
+    /// å·¥å…·ç±»
+    /// <para>ä¸€äº›å·¥å…·å‡½æ•°</para>
     /// </summary>
     public class Tool
     {
         /// <summary>
-        /// Ò»¸öµãºÍÒ»¸ö·¨ÏòÁ¿È·¶¨Ò»¸öÆ½Ãæ
+        /// ä¸€ä¸ªç‚¹å’Œä¸€ä¸ªæ³•å‘é‡ç¡®å®šä¸€ä¸ªå¹³é¢
         /// </summary>
         public static Vector4 GetPlane(Vector3 normal, Vector3 point)
         {
             return new Vector4(normal.x, normal.y, normal.z, -Vector3.Dot(normal, point));
         }
         /// <summary>
-        /// ÈıµãÈ·¶¨Ò»¸öÆ½Ãæ
+        /// ä¸‰ç‚¹ç¡®å®šä¸€ä¸ªå¹³é¢
         /// </summary>
         public static Vector4 GetPlane(Vector3 a, Vector3 b, Vector3 c)
         {
@@ -26,7 +26,7 @@ namespace RenderVegetationIn1ms
             return GetPlane(normal, a);
         }
         /// <summary>
-        /// »ñÈ¡ÊÓ×¶ÌåÔ¶Æ½ÃæµÄËÄ¸öµã
+        /// è·å–è§†é”¥ä½“è¿œå¹³é¢çš„å››ä¸ªç‚¹
         /// </summary>
         public static Vector3[] GetCameraFarClipPlanePoint(Camera camera)
         {
@@ -46,7 +46,7 @@ namespace RenderVegetationIn1ms
             return points;
         }
         /// <summary>
-        /// »ñÈ¡ÊÓ×¶ÌåµÄÁù¸öÆ½Ãæ
+        /// è·å–è§†é”¥ä½“çš„å…­ä¸ªå¹³é¢
         /// </summary>
         public static Vector4[] GetFrustumPlanes(Camera camera, Vector4[] planes = null)
         {
@@ -54,7 +54,7 @@ namespace RenderVegetationIn1ms
             Transform transform = camera.transform;
             Vector3 cameraPosition = transform.position;
             Vector3[] points = GetCameraFarClipPlanePoint(camera);
-            //Ë³Ê±Õë
+            //é¡ºæ—¶é’ˆ
             planes[0] = GetPlane(cameraPosition, points[0], points[2]);//left
             planes[1] = GetPlane(cameraPosition, points[3], points[1]);//right
             planes[2] = GetPlane(cameraPosition, points[1], points[0]);//bottom
@@ -64,22 +64,22 @@ namespace RenderVegetationIn1ms
             return planes;
         }
         /// <summary>
-        /// ¼ÆËãÊÓ×¶ÌåÆ½½ØÍ·
+        /// è®¡ç®—è§†é”¥ä½“å¹³æˆªå¤´
         /// </summary>
         public static void CalculateFrustumPlanes(Camera camera, Plane[] FrustumPlanes_CPU) => GeometryUtility.CalculateFrustumPlanes(camera, FrustumPlanes_CPU);
         /// <summary>
-        /// ²âÊÔ°üÎ§ºĞÊÇ·ñÎ»ÓÚÊÓ×¶ÌåÄÚ
+        /// æµ‹è¯•åŒ…å›´ç›’æ˜¯å¦ä½äºè§†é”¥ä½“å†…
         /// </summary>
         public static bool TestPlanesAABB(Camera camera, Bounds bounds, Plane[] FrustumPlanes_CPU) => GeometryUtility.TestPlanesAABB(FrustumPlanes_CPU, bounds);
         /// <summary>
-        /// ´Ó¾ØÕóÖĞÌáÈ¡Î»ÖÃÊı¾İ
+        /// ä»çŸ©é˜µä¸­æå–ä½ç½®æ•°æ®
         /// </summary>
         public static Vector4 ExtractPositionFromMatrix(Matrix4x4 matrix)
         {
             return matrix.GetColumn(3);
         }
         /// <summary>
-        /// ´Ó¾ØÕóÖĞÌáÈ¡Ğı×ªÊı¾İ
+        /// ä»çŸ©é˜µä¸­æå–æ—‹è½¬æ•°æ®
         /// </summary>
         public static Quaternion ExtractRotationFromMatrix(Matrix4x4 matrix)
         {
@@ -88,7 +88,7 @@ namespace RenderVegetationIn1ms
                 matrix.GetColumn(1));
         }
         /// <summary>
-        /// ´Ó¾ØÕóÖĞÌáÈ¡Ëõ·ÅÊı¾İ
+        /// ä»çŸ©é˜µä¸­æå–ç¼©æ”¾æ•°æ®
         /// </summary>
         public static Vector3 ExtractScaleFromMatrix(Matrix4x4 matrix)
         {
@@ -98,7 +98,7 @@ namespace RenderVegetationIn1ms
                 matrix.GetColumn(2).magnitude);
         }
         /// <summary>
-        /// ´Ó¾ØÕóÖĞÌáÈ¡³ö¸÷ÏîÊı¾İ
+        /// ä»çŸ©é˜µä¸­æå–å‡ºå„é¡¹æ•°æ®
         /// </summary>
         public static void ExtractMatrix(Matrix4x4 matrix, out Vector3 position, out Quaternion rotation, out Vector3 scale)
         {
@@ -117,7 +117,7 @@ namespace RenderVegetationIn1ms
                 matrix.GetColumn(2).magnitude);
         }
         /// <summary>
-        /// ±¾µØ¾ØÕóÖĞµÃµ½ÆäÊÀ½ç×ø±êÎ»ÖÃ
+        /// æœ¬åœ°çŸ©é˜µä¸­å¾—åˆ°å…¶ä¸–ç•Œåæ ‡ä½ç½®
         /// </summary>
         public static Vector3 LocalMatrixToWorldPosition(Matrix4x4 local2WorldTransfMatrix, Matrix4x4 matrix4X4)
         {
@@ -126,7 +126,7 @@ namespace RenderVegetationIn1ms
             return local2WorldTransfMatrix * positionv4;
         }
         /// <summary>
-        /// ±¾µØ×ø±êÎ»ÖÃÖĞµÃµ½ÆäÊÀ½ç×ø±êÎ»ÖÃ
+        /// æœ¬åœ°åæ ‡ä½ç½®ä¸­å¾—åˆ°å…¶ä¸–ç•Œåæ ‡ä½ç½®
         /// </summary>
         public static Vector3 LocalPositionToWorldPosition(Matrix4x4 local2WorldTransfMatrix, Vector3 position)
         {
@@ -134,7 +134,7 @@ namespace RenderVegetationIn1ms
             return local2WorldTransfMatrix * positionv4;
         }
         /// <summary>
-        /// ±¾µØ¾ØÕóÖĞµÃµ½ÆäÊÀ½çĞı×ª
+        /// æœ¬åœ°çŸ©é˜µä¸­å¾—åˆ°å…¶ä¸–ç•Œæ—‹è½¬
         /// </summary>
         public static Quaternion LocalMatrixToWorldRotation(Matrix4x4 local2WorldTransfMatrix, Matrix4x4 matrix4X4)
         {
@@ -143,7 +143,7 @@ namespace RenderVegetationIn1ms
             return q * rotation;
         }
         /// <summary>
-        /// ±¾µØĞı×ªÖĞµÃµ½ÆäÊÀ½çĞı×ª
+        /// æœ¬åœ°æ—‹è½¬ä¸­å¾—åˆ°å…¶ä¸–ç•Œæ—‹è½¬
         /// </summary>
         public static Quaternion LocalRotationToWorldRotation(Matrix4x4 local2WorldTransfMatrix, Quaternion rotation)
         {
@@ -151,7 +151,7 @@ namespace RenderVegetationIn1ms
             return q * rotation;
         }
         /// <summary>
-        /// ±¾µØ¾ØÕóÖĞµÃµ½ÆäÊÀ½çËõ·Å
+        /// æœ¬åœ°çŸ©é˜µä¸­å¾—åˆ°å…¶ä¸–ç•Œç¼©æ”¾
         /// </summary>
         public static Vector3 LocalMatrixToWorldScale(Matrix4x4 local2WorldTransfMatrix, Matrix4x4 matrix4X4)
         {
@@ -160,7 +160,7 @@ namespace RenderVegetationIn1ms
             return new Vector3(scale.x * s.x, scale.y * s.y, scale.z * s.z);
         }
         /// <summary>
-        /// ±¾µØËõ·ÅÖĞµÃµ½ÆäÊÀ½çËõ·Å
+        /// æœ¬åœ°ç¼©æ”¾ä¸­å¾—åˆ°å…¶ä¸–ç•Œç¼©æ”¾
         /// </summary>
         public static Vector3 LocalScaleToWorldScale(Matrix4x4 local2WorldTransfMatrix, Vector3 scale)
         {
@@ -169,7 +169,7 @@ namespace RenderVegetationIn1ms
         }
 
         /// <summary>
-        /// ±¾µØ¾ØÕó×ª»»³ÉÊÀ½ç¾ØÕó
+        /// æœ¬åœ°çŸ©é˜µè½¬æ¢æˆä¸–ç•ŒçŸ©é˜µ
         /// </summary>
         public static Matrix4x4 LocalMatrixToWorldMatrix(Matrix4x4 local2WorldTransfMatrix, Matrix4x4 matrix4X4)
         {
@@ -278,7 +278,7 @@ namespace RenderVegetationIn1ms
                 System.IO.Directory.CreateDirectory(dir);
         }
         /// <summary>
-        /// É¾³ıÎÄ¼ş¼Ğ
+        /// åˆ é™¤æ–‡ä»¶å¤¹
         /// </summary>
         public static void DeleteDir(string dir)
         {
@@ -364,11 +364,11 @@ namespace RenderVegetationIn1ms
             }
         }
         /// <summary>
-        /// ÇĞ¸î¿Õ¼ä
-        /// <para>ÒÔ x z Æ½ÃæÇĞ¸îÇø¿é£¬y·½Ïò²»±ä</para>
+        /// åˆ‡å‰²ç©ºé—´
+        /// <para>ä»¥ x z å¹³é¢åˆ‡å‰²åŒºå—ï¼Œyæ–¹å‘ä¸å˜</para>
         /// </summary>
-        /// <param name="_bounds">Ô­Ê¼¿Õ¼ä°üÎ§ºĞ</param>
-        /// <param name="splitSize">ÇĞ¸î³ß´ç</param>
+        /// <param name="_bounds">åŸå§‹ç©ºé—´åŒ…å›´ç›’</param>
+        /// <param name="splitSize">åˆ‡å‰²å°ºå¯¸</param>
         /// <returns></returns>
         public static List<Bounds> GetSplitBounds(Bounds _bounds, int nextBlockReductionFactor)
         {
@@ -380,8 +380,8 @@ namespace RenderVegetationIn1ms
                 for (var j = 0; j < nextBlockReductionFactor; j++)
                 {
                     var b = new Bounds();
-                    b.min = new Vector3(_bounds.min.x + j * splitSizex, _bounds.min.y, _bounds.min.z + i * splitSizex);
-                    b.max = new Vector3(b.min.x + splitSizez, _bounds.max.y, b.min.z + splitSizez);
+                    b.min = new Vector3(_bounds.min.x + j * splitSizex, _bounds.min.y, _bounds.min.z + i * splitSizez);
+                    b.max = new Vector3(b.min.x + splitSizex, _bounds.max.y, b.min.z + splitSizez);
                     bounds.Add(b);
                 }
             }
