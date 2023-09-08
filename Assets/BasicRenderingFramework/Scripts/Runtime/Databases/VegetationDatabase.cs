@@ -13,45 +13,45 @@ namespace RenderVegetationIn1ms
     public class VegetationDatabase
     {
         /// <summary>
-        /// ÏÂÒ»¸öÊµÀıID
+        /// ä¸‹ä¸€ä¸ªå®ä¾‹ID
         /// </summary>
         public int NextInstanceID;
         /// <summary>
-        /// Ö²±»Êı¾İ×ÜÁ¿
+        /// æ¤è¢«æ•°æ®æ€»é‡
         /// </summary>
         public int TotalDataCount;
         /// <summary>
-        /// Çø¿éÖ²±»Êı¾İ¿â´æ·ÅÎÄ¼şÂ·¾¶
+        /// åŒºå—æ¤è¢«æ•°æ®åº“å­˜æ”¾æ–‡ä»¶è·¯å¾„
         /// </summary>
         public string BlockVegetationDatasDatabaseFilepath;
         /// <summary>
-        /// Çø¿éÖ²±»Êı¾İ¿âĞÅÏ¢´æ·ÅÎÄ¼şÂ·¾¶
+        /// åŒºå—æ¤è¢«æ•°æ®åº“ä¿¡æ¯å­˜æ”¾æ–‡ä»¶è·¯å¾„
         /// </summary>
         public string BlockVegetationDatasDatabaseInfoFilepath;
         /// <summary>
-        /// ËùÓĞÖ²±»ÊµÀıÊı¾İ
+        /// æ‰€æœ‰æ¤è¢«å®ä¾‹æ•°æ®
         /// </summary>
         public BlockVegetationDatas[] AllBlockVegetationDatas;
         /// <summary>
-        /// Çø¿éÖ²±»Êı¾İ¿â
+        /// åŒºå—æ¤è¢«æ•°æ®åº“
         /// </summary>
         public BlockVegetationDatasDatabaseInfo BlockVegetationDatasDatabaseInfo;
 
 
         /// <summary>
-        /// »ñÈ¡Çø¿éÖ²±»Êı¾İ×´Ì¬
+        /// è·å–åŒºå—æ¤è¢«æ•°æ®çŠ¶æ€
         /// </summary>
-        /// <param name="blockID">Çø¿é±àºÅ</param>
-        /// <returns>Çø¿éÖ²±»Êı¾İ¶ÔÏó</returns>
+        /// <param name="blockID">åŒºå—ç¼–å·</param>
+        /// <returns>åŒºå—æ¤è¢«æ•°æ®å¯¹è±¡</returns>
         public BlockVegetationDatas GetBlockVegetationDatas(int blockID)
         {
             if (AllBlockVegetationDatas == null) return null;
             return AllBlockVegetationDatas[blockID];
         }
         /// <summary>
-        /// Êı¾İĞ´ÈëÎÄ¼şÖĞ
+        /// æ•°æ®å†™å…¥æ–‡ä»¶ä¸­
         /// </summary>
-        /// <param name="filepath">ÎÄ¼şÂ·¾¶</param>
+        /// <param name="filepath">æ–‡ä»¶è·¯å¾„</param>
         public void Write(string filepath, System.Action<bool,float> progressAction = null)
         {
             if (progressAction != null)
@@ -60,7 +60,7 @@ namespace RenderVegetationIn1ms
             var dir = System.IO.Path.GetDirectoryName(filepath);
             System.IO.Directory.CreateDirectory(dir);
 
-            // Ğ´ÈëÖ²±»Êı¾İ¿â
+            // å†™å…¥æ¤è¢«æ•°æ®åº“
             var length = AllBlockVegetationDatas == null ? 0 : AllBlockVegetationDatas.Length;
             using (FileStream fs = new FileStream(filepath, FileMode.Create))
             {
@@ -93,7 +93,7 @@ namespace RenderVegetationIn1ms
             BlockVegetationDatasDatabaseInfo.IDIndexs = new BlockVegetationDatasDatabaseIndex[count];
 
             
-            // Ğ´ÈëËùÓĞÇø¿éµÄÖ²±»Êı¾İ
+            // å†™å…¥æ‰€æœ‰åŒºå—çš„æ¤è¢«æ•°æ®
             var blockVegetationDatasFilepath = System.IO.Path.Combine(dir, BlockVegetationDatasDatabaseFilepath);
             dir = System.IO.Path.GetDirectoryName(blockVegetationDatasFilepath);
             System.IO.Directory.CreateDirectory(dir);
@@ -126,7 +126,7 @@ namespace RenderVegetationIn1ms
 
 
 
-            // Ğ´ÈëËùÓĞÇø¿éµÄË÷ÒıÊı¾İ
+            // å†™å…¥æ‰€æœ‰åŒºå—çš„ç´¢å¼•æ•°æ®
             if (progressAction != null)
                 progressAction(false, 0);
             var blockVegetationDatasDatabaseInfoFilepath = System.IO.Path.Combine(dir, BlockVegetationDatasDatabaseInfoFilepath);
@@ -134,10 +134,10 @@ namespace RenderVegetationIn1ms
 
         }
         /// <summary>
-        /// ´ÓÎÄ¼şÖĞ¶ÁÈ¡Êı¾İ
+        /// ä»æ–‡ä»¶ä¸­è¯»å–æ•°æ®
         /// </summary>
-        /// <param name="filepath">ÎÄ¼şÂ·¾¶</param>
-        /// <param name="progressAction">½ø¶È»Øµ÷</param>
+        /// <param name="filepath">æ–‡ä»¶è·¯å¾„</param>
+        /// <param name="progressAction">è¿›åº¦å›è°ƒ</param>
         public void ReadFromFile(string filepath, System.Action<bool, float> progressAction = null)
         {
             if (progressAction != null) progressAction(false, 0);
@@ -155,14 +155,14 @@ namespace RenderVegetationIn1ms
             BlockVegetationDatasDatabaseInfo = new BlockVegetationDatasDatabaseInfo();
             if (progressAction != null) progressAction(false, 0.1f);
 
-            // ½âÎöÇø¿éÖ²±»Êı¾İ¿âĞÅÏ¢Êı¾İ
+            // è§£æåŒºå—æ¤è¢«æ•°æ®åº“ä¿¡æ¯æ•°æ®
             var infoDone = false;
             System.Threading.Tasks.Task.Run(() => {
                 BlockVegetationDatasDatabaseInfo.ReadFromFile(System.IO.Path.Combine(dir, BlockVegetationDatasDatabaseInfoFilepath));
                 infoDone = true;
             });
  
-            // ¶ÁÈ¡Çø¿éÖ²±»Êı¾İ¿â
+            // è¯»å–åŒºå—æ¤è¢«æ•°æ®åº“
             var fileStream = new System.IO.FileStream(System.IO.Path.Combine(dir, BlockVegetationDatasDatabaseFilepath), FileMode.Open);
             var blockVegetationDatabaseDone = false;
             var bufferCount = 1;
@@ -195,7 +195,7 @@ namespace RenderVegetationIn1ms
                 blockVegetationDatabaseDone = true;
             });
 
-            // µÈ´ıÇø¿éÖ²±»Êı¾İ¿âĞÅÏ¢ºÍÇø¿éÖ²±»Êı¾İ¿âÎÄ¼şÊı¾İ¶ÁÈ¡Íê³É
+            // ç­‰å¾…åŒºå—æ¤è¢«æ•°æ®åº“ä¿¡æ¯å’ŒåŒºå—æ¤è¢«æ•°æ®åº“æ–‡ä»¶æ•°æ®è¯»å–å®Œæˆ
             while (!infoDone || !blockVegetationDatabaseDone)
             {
                 if (infoDone || blockVegetationDatabaseDone)
@@ -209,11 +209,11 @@ namespace RenderVegetationIn1ms
             startIndex = 0;
             var count = BitConverter.ToInt32(buffers[0], startIndex); startIndex += sizeof(int);
             if (count != BlockVegetationDatasDatabaseInfo.BlockCount)
-                throw new Exception("[RenderVegetationIn1ms] ½âÎöÖ²±»Êı¾İ¿â³ö´í£¡¼ÇÂ¼µÄ´æÔÚÖ²±»Êı¾İµÄÇø¿éÊıÁ¿²»Ò»ÖÂ¡£");
+                throw new Exception("[RenderVegetationIn1ms] è§£ææ¤è¢«æ•°æ®åº“å‡ºé”™ï¼è®°å½•çš„å­˜åœ¨æ¤è¢«æ•°æ®çš„åŒºå—æ•°é‡ä¸ä¸€è‡´ã€‚");
             if(fileStreamLength != BlockVegetationDatasDatabaseInfo.BytesCount)
-                throw new Exception("[RenderVegetationIn1ms] ½âÎöÖ²±»Êı¾İ¿â³ö´í£¡¼ÇÂ¼µÄÖ²±»Êı¾İËùÕ¼×Ö½ÚÊı²»Ò»ÖÂ¡£");
+                throw new Exception("[RenderVegetationIn1ms] è§£ææ¤è¢«æ•°æ®åº“å‡ºé”™ï¼è®°å½•çš„æ¤è¢«æ•°æ®æ‰€å å­—èŠ‚æ•°ä¸ä¸€è‡´ã€‚");
             
-            // ½âÎöÃ¿Ò»¸öÇø¿éÖ²±»Êı¾İÊı¾İ
+            // è§£ææ¯ä¸€ä¸ªåŒºå—æ¤è¢«æ•°æ®æ•°æ®
             var doneCount = 0;
             object donesync = new object();
             var error = string.Empty;
@@ -245,7 +245,7 @@ namespace RenderVegetationIn1ms
                                 var count1 = buffer.Length - idIndex.StartIndex;
                                 var count2 = idIndex.BytesCount - count1;
                                 System.Array.Copy(buffer, bufferStartIndex, mybuffer, 0, count1);
-                                System.Array.Copy(buffers[j + 1], 0, mybuffer, 0, count2);
+                                System.Array.Copy(buffers[j + 1], 0, mybuffer, count1, count2);
                                 buffer = mybuffer;
                                 bufferStartIndex = 0;
                             }
@@ -255,7 +255,7 @@ namespace RenderVegetationIn1ms
                     }
                     if (!ok)
                     {
-                        error = $"Çø¿éÖ²±»Êı¾İ¿âË÷ÒıÊı¾İÎŞĞ§£¡id: {id}, idIndex: {idIndex}";
+                        error = $"åŒºå—æ¤è¢«æ•°æ®åº“ç´¢å¼•æ•°æ®æ— æ•ˆï¼id: {id}, idIndex: {idIndex}";
                         return;
                     }
                     else
@@ -267,7 +267,7 @@ namespace RenderVegetationIn1ms
                 });
             }
 
-            // µÈ´ıÇø¿éÖ²±»Êı¾İ½âÎöÈ«²¿Íê±Ï
+            // ç­‰å¾…åŒºå—æ¤è¢«æ•°æ®è§£æå…¨éƒ¨å®Œæ¯•
             while (true)
             {
                 if (!string.IsNullOrEmpty(error))
