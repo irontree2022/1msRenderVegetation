@@ -141,6 +141,13 @@ namespace RenderVegetationIn1ms
         public void ReadFromFile(string filepath, System.Action<bool, float> progressAction = null)
         {
             if (progressAction != null) progressAction(false, 0);
+
+            // 注意，经过测试植被总数太高，比如800万，单个文件占用将达到4G以上的时候，
+            // 此时这个读取函数将会出问题，并不能顺利通过拼接buffer来完成植被数据反序列化，
+            // 因此，该函数不适用于大文件读取，对于基础渲染框架这个Demo来说，这个函数已经足够使用了。
+            // 但商业项目中，仍需要对植被数据存储结构和文件存储方式进行优化。
+            
+            
             var buffer = System.IO.File.ReadAllBytes(filepath);
             var dir = System.IO.Path.GetDirectoryName(filepath);
             var startIndex = 0;
@@ -242,7 +249,7 @@ namespace RenderVegetationIn1ms
                             if (idIndex.StartIndex + idIndex.BytesCount > prebufferBytesCount + buffer.Length)
                             {
                                 var mybuffer = new byte[idIndex.BytesCount];
-                                var count1 = buffer.Length - idIndex.StartIndex;
+                                var count1 = prebufferBytesCount + buffer.Length - idIndex.StartIndex;
                                 var count2 = idIndex.BytesCount - count1;
                                 System.Array.Copy(buffer, bufferStartIndex, mybuffer, 0, count1);
                                 System.Array.Copy(buffers[j + 1], 0, mybuffer, count1, count2);
