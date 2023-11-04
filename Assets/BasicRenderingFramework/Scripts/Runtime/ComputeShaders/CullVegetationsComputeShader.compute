@@ -3,7 +3,7 @@
 struct VegetationInstanceData {
 	float3 center;
 	float3 extents;
-	float4x4 Matrix;
+	float4x4 MatrixData;
 	int InstanceID;
 	int ModelPrototypeID;
 };
@@ -142,7 +142,7 @@ void CullVegetations(uint3 id : SV_DispatchThreadID)
 	// 计算lod
 	int lod = 0;
 	if (LODLevelsCount > 0)
-		lod = CalculateLOD(instance.Matrix, instance.extents);
+		lod = CalculateLOD(instance.MatrixData, instance.extents);
 	if (lod == 0)
 		VisibleLOD0AppendStructuredBuffer.Append(instance);
 	else if (lod == 1)
