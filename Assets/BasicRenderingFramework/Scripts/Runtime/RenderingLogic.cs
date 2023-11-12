@@ -478,7 +478,6 @@ namespace RenderVegetationIn1ms
         private static void CullVegetationDatasWithComputeShader()
         {
             UnityEngine.Profiling.Profiler.BeginSample("CullVegetations_ComputeShader");
-
             for (var i = 0; i < _RenderVars.ModelRenderingDatas.Length; i++)
             {
                 var modelRenderingsData = _RenderVars.ModelRenderingDatas[i];
@@ -547,7 +546,6 @@ namespace RenderVegetationIn1ms
                     }
                 }
             }
-
             UnityEngine.Profiling.Profiler.EndSample();
         }
         /// <summary>

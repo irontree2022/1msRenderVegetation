@@ -217,6 +217,9 @@ namespace RenderVegetationIn1ms
         /// </summary>
         private void InitShaderIDs()
         {
+            if (!_RenderParams.DrawsWithProcedural)
+                CullVegetationsComputeShaderKernel = _RenderParams.CullVegetationsComputeShader.FindKernel("CullVegetations");
+
             ShaderName_IndirectShaderDataBuffer_ID = Shader.PropertyToID(ShaderName_IndirectShaderDataBuffer);
 
             ShaderName_InstancesCount_ID = Shader.PropertyToID(ShaderName_InstancesCount);

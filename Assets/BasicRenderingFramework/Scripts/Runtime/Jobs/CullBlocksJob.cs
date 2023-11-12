@@ -21,7 +21,8 @@ namespace RenderVegetationIn1ms
         [ReadOnly] public Vector3 CameraPosition;
 
 
-        bool IsOutPlane(float4 plane, float3 pointPosition) => (math.dot(plane.xyz, pointPosition) + plane.w > 0);
+        bool IsOutPlane(float4 plane, float3 pointPosition) => 
+            (math.dot(plane.xyz, pointPosition) + plane.w > 0);
         bool IsCulled(in NativeArray<float3> boundVerts)
         {
             //如果8个顶点都在某个面外，则肯定在视锥体外面
@@ -38,20 +39,21 @@ namespace RenderVegetationIn1ms
             return false;
         }
 
-        float Distance(float3 center, float3 min, float3 max)
+        float Distance(float3 point, float3 min, float3 max)
         {
-            var x = center.x;
-            var y = center.y;
-            var z = center.z;
+            var x = point.x;
+            var y = point.y;
+            var z = point.z;
             if (x < min.x) x = min.x;
             else if (x > max.x) x = max.x;
             if (y < min.y) y = min.y;
             else if (y > max.y) y = max.y;
             if (z < min.z) z = min.z;
             else if (z > max.z) z = max.z;
-            return math.abs(math.distance(new float3(x, y, z), center));
+            return math.abs(math.distance(new float3(x, y, z), point));
         }
-        bool IsInBounds(float3 center, float3 min, float3 max) => center.x > min.x && center.y > min.y && center.z > min.z && center.x < max.x && center.y < max.y && center.z < max.z;
+        bool IsInBounds(float3 center, float3 min, float3 max) => 
+            center.x > min.x && center.y > min.y && center.z > min.z && center.x < max.x && center.y < max.y && center.z < max.z;
         bool IsAllInPlanesWhenNotCulled(in NativeArray<float3> boundVerts)
         {
             for (int i = 0; i < 6; i++)

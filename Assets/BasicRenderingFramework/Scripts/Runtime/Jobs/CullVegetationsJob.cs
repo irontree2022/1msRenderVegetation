@@ -41,19 +41,20 @@ namespace RenderVegetationIn1ms
         [ReadOnly] public float3 CameraPosition;
         [ReadOnly] public float MaxCoreRenderingDistance;
         [ReadOnly] public float MaxRenderingDistance;
-        [ReadOnly] public bool ShowVisibleVegetationBounds;
 
         public Unity.Collections.NativeArray<int> VisibleLOD0CountNativeArray;
         public Unity.Collections.NativeArray<int> VisibleLOD1CountNativeArray;
         public Unity.Collections.NativeArray<int> VisibleLOD2CountNativeArray;
         public Unity.Collections.NativeArray<int> VisibleLOD3CountNativeArray;
         public Unity.Collections.NativeArray<int> VisibleLOD4CountNativeArray;
-        public Unity.Collections.NativeArray<int> VegetationBoundsCountNativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD0NativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD1NativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD2NativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD3NativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD4NativeArray;
+
+        [ReadOnly] public bool ShowVisibleVegetationBounds;
+        public Unity.Collections.NativeArray<int> VegetationBoundsCountNativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<Bounds> VegetationBoundsNativeArray;
 
         float Distance(float3 center, float3 min, float3 max)
