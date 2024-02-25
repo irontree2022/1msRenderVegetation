@@ -66,6 +66,10 @@ namespace RenderVegetationIn1ms
         public float CameraNear;
         public float CameraFar;
         public Vector3 CameraPosition;
+        public float QualitySettingsLodBias;
+        public bool CameraOrthographic;
+        public float CameraOrthographicSize;
+
         public float TanHalfAngle;
         public Vector4[] FrustumPlanes;
         public NativeArray<float4> FrustumPlanesNativeArray;
@@ -110,6 +114,12 @@ namespace RenderVegetationIn1ms
         public const string ShaderName_VisibleLOD3AppendStructuredBuffer = "VisibleLOD3AppendStructuredBuffer";
         public const string ShaderName_VisibleLOD4AppendStructuredBuffer = "VisibleLOD4AppendStructuredBuffer";
         public const string ShaderName_VegetationBoundsAppendStructuredBuffer = "VegetationBoundsAppendStructuredBuffer";
+        // 添加四个参与LOD计算的参数
+        public const string ShaderName_QualitySettingsLodBias = "QualitySettingsLodBias";
+        public const string ShaderName_CameraOrthographic = "CameraOrthographic";
+        public const string ShaderName_CameraOrthographicSize = "CameraOrthographicSize";
+        public const string ShaderName_CameraFieldOfView = "CameraFieldOfView";
+        public const string ShaderName_LODGroupSize = "LODGroupSize";
 
         public int ShaderName_InstancesCount_ID = -1;
         public int ShaderName_InstancesStructuredBuffer_ID = -1;
@@ -119,6 +129,13 @@ namespace RenderVegetationIn1ms
         public int ShaderName_tanHalfAngle_ID = -1;
         public int ShaderName_FrustumPlanes_ID = -1;
         public int ShaderName_CameraPosition_ID = -1;
+
+        public int ShaderName_QualitySettingsLodBias_ID = -1;
+        public int ShaderName_CameraOrthographic_ID = -1;
+        public int ShaderName_CameraOrthographicSize_ID = -1;
+        public int ShaderName_CameraFieldOfView_ID = -1;
+        public int ShaderName_LODGroupSize_ID = -1;
+
         public int ShaderName_MaxCoreRenderingDistance_ID = -1;
         public int ShaderName_MaxRenderingDistance_ID = -1;
         public int ShaderName_ShowVisibleVegetationBounds_ID = -1;
@@ -200,6 +217,9 @@ namespace RenderVegetationIn1ms
             CameraFOV = _RenderParams.Camera.fieldOfView;
             CameraNear = _RenderParams.Camera.nearClipPlane;
             CameraFar = _RenderParams.Camera.farClipPlane;
+            CameraOrthographic = _RenderParams.Camera.orthographic;
+            CameraOrthographicSize = _RenderParams.Camera.orthographicSize;
+            QualitySettingsLodBias = QualitySettings.lodBias;
 
             TanHalfAngle = Mathf.Tan(Mathf.Deg2Rad * CameraFOV * 0.5f);
             FrustumPlanes = Tool.GetFrustumPlanes(_RenderParams.Camera, FrustumPlanes);
@@ -230,6 +250,13 @@ namespace RenderVegetationIn1ms
             ShaderName_tanHalfAngle_ID = Shader.PropertyToID(ShaderName_tanHalfAngle);
             ShaderName_FrustumPlanes_ID = Shader.PropertyToID(ShaderName_FrustumPlanes);
             ShaderName_CameraPosition_ID = Shader.PropertyToID(ShaderName_CameraPosition);
+
+            ShaderName_QualitySettingsLodBias_ID = Shader.PropertyToID(ShaderName_QualitySettingsLodBias);
+            ShaderName_CameraOrthographic_ID = Shader.PropertyToID(ShaderName_CameraOrthographic);
+            ShaderName_CameraOrthographicSize_ID = Shader.PropertyToID(ShaderName_CameraOrthographicSize);
+            ShaderName_CameraFieldOfView_ID = Shader.PropertyToID(ShaderName_CameraFieldOfView);
+            ShaderName_LODGroupSize_ID = Shader.PropertyToID(ShaderName_LODGroupSize);
+
             ShaderName_MaxCoreRenderingDistance_ID = Shader.PropertyToID(ShaderName_MaxCoreRenderingDistance);
             ShaderName_MaxRenderingDistance_ID = Shader.PropertyToID(ShaderName_MaxRenderingDistance);
             ShaderName_ShowVisibleVegetationBounds_ID = Shader.PropertyToID(ShaderName_ShowVisibleVegetationBounds);

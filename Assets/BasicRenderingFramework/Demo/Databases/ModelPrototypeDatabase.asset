@@ -25,6 +25,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.8556602, y: 0.015998593, z: 0, w: 0}
+    LODGroupSize: 0.66174686
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -41,6 +42,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.8413828, y: 0.01, z: 0, w: 0}
+    LODGroupSize: 0.57412916
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -57,6 +59,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.87488335, y: 0.01, z: 0, w: 0}
+    LODGroupSize: 0.38923955
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -73,6 +76,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.8413828, y: 0.01, z: 0, w: 0}
+    LODGroupSize: 0.7433133
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -89,6 +93,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.90166354, y: 0.01, z: 0, w: 0}
+    LODGroupSize: 1.4411201
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -105,6 +110,7 @@ MonoBehaviour:
     isLODGroup: 0
     lodCount: 0
     LODLevels: {x: 0, y: 0, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -121,6 +127,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.7627436, y: 0.019902887, z: 0, w: 0}
+    LODGroupSize: 0.7154342
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -137,6 +144,7 @@ MonoBehaviour:
     isLODGroup: 0
     lodCount: 0
     LODLevels: {x: 0, y: 0, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -153,6 +161,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.8652451, y: 0.032306254, z: 0, w: 0}
+    LODGroupSize: 0.4867506
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -169,6 +178,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.8413828, y: 0.031400003, z: 0, w: 0}
+    LODGroupSize: 0.29741418
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -186,6 +196,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 3
     LODLevels: {x: 0.72267085, y: 0.26428708, z: 0.037072573, w: 0}
+    LODGroupSize: 1.0356207
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -203,6 +214,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 3
     LODLevels: {x: 0.8508877, y: 0.37497377, z: 0.022073222, w: 0}
+    LODGroupSize: 0.7413604
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -220,6 +232,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 2
     LODLevels: {x: 0.6251685, y: 0.021810876, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -237,6 +250,7 @@ MonoBehaviour:
     isLODGroup: 0
     lodCount: 0
     LODLevels: {x: 0, y: 0, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -253,6 +267,7 @@ MonoBehaviour:
     isLODGroup: 0
     lodCount: 0
     LODLevels: {x: 0, y: 0, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -269,6 +284,7 @@ MonoBehaviour:
     isLODGroup: 0
     lodCount: 0
     LODLevels: {x: 0, y: 0, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -285,6 +301,7 @@ MonoBehaviour:
     isLODGroup: 0
     lodCount: 0
     LODLevels: {x: 0, y: 0, z: 0, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -301,7 +318,8 @@ MonoBehaviour:
       m_Extent: {x: 2.8711886, y: 6.2591386, z: 2.9923902}
     isLODGroup: 1
     lodCount: 3
-    LODLevels: {x: 0.87407523, y: 0.52528435, z: 0.0042130137, w: 0}
+    LODLevels: {x: 0.33162516, y: 0.1342015, z: 0.03383465, w: 0}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -319,6 +337,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 3
     LODLevels: {x: 1.9903482, y: 1.2956038, z: 0.041838843, w: 0}
+    LODGroupSize: 18.53942
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -336,6 +355,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 3
     LODLevels: {x: 0.6, y: 0.3, z: 0.1, w: 0}
+    LODGroupSize: 4.160165
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -353,6 +373,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 4
     LODLevels: {x: 4.9619536, y: 1.6716243, z: 0.62943685, w: 0.040986966}
+    LODGroupSize: 18.206308
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1
@@ -370,6 +391,7 @@ MonoBehaviour:
     isLODGroup: 1
     lodCount: 4
     LODLevels: {x: 0.79291934, y: 0.4903262, z: 0.19733919, w: 0.021810876}
+    LODGroupSize: 1
     layer: 0
     receiveShadows: 1
     shadowCastingMode: 1

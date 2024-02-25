@@ -361,6 +361,11 @@ namespace RenderVegetationIn1ms
                     tanHalfAngle = _RenderVars.TanHalfAngle,
                     FrustumPlanes = _RenderVars.FrustumPlanesNativeArray,
                     CameraPosition = _RenderVars.CameraPosition,
+                    CameraOrthographic = _RenderVars.CameraOrthographic,
+                    CameraOrthographicSize = _RenderVars.CameraOrthographicSize,
+                    CameraFieldOfView = _RenderVars.CameraFOV,
+                    LODGroupSize = modelRenderingsData.Model.LODGroupSize,
+                    QualitySettingsLodBias = _RenderVars.QualitySettingsLodBias,
                     MaxCoreRenderingDistance = _RenderParams.MaxCoreRenderingDistance,
                     MaxRenderingDistance = _RenderParams.MaxRenderingDistance,
                     ShowVisibleVegetationBounds = _RenderParams.ShowVisibleVegetationBounds,
@@ -495,6 +500,13 @@ namespace RenderVegetationIn1ms
                 cs.SetFloat(_RenderVars.ShaderName_tanHalfAngle_ID, _RenderVars.TanHalfAngle);
                 cs.SetVectorArray(_RenderVars.ShaderName_FrustumPlanes_ID, _RenderVars.FrustumPlanes);
                 cs.SetVector(_RenderVars.ShaderName_CameraPosition_ID, _RenderVars.CameraPosition);
+
+                cs.SetFloat(_RenderVars.ShaderName_QualitySettingsLodBias_ID, _RenderVars.QualitySettingsLodBias);
+                cs.SetBool(_RenderVars.ShaderName_CameraOrthographic_ID, _RenderVars.CameraOrthographic);
+                cs.SetFloat(_RenderVars.ShaderName_CameraOrthographicSize_ID, _RenderVars.CameraOrthographicSize);
+                cs.SetFloat(_RenderVars.ShaderName_CameraFieldOfView_ID, _RenderVars.CameraFOV);
+                cs.SetFloat(_RenderVars.ShaderName_LODGroupSize_ID, modelRenderingsData.Model.LODGroupSize);
+
                 cs.SetFloat(_RenderVars.ShaderName_MaxCoreRenderingDistance_ID, modelRenderingsData.Model.enableRenderImpostor ? _RenderParams.MaxCoreRenderingDistance : _RenderParams.MaxGrassRenderingDistance);
                 cs.SetFloat(_RenderVars.ShaderName_MaxRenderingDistance_ID, _RenderParams.MaxRenderingDistance);
                 cs.SetBool(_RenderVars.ShaderName_ShowVisibleVegetationBounds_ID, _RenderParams.ShowVisibleVegetationBounds);

@@ -24,6 +24,14 @@ bool enableImpostor;
 float tanHalfAngle;
 float4 FrustumPlanes[6];
 float3 CameraPosition;
+
+// 添加四个参与LOD计算的参数
+float QualitySettingsLodBias;
+bool CameraOrthographic;
+float CameraOrthographicSize;
+float CameraFieldOfView;
+float LODGroupSize;
+
 float MaxCoreRenderingDistance;
 float MaxRenderingDistance;
 bool ShowVisibleVegetationBounds;
@@ -84,7 +92,63 @@ int CalculateLOD(float4x4 instanceMatrix, float3 boundsExtents)
 	}
 	return 4;
 }
+// 计算LOD对象的屏占比值
+float GetRelativeHeight(
+		float3 lodBoundsCenter, float3 cameraPos, float lodBias,
+		bool CameraOrthographic, float CameraOrthographicSize, float CameraFieldOfView,
+		float3 lodGroupLossyScale, float lodGroupSize)
+{
+    float3 scale = lodGroupLossyScale;
+    float largestAxis = abs(scale.x);
+    largestAxis = max(largestAxis, abs(scale.y));
+    largestAxis = max(largestAxis, abs(scale.z));
+    float size = lodGroupSize * largestAxis; // lod对象最大的尺寸
 
+    if (CameraOrthographic)
+		// 正交相机
+		// 使用相机正交尺寸当作屏幕尺寸，计算屏占比
+        return (size * 0.5F / CameraOrthographicSize) * lodBias;
+
+	// 透视相机
+	// 使用相似三角形，就算屏占比
+    float dist = abs(distance(lodBoundsCenter, cameraPos));
+    float halfAngle = tanHalfAngle;
+    float relativeHeight = size * 0.5F / (dist * halfAngle);
+    return relativeHeight * lodBias;
+}
+// 就LOD对象的LOD级别
+int CalculateLOD(float3 lodBoundsCenter, float3 cameraPos, float lodBias,
+		bool CameraOrthographic, float CameraOrthographicSize, float CameraFieldOfView,
+		float3 lodGroupLossyScale, float lodGroupSize,
+		int lodLevelsCount, float4 lodLevels)
+{
+	// 计算出LOD对象的屏占比值
+    float currLOD = GetRelativeHeight(
+                lodBoundsCenter,
+                cameraPos,
+                lodBias,
+                CameraOrthographic, CameraOrthographicSize, CameraFieldOfView,
+                lodGroupLossyScale, lodGroupSize);
+
+	// 出LOD对象的LOD级别
+    for (int i = 0; i < lodLevelsCount; i++)
+    {
+        if (i > 3)
+            break;
+        float lodLevel = 0;
+        if (i == 0)
+            lodLevel = lodLevels.x;
+        else if (i == 1)
+            lodLevel = lodLevels.y;
+        else if (i == 2)
+            lodLevel = lodLevels.z;
+        else if (i == 3)
+            lodLevel = lodLevels.w;
+        if (currLOD >= lodLevel)
+            return i;
+    }
+    return 4;
+}
 
 [numthreads(64, 1, 1)]
 void CullVegetations(uint3 id : SV_DispatchThreadID)
@@ -142,7 +206,13 @@ void CullVegetations(uint3 id : SV_DispatchThreadID)
 	// 计算lod
 	int lod = 0;
 	if (LODLevelsCount > 0)
-		lod = CalculateLOD(instance.MatrixData, instance.extents);
+    {
+        float3 lossyScale = float3(length(instance.MatrixData._m00_m10_m20), length(instance.MatrixData._m01_m11_m21), length(instance.MatrixData._m02_m12_m22));
+        lod = CalculateLOD(instance.center, CameraPosition, QualitySettingsLodBias, 
+				CameraOrthographic, CameraOrthographicSize, CameraFieldOfView, 
+				lossyScale, LODGroupSize, 
+				LODLevelsCount, LODLevels);
+    }
 	if (lod == 0)
 		VisibleLOD0AppendStructuredBuffer.Append(instance);
 	else if (lod == 1)

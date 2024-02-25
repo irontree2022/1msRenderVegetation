@@ -31,6 +31,8 @@ namespace RenderVegetationIn1ms
         public int lodCount;
         [Header("PrefabObject LOD值")]
         public Vector4 LODLevels;
+        [Header("LODGroup size")]
+        public float LODGroupSize;
 
         [Header("渲染数据")]
         [Header("植被模型原型layer")]
@@ -71,6 +73,7 @@ namespace RenderVegetationIn1ms
         /// </summary>
         public void ResetLODLevels(LODGroup lodg = null)
         {
+            LODGroupSize = 1f;
             if (PrefabObject != null)
             {
                 if (lodg == null)
@@ -78,6 +81,7 @@ namespace RenderVegetationIn1ms
                 isLODGroup = lodg != null;
                 if (isLODGroup)
                 {
+                    LODGroupSize = lodg.size;
                     var lods = lodg.GetLODs();
                     lodCount = lods.Length;
                     for (var i = 0; i < lodCount; i++)

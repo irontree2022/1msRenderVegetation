@@ -39,8 +39,17 @@ namespace RenderVegetationIn1ms
         [ReadOnly] public float tanHalfAngle;
         [ReadOnly] public NativeArray<float4> FrustumPlanes;
         [ReadOnly] public float3 CameraPosition;
+
+        // 添加四个参与LOD计算的参数
+        [ReadOnly] public float QualitySettingsLodBias;
+        [ReadOnly] public bool CameraOrthographic;
+        [ReadOnly] public float CameraOrthographicSize;
+        [ReadOnly] public float CameraFieldOfView;
+        [ReadOnly] public float LODGroupSize;
+
         [ReadOnly] public float MaxCoreRenderingDistance;
         [ReadOnly] public float MaxRenderingDistance;
+
 
         public Unity.Collections.NativeArray<int> VisibleLOD0CountNativeArray;
         public Unity.Collections.NativeArray<int> VisibleLOD1CountNativeArray;
@@ -105,6 +114,62 @@ namespace RenderVegetationIn1ms
             }
             return 4;
         }
+        /// <summary>
+        /// 计算LOD对象的屏占比值
+        /// </summary>
+        float GetRelativeHeight(
+            Vector3 lodBoundsCenter, Vector3 cameraPos, float lodBias,
+            bool CameraOrthographic, float CameraOrthographicSize, float CameraFieldOfView,
+            Vector3 lodGroupLossyScale, float lodGroupSize)
+        {
+            var scale = lodGroupLossyScale;
+            float largestAxis = Mathf.Abs(scale.x);
+            largestAxis = Mathf.Max(largestAxis, Mathf.Abs(scale.y));
+            largestAxis = Mathf.Max(largestAxis, Mathf.Abs(scale.z));
+            var size = lodGroupSize * largestAxis; // lod对象最大的尺寸
+
+            if (CameraOrthographic)
+                // 正交相机
+                // 使用相机正交尺寸当作屏幕尺寸，计算屏占比
+                return (size * 0.5F / CameraOrthographicSize) * lodBias;
+
+            // 透视相机
+            // 使用相似三角形，就算屏占比
+            var distance = (lodBoundsCenter - cameraPos).magnitude;
+            var halfAngle = Mathf.Tan(Mathf.Deg2Rad * CameraFieldOfView * 0.5F);
+            var relativeHeight = size * 0.5F / (distance * halfAngle);
+            return relativeHeight * lodBias;
+        }
+        /// <summary>
+        /// 就LOD对象的LOD级别
+        /// </summary>
+        int CalculateLOD(Vector3 lodBoundsCenter, Vector3 cameraPos, float lodBias,
+            bool CameraOrthographic, float CameraOrthographicSize, float CameraFieldOfView,
+            Vector3 lodGroupLossyScale, float lodGroupSize,
+            int lodLevelsCount, Vector4 lodLevels)
+        {
+            // 计算出LOD对象的屏占比值
+            var currLOD = GetRelativeHeight(
+                lodBoundsCenter,
+                cameraPos,
+                lodBias,
+                CameraOrthographic, CameraOrthographicSize, CameraFieldOfView,
+                lodGroupLossyScale, lodGroupSize);
+
+            // 出LOD对象的LOD级别
+            for (int i = 0; i < lodLevelsCount; i++)
+            {
+                if (i > 3) break;
+                float lodLevel = 0;
+                if (i == 0) lodLevel = lodLevels.x;
+                else if (i == 1) lodLevel = lodLevels.y;
+                else if (i == 2) lodLevel = lodLevels.z;
+                else if (i == 3) lodLevel = lodLevels.w;
+                if (currLOD >= lodLevel)
+                    return i;
+            }
+            return 4;
+        }
         public void Execute(int index)
         {
             var instance = InstancesNativeArray[index];
@@ -157,7 +222,16 @@ namespace RenderVegetationIn1ms
             }
 
             // 计算lod
-            int lod = CalculateLOD(instance.matrix, instance.extents);
+            int lod = 0;
+            if (LODLevelsCount > 0)
+            {
+                float4x4 matrix = instance.matrix;
+                Vector3 lossyScale = new float3(math.length(matrix.c0.xyz), math.length(matrix.c1.xyz), math.length(matrix.c2.xyz));
+                CalculateLOD(instance.center, CameraPosition, QualitySettingsLodBias,
+                    CameraOrthographic, CameraOrthographicSize, CameraFieldOfView,
+                    lossyScale, LODGroupSize,
+                    LODLevelsCount, LODLevels);
+            }
             if (lod == 0)
                 VisibleLOD0NativeArray[VisibleLOD0CountNativeArray[0]++] = instance;
             else if (lod == 1)
