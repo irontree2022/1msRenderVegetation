@@ -26,7 +26,7 @@ public class CalculationLOD : MonoBehaviour
         float largestAxis = Mathf.Abs(scale.x);
         largestAxis = Mathf.Max(largestAxis, Mathf.Abs(scale.y));
         largestAxis = Mathf.Max(largestAxis, Mathf.Abs(scale.z));
-        var size = lodGroupSize * largestAxis; // lod对象最大的尺寸
+        var size = lodGroupSize * largestAxis; // 计算lod对象的尺寸
 
         if (CameraOrthographic)
             // 正交相机
