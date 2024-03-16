@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class CalculationLOD : MonoBehaviour
 {
+    public bool syncGameAndScene = true;
     public GameObject golod;
     public GameObject runtimeLODgo;
     public int lodLevelsCount = -1;
@@ -117,6 +118,7 @@ public class CalculationLOD : MonoBehaviour
             Handles.Label(bounds.center, $"Runtime\nLOD {currLodLevel}", EditorStyles.boldLabel);
         }
 
+        if (!syncGameAndScene) return;
         // 以下代码实现Game窗口与Scene摄像机同步
         Camera cameraMain = Camera.main;
         var sceneView = SceneView.lastActiveSceneView;

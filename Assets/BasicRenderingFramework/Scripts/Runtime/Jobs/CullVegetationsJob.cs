@@ -227,7 +227,7 @@ namespace RenderVegetationIn1ms
             {
                 float4x4 matrix = instance.matrix;
                 Vector3 lossyScale = new float3(math.length(matrix.c0.xyz), math.length(matrix.c1.xyz), math.length(matrix.c2.xyz));
-                CalculateLOD(instance.center, CameraPosition, QualitySettingsLodBias,
+                lod = CalculateLOD(instance.center, CameraPosition, QualitySettingsLodBias,
                     CameraOrthographic, CameraOrthographicSize, CameraFieldOfView,
                     lossyScale, LODGroupSize,
                     LODLevelsCount, LODLevels);
