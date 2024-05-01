@@ -43,6 +43,16 @@ namespace RenderVegetationIn1ms
         public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD4NativeArray;
         public Unity.Collections.NativeArray<Bounds> VegetationBoundsNativeArray;
 
+        // 阴影优化相关参数
+        public int VisibleShadowCount;
+        public Unity.Collections.NativeArray<int> VisibleShadowCountNativeArray;
+        public Unity.Collections.NativeArray<VegetationInstanceData> VisibleShadowNativeArray;
+        public ComputeBuffer VisibleShadowComputeBuffer;
+        public MaterialPropertyBlock visibleShadowMPB;
+        public uint[] visibleShadowCountArr = new uint[1] { 0 };
+        public ComputeBuffer visibleShadowCountComputeBuffer;
+        public VegetationInstanceData[] visibleShadowDatas;
+
         public ComputeBuffer VisibleLOD0ComputeBuffer;
         public ComputeBuffer VisibleLOD1ComputeBuffer;
         public ComputeBuffer VisibleLOD2ComputeBuffer;
@@ -121,6 +131,7 @@ namespace RenderVegetationIn1ms
             VisibleLOD2Count = 0;
             VisibleLOD3Count = 0;
             VisibleLOD4Count = 0;
+            VegetationBoundsCount = 0;
 
             if (!VisibleLOD0CountNativeArray.IsCreated)
                 VisibleLOD0CountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
@@ -134,6 +145,7 @@ namespace RenderVegetationIn1ms
                 VisibleLOD4CountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
             if (!VegetationBoundsCountNativeArray.IsCreated)
                 VegetationBoundsCountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
+
 
             if (!VisibleLOD0NativeArray.IsCreated || VisibleLOD0NativeArray.Length < InstanceCount)
             {
@@ -170,6 +182,16 @@ namespace RenderVegetationIn1ms
                 if (VegetationBoundsNativeArray.IsCreated)
                     VegetationBoundsNativeArray.Dispose();
                 VegetationBoundsNativeArray = new NativeArray<Bounds>(InstanceCount, Allocator.Persistent);
+            }
+
+            VisibleShadowCount = 0;
+            if (!VisibleShadowCountNativeArray.IsCreated)
+                VisibleShadowCountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
+            if (!VisibleShadowNativeArray.IsCreated || VisibleShadowNativeArray.Length < InstanceCount)
+            {
+                if (VisibleShadowNativeArray.IsCreated)
+                    VisibleShadowNativeArray.Dispose();
+                VisibleShadowNativeArray = new NativeArray<VegetationInstanceData>(InstanceCount, Allocator.Persistent);
             }
         }
         private void PrepareCullVegetationDatasUsingComputeShader()
@@ -229,6 +251,17 @@ namespace RenderVegetationIn1ms
                     VegetationBoundsComputeBuffer = new ComputeBuffer(InstanceCount * 2, sizeof(float) * 6, ComputeBufferType.Append);
                 }
                 VegetationBoundsComputeBuffer.SetCounterValue(0);
+
+
+                if (visibleShadowCountComputeBuffer == null)
+                    visibleShadowCountComputeBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
+                if (VisibleShadowComputeBuffer == null || VisibleShadowComputeBuffer.count < InstanceCount)
+                {
+                    VisibleShadowComputeBuffer?.Release();
+                    VisibleShadowComputeBuffer = new ComputeBuffer(InstanceCount * 2, VegetationInstanceData.stride, ComputeBufferType.Append);
+                    ResetLODsMPB(-1);
+                }
+                VisibleShadowComputeBuffer.SetCounterValue(0);
             }
 
             if (impostorInstancesCount > 0)
@@ -334,6 +367,8 @@ namespace RenderVegetationIn1ms
                         renderer.argsList = new List<uint[]>();
                     if (renderer.argsBufferList == null)
                         renderer.argsBufferList = new List<ComputeBuffer>();
+                    if (renderer.ShadowArgsBufferList == null)
+                        renderer.ShadowArgsBufferList = new List<ComputeBuffer>();
                     int submeshesToRender = Mathf.Min(renderer.subMeshCount, renderer.materials.Count);
                     for (int j = 0; j < submeshesToRender; j++)
                     {
@@ -347,10 +382,15 @@ namespace RenderVegetationIn1ms
                         var argsbuffer = new ComputeBuffer(1, sizeof(uint) * 5, ComputeBufferType.IndirectArguments);
                         argsbuffer.SetData(args);
                         renderer.argsBufferList.Add(argsbuffer);
+                        var shadowArgsbuffer = new ComputeBuffer(1, sizeof(uint) * 5, ComputeBufferType.IndirectArguments);
+                        shadowArgsbuffer.SetData(args);
+                        renderer.ShadowArgsBufferList.Add(shadowArgsbuffer);
                     }
                 }
             }
 
+            if(visibleShadowMPB == null)
+                visibleShadowMPB = new MaterialPropertyBlock();
         }
         /// <summary>
         /// 重新设置LODs的材质属性快
@@ -367,6 +407,13 @@ namespace RenderVegetationIn1ms
                     impostorMPB.SetBuffer(RenderingAPI.RenderVars.ShaderName_IndirectShaderDataBuffer_ID, VisibleLOD4ComputeBuffer);
                 }
                 return;
+            }
+            else if (lod < 0 || lod > 4)
+            {
+                // 仅渲染阴影相关
+                visibleShadowMPB.Clear();
+                visibleShadowMPB.SetBuffer(RenderingAPI.RenderVars.ShaderName_IndirectShaderDataBuffer_ID, VisibleShadowComputeBuffer);
+                return;   
             }
             if (lod >= LODs.Count) return;
             ComputeBuffer cb = null;
@@ -470,6 +517,18 @@ namespace RenderVegetationIn1ms
             impostorInstancesCount = 0;
             impostorInstances = null;
             impostorArgsBuffer?.Release();
+
+            VisibleShadowCount = 0;
+            if (VisibleShadowCountNativeArray.IsCreated)
+                VisibleShadowCountNativeArray.Dispose();
+            if (VisibleShadowNativeArray.IsCreated)
+                VisibleShadowNativeArray.Dispose();
+            if (visibleShadowMPB != null)
+                visibleShadowMPB.Clear();
+            visibleShadowMPB = null;
+            VisibleShadowComputeBuffer?.Release();
+            visibleShadowCountComputeBuffer?.Release();
+            visibleShadowDatas = null;
 
         }
     }

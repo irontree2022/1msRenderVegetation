@@ -76,6 +76,10 @@ namespace RenderVegetationIn1ms
         /// 面片区块剔除时，指示该面片区块是否可以继续收集它的子节点
         /// </summary>
         public int _IsImpostorNeedCollected;
+        /// <summary>
+        /// 是否是阴影区块
+        /// </summary>
+        public int _IsShadow;
 
         /// <summary>
         /// 当前数据可用？
@@ -117,11 +121,19 @@ namespace RenderVegetationIn1ms
             get => _IsImpostorNeedCollected != 0;
             set => _IsImpostorNeedCollected = value ? 1 : 0;
         }
+        /// <summary>
+        /// 是否是阴影区块
+        /// </summary>
+        public bool IsShadow
+        {
+            get => _IsShadow != 0;
+            set => _IsShadow = value ? 1 : 0;
+        }
 
         /// <summary>
         /// 单个实例所占字节数
         /// </summary>
-        public static int stride => sizeof(float) * 12 + sizeof(int) * 7;
+        public static int stride => sizeof(float) * 12 + sizeof(int) * 9;
         public override string ToString() => $"(ID: {ID}, Empty: {Empty}, Bounds: (center: {Bounds.center}, size: {Bounds.size}), TrueBounds: (center: {TrueBounds.center}, size: {TrueBounds.size}))";
     }
 

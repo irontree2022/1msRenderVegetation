@@ -8,6 +8,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.Collections.AllocatorManager;
 
 namespace RenderVegetationIn1ms
 {
@@ -119,10 +120,58 @@ namespace RenderVegetationIn1ms
             {
                 Gizmos.color = Color.green;
                 for (var i = 0; i < _RenderVars.CoreBlocksLength; i++)
+                {
+                    if (_RenderVars.CoreBlocks[i].IsShadow) continue;
                     GizmosDrawWireCube(_RenderVars.CoreBlocks[i]);
+                }
                 Gizmos.color = Color.black;
                 for (var i = 0; i < _RenderVars.ImpostorBlocksLength; i++)
                     GizmosDrawWireCube(_RenderVars.ImpostorBlocks[i]);
+            }
+
+            if (_RenderParams.ShowShadowBlock && _RenderParams.EnableShadowOptimization)
+            {
+                Gizmos.color = Color.black;
+                for (var i = 0; i < _RenderVars.CoreBlocksLength; i++)
+                {
+                    var block = _RenderVars.CoreBlocks[i];
+                    if (block.IsShadow)
+                    {
+                        if (_RenderParams.ShowBlockTrueBounds) Gizmos.DrawWireCube(block.TrueBounds.center, block.TrueBounds.size);
+                        else Gizmos.DrawWireCube(block.Bounds.center, block.Bounds.size);
+                    }
+                }
+            }
+
+            if(_RenderParams.ShowShadowBounds && _RenderParams.EnableShadowOptimization)
+            {
+                Gizmos.color = Color.black;
+                for (var i = 0; i < _RenderVars.ModelRenderingDatas.Length; i++)
+                {
+                    var modelRenderingData = _RenderVars.ModelRenderingDatas[i];
+                    for (var j = 0; j < modelRenderingData.VisibleShadowCount; j++)
+                    {
+                        Bounds bounds = default;
+                        if (_RenderParams.DrawsWithProcedural)
+                        {
+                            if (!modelRenderingData.VisibleShadowNativeArray.IsCreated || j >= modelRenderingData.VisibleShadowNativeArray.Length)
+                                break;
+                            var instance = modelRenderingData.VisibleShadowNativeArray[j];
+                            bounds.center = instance.center;
+                            bounds.extents = instance.extents;
+                        }
+                        else
+                        {
+                            if (modelRenderingData.visibleShadowDatas == null || j >= modelRenderingData.visibleShadowDatas.Length)
+                                break;
+                            var instance = modelRenderingData.visibleShadowDatas[j];
+                            bounds.center = instance.center;
+                            bounds.extents = instance.extents;
+                        }
+
+                        GizmosDrawWireCube(bounds);
+                    }
+                }
             }
         }
         private static void GetBlockNodesDepths(BlockNode blockNode)
@@ -208,6 +257,10 @@ namespace RenderVegetationIn1ms
                 ImpostorBlockMaxSize = _RenderParams.ImpostorBlockMaxSize,
                 ImpostorBlockMinSize = _RenderParams.ImpostorBlockMinSize,
                 CameraPosition = _RenderVars.CameraPosition,
+
+                EnableShadowOptimization = _RenderParams.EnableShadowOptimization,
+                ShadowOptimizationRange = _RenderParams.ShadowOptimizationRange,
+
                 FrustumPlanes = _RenderVars.FrustumPlanesNativeArray,
 
                 AfterCullingBlocksNativeArray = _RenderVars.AfterCullingBlocksNativeArray,
@@ -349,6 +402,7 @@ namespace RenderVegetationIn1ms
                     VisibleLOD3CountNativeArray = modelRenderingsData.VisibleLOD3CountNativeArray,
                     VisibleLOD4CountNativeArray = modelRenderingsData.VisibleLOD4CountNativeArray,
                     VegetationBoundsCountNativeArray = modelRenderingsData.VegetationBoundsCountNativeArray,
+                    VisibleShadowCountNativeArray = modelRenderingsData.VisibleShadowCountNativeArray,
                 }.Schedule();
                 jobhandle = new CullVegetationsJob()
                 {
@@ -383,6 +437,12 @@ namespace RenderVegetationIn1ms
                     VisibleLOD3NativeArray = modelRenderingsData.VisibleLOD3NativeArray,
                     VisibleLOD4NativeArray = modelRenderingsData.VisibleLOD4NativeArray,
                     VegetationBoundsNativeArray = modelRenderingsData.VegetationBoundsNativeArray,
+
+                    // 阴影优化
+                    EnableShadowOptimization = _RenderParams.EnableShadowOptimization,
+                    SunshineDir = _RenderParams.Sunshine.transform.forward,
+                    VisibleShadowCountNativeArray = modelRenderingsData.VisibleShadowCountNativeArray,
+                    VisibleShadowNativeArray = modelRenderingsData.VisibleShadowNativeArray,
 
                 }.Schedule(modelRenderingsData.InstanceCount, modelRenderingsData.InstanceCount, jobhandle);
                 _RenderVars.TempJobHandles[_RenderVars.TempJobHandlesLength++] = jobhandle;
@@ -462,6 +522,22 @@ namespace RenderVegetationIn1ms
                             }
                             modelRenderingsData.VisibleLOD4ComputeBuffer.SetData(modelRenderingsData.VisibleLOD4NativeArray, 0, 0, modelRenderingsData.VisibleLOD4Count);
                         }
+
+                        if (_RenderParams.EnableShadowOptimization)
+                        {
+                            modelRenderingsData.VisibleShadowCount = modelRenderingsData.VisibleShadowCountNativeArray[0];
+                            if (modelRenderingsData.VisibleShadowCount > 0)
+                            {
+                                if (modelRenderingsData.VisibleShadowComputeBuffer == null || modelRenderingsData.VisibleShadowComputeBuffer.count < modelRenderingsData.VisibleShadowCount)
+                                {
+                                    modelRenderingsData.VisibleShadowComputeBuffer?.Release();
+                                    modelRenderingsData.VisibleShadowComputeBuffer = new ComputeBuffer(modelRenderingsData.VisibleShadowCount * 2, VegetationInstanceData.stride, ComputeBufferType.Append);
+                                    modelRenderingsData.ResetLODsMPB(-1);
+                                }
+                                modelRenderingsData.VisibleShadowComputeBuffer.SetData(modelRenderingsData.VisibleShadowNativeArray, 0, 0, modelRenderingsData.VisibleShadowCount);
+                            }
+                        }
+
                     }
                     if (modelRenderingsData.impostorInstancesCount > 0)
                     {
@@ -518,6 +594,12 @@ namespace RenderVegetationIn1ms
                 cs.SetBuffer(kernel, _RenderVars.ShaderName_VisibleLOD4AppendStructuredBuffer_ID, modelRenderingsData.VisibleLOD4ComputeBuffer);
                 cs.SetBuffer(kernel, _RenderVars.ShaderName_VegetationBoundsAppendStructuredBuffer_ID, modelRenderingsData.VegetationBoundsComputeBuffer);
 
+                // 阴影优化
+                cs.SetBool(_RenderVars.ShaderName_EnableShadowOptimization_ID, _RenderParams.EnableShadowOptimization);
+                cs.SetVector(_RenderVars.ShaderName_SunshineDir_ID, _RenderParams.Sunshine.transform.forward);
+                cs.SetBuffer(kernel, _RenderVars.ShaderName_VisibleShadowAppendStructuredBuffer_ID, modelRenderingsData.VisibleShadowComputeBuffer);
+
+
                 int threadGroupsX = modelRenderingsData.InstanceCount / 64;
                 if (modelRenderingsData.InstanceCount % 64 != 0) ++threadGroupsX;
                 cs.Dispatch(kernel, threadGroupsX, 1, 1);
@@ -554,6 +636,30 @@ namespace RenderVegetationIn1ms
                         if (modelRenderingsData.VegetationBoundsDatas == null || modelRenderingsData.VegetationBoundsDatas.Length < modelRenderingsData.VegetationBoundsCount)
                             modelRenderingsData.VegetationBoundsDatas = new Bounds[modelRenderingsData.VegetationBoundsCount * 2];
                         modelRenderingsData.VegetationBoundsComputeBuffer.GetData(modelRenderingsData.VegetationBoundsDatas, 0, 0, modelRenderingsData.VegetationBoundsCount);
+                    }
+                }
+                // 阴影优化
+                if (_RenderParams.EnableShadowOptimization)
+                {
+                    var _lod = modelRenderingsData.LODs[0];
+                    for (var r = 0; r < _lod.renderers.Count; r++)
+                    {
+                        var renderer = _lod.renderers[r];
+                        int submeshesToRender = Mathf.Min(renderer.subMeshCount, renderer.materials.Count);
+                        for (var submeshIndex = 0; submeshIndex < submeshesToRender; submeshIndex++)
+                            ComputeBuffer.CopyCount(modelRenderingsData.VisibleShadowComputeBuffer, renderer.ShadowArgsBufferList[submeshIndex], sizeof(uint));
+                    }
+                    if (_RenderParams.ShowShadowBounds)
+                    {
+                        ComputeBuffer.CopyCount(modelRenderingsData.VisibleShadowComputeBuffer, modelRenderingsData.visibleShadowCountComputeBuffer, 0);
+                        modelRenderingsData.visibleShadowCountComputeBuffer.GetData(modelRenderingsData.visibleShadowCountArr);
+                        modelRenderingsData.VisibleShadowCount = (int)modelRenderingsData.visibleShadowCountArr[0];
+                        if (modelRenderingsData.VisibleShadowCount > 0)
+                        {
+                            if (modelRenderingsData.visibleShadowDatas == null || modelRenderingsData.visibleShadowDatas.Length < modelRenderingsData.VisibleShadowCount)
+                                modelRenderingsData.visibleShadowDatas = new VegetationInstanceData[modelRenderingsData.VisibleShadowCount * 2];
+                            modelRenderingsData.VisibleShadowComputeBuffer.GetData(modelRenderingsData.visibleShadowDatas, 0, 0, modelRenderingsData.VisibleShadowCount);
+                        }
                     }
                 }
             }
@@ -593,7 +699,11 @@ namespace RenderVegetationIn1ms
                           false,
                           modelRenderingData.Model.layer);
             }
-            if (_RenderParams.OnlyRenderingImpostor) return;
+            if (_RenderParams.OnlyRenderingImpostor) 
+            {
+                UnityEngine.Profiling.Profiler.EndSample();
+                return;
+            }
             // lod
             for (var lod = 0; lod < modelRenderingData.LODs.Count; lod++)
             {
@@ -633,6 +743,34 @@ namespace RenderVegetationIn1ms
                             count,
                             renderer.mpb,
                             modelRenderingData.Model.shadowCastingMode,
+                            modelRenderingData.Model.receiveShadows,
+                            modelRenderingData.Model.layer);
+                    }
+                }
+            }
+
+            // 仅渲染阴影
+            if(_RenderParams.EnableShadowOptimization && modelRenderingData.VisibleShadowCount > 0)
+            {
+                var _lod = modelRenderingData.LODs[0];
+                var _lodRenderersCount = _lod.renderers.Count;
+                for (var j = 0; j < _lodRenderersCount; j++)
+                {
+                    var renderer = _lod.renderers[j];
+                    var rendererMaterialsCount = renderer.materials.Count;
+                    for (var r = 0; r < rendererMaterialsCount; r++)
+                    {
+                        var mesh = renderer.mesh;
+                        var material = renderer.materials[r];
+                        var submeshIndex = System.Math.Min(r, renderer.subMeshCount - 1);
+                        Graphics.DrawMeshInstancedProcedural(
+                            mesh,
+                            submeshIndex,
+                            material,
+                            _RenderVars.DrawBounds,
+                            modelRenderingData.VisibleShadowCount,
+                            modelRenderingData.visibleShadowMPB,
+                            UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly,
                             modelRenderingData.Model.receiveShadows,
                             modelRenderingData.Model.layer);
                     }
@@ -711,6 +849,34 @@ namespace RenderVegetationIn1ms
                     }
                 }
             }
+
+            // 进渲染阴影
+            if (_RenderParams.EnableShadowOptimization)
+            {
+                var _lod = modelRenderingData.LODs[0];
+                for (var j = 0; j < _lod.renderers.Count; j++)
+                {
+                    var renderer = _lod.renderers[j];
+                    int submeshesToRender = Mathf.Min(renderer.subMeshCount, renderer.materials.Count);
+                    for (var r = 0; r < submeshesToRender; r++)
+                    {
+                        var mesh = renderer.mesh;
+                        var material = renderer.materials[r];
+                        Graphics.DrawMeshInstancedIndirect(
+                            mesh,
+                            r,
+                            material,
+                            _RenderVars.DrawBounds,
+                            renderer.ShadowArgsBufferList[r],
+                            0,
+                            modelRenderingData.visibleShadowMPB,
+                            UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly,
+                            modelRenderingData.Model.receiveShadows,
+                            modelRenderingData.Model.layer);
+                    }
+                }
+            }
+
             UnityEngine.Profiling.Profiler.EndSample();
         }
     }

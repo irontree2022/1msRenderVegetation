@@ -49,6 +49,13 @@ namespace RenderVegetationIn1ms
         public bool OnlyRenderingCore;
         [Header("仅渲染面片植被")]
         public bool OnlyRenderingImpostor;
+        [Header("允许阴影优化")]
+        public bool EnableShadowOptimization;
+        [Header("阴影优化范围")]
+        public float ShadowOptimizationRange = 32;
+        [Header("太阳光")]
+        public Light Sunshine;
+
 
         [Space(30)]
         [Header("---调试相关选项---")]
@@ -60,6 +67,10 @@ namespace RenderVegetationIn1ms
         public bool ShowAllModelBounds;
         [Header("调试：显示剔除后可视区块")]
         public bool ShowVisibleBlock;
+        [Header("调试：显示阴影区块")]
+        public bool ShowShadowBlock;
+        [Header("调试：显示阴影实例包围盒")]
+        public bool ShowShadowBounds;
         [Header("调试：显示本地区块树")]
         public bool ShowLocalBlockTree;
         [Header("调试：仅显示包含的区块ID")]

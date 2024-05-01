@@ -36,6 +36,7 @@ namespace RenderVegetationIn1ms
         public MaterialPropertyBlock mpb;
         public List<uint[]>argsList;
         public List<ComputeBuffer> argsBufferList;
+        public List<ComputeBuffer> ShadowArgsBufferList;
         public void AutoSetup()
         {
             subMeshCount = mesh.subMeshCount;
@@ -63,6 +64,13 @@ namespace RenderVegetationIn1ms
                     argsBufferList[i]?.Release();
                 argsBufferList.Clear();
                 argsBufferList = null;
+            }
+            if (ShadowArgsBufferList != null)
+            {
+                for (var i = 0; i < ShadowArgsBufferList.Count; i++)
+                    ShadowArgsBufferList[i]?.Release();
+                ShadowArgsBufferList.Clear();
+                ShadowArgsBufferList = null;
             }
         }
     }

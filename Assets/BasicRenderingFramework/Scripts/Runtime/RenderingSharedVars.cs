@@ -120,6 +120,10 @@ namespace RenderVegetationIn1ms
         public const string ShaderName_CameraOrthographicSize = "CameraOrthographicSize";
         public const string ShaderName_CameraFieldOfView = "CameraFieldOfView";
         public const string ShaderName_LODGroupSize = "LODGroupSize";
+        // 阴影优化参数
+        public const string ShaderName_EnableShadowOptimization = "EnableShadowOptimization";
+        public const string ShaderName_SunshineDir = "SunshineDir";
+        public const string ShaderName_VisibleShadowAppendStructuredBuffer = "VisibleShadowAppendStructuredBuffer";
 
         public int ShaderName_InstancesCount_ID = -1;
         public int ShaderName_InstancesStructuredBuffer_ID = -1;
@@ -145,6 +149,10 @@ namespace RenderVegetationIn1ms
         public int ShaderName_VisibleLOD3AppendStructuredBuffer_ID = -1;
         public int ShaderName_VisibleLOD4AppendStructuredBuffer_ID = -1;
         public int ShaderName_VegetationBoundsAppendStructuredBuffer_ID = -1;
+
+        public int ShaderName_EnableShadowOptimization_ID = -1;
+        public int ShaderName_SunshineDir_ID = -1;
+        public int ShaderName_VisibleShadowAppendStructuredBuffer_ID = -1;
         #endregion
 
 
@@ -267,6 +275,10 @@ namespace RenderVegetationIn1ms
             ShaderName_VisibleLOD4AppendStructuredBuffer_ID = Shader.PropertyToID(ShaderName_VisibleLOD4AppendStructuredBuffer);
             ShaderName_VegetationBoundsAppendStructuredBuffer_ID = Shader.PropertyToID(ShaderName_VegetationBoundsAppendStructuredBuffer);
 
+            ShaderName_EnableShadowOptimization_ID = Shader.PropertyToID(ShaderName_EnableShadowOptimization);
+            ShaderName_SunshineDir_ID = Shader.PropertyToID(ShaderName_SunshineDir);
+            ShaderName_VisibleShadowAppendStructuredBuffer_ID = Shader.PropertyToID(ShaderName_VisibleShadowAppendStructuredBuffer);
+
         }
 
         /// <summary>
@@ -285,6 +297,7 @@ namespace RenderVegetationIn1ms
                 modelRenderingsData.VisibleLOD3Count = 0;
                 modelRenderingsData.VisibleLOD4Count = 0;
                 modelRenderingsData.VegetationBoundsCount = 0;
+                modelRenderingsData.VisibleShadowCount = 0;
             }
         }
 

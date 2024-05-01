@@ -5,6 +5,8 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEditor.ShortcutManagement;
+using System.Drawing;
 
 namespace RenderVegetationIn1ms
 {
@@ -16,6 +18,7 @@ namespace RenderVegetationIn1ms
         public NativeArray<int> VisibleLOD2CountNativeArray;
         public NativeArray<int> VisibleLOD3CountNativeArray;
         public NativeArray<int> VisibleLOD4CountNativeArray;
+        public NativeArray<int> VisibleShadowCountNativeArray;
         public NativeArray<int> VegetationBoundsCountNativeArray;
         public void Execute()
         {
@@ -24,6 +27,7 @@ namespace RenderVegetationIn1ms
             VisibleLOD2CountNativeArray[0] = 0;
             VisibleLOD3CountNativeArray[0] = 0;
             VisibleLOD4CountNativeArray[0] = 0;
+            VisibleShadowCountNativeArray[0] = 0;
             VegetationBoundsCountNativeArray[0] = 0;
         }
     }
@@ -61,6 +65,15 @@ namespace RenderVegetationIn1ms
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD2NativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD3NativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD4NativeArray;
+
+
+        [ReadOnly] public bool EnableShadowOptimization;
+        // 阴影优化参数
+        [ReadOnly] public float3 SunshineDir;
+        // 仅渲染阴影的容器
+        public Unity.Collections.NativeArray<int> VisibleShadowCountNativeArray;
+        [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<VegetationInstanceData> VisibleShadowNativeArray;
+
 
         [ReadOnly] public bool ShowVisibleVegetationBounds;
         public Unity.Collections.NativeArray<int> VegetationBoundsCountNativeArray;
@@ -170,6 +183,27 @@ namespace RenderVegetationIn1ms
             }
             return 4;
         }
+        /// <summary>
+        /// 计算直线与平面的交点
+        /// </summary>
+        /// <param name="point">直线上某一点</param>
+        /// <param name="direct">直线的方向</param>
+        /// <param name="planeNormal">垂直于平面的的向量</param>
+        /// <param name="planePoint">平面上的任意一点</param>
+        /// <param name="result">交点</param>
+        /// <returns>是否相交</returns>
+        private bool GetIntersectWithLineAndPlane(float3 point, float3 direct, float3 planeNormal, float3 planePoint, out float3 result)
+        {
+            result = float3.zero;
+            //要注意直线和平面平行的情况
+            float d1 = math.dot(direct, planeNormal);
+            if (d1 == 0) return false;
+            float d2 = math.dot(planePoint - point, planeNormal);
+            float d3 = d2 / d1;
+
+            result = d3 * direct + point;
+            return true;
+        }
         public void Execute(int index)
         {
             var instance = InstancesNativeArray[index];
@@ -192,6 +226,72 @@ namespace RenderVegetationIn1ms
             // 剔除不可见的植被
             if (culled)
             {
+                if (EnableShadowOptimization)
+                {
+                    // 重新计算阴影+原本植被包围盒的AABB包围盒
+                    float3 newBoundsMin = boundMin;
+                    float3 newBoundsMax = boundMax;
+                    // 假设地面法向量向上，地面的一点是原本植被包围盒最底部的其中一点，
+                    // 这里选择原本包围盒的最小点，也就是说这里假设植被最低点就是地面。
+                    float3 planeNormal = Vector3.up;
+                    float3 planePoint = boundMin;
+                    var isIntersection = false;
+                    // 阳光从原本植被包围盒顶部的那四个顶点射向地面
+                    for (var i = 1; i < 8; i += 2)
+                    {
+                        var vert = boundVerts[i];
+                        // result交点就是顶点投射到地面的阴影点，
+                        if (GetIntersectWithLineAndPlane(vert, SunshineDir, planeNormal, planePoint, out float3 result))
+                        {
+                            isIntersection = true;
+                            // 重新计算包围盒最大最小点
+                            if (result.x < newBoundsMin.x)
+                                newBoundsMin.x = result.x;
+                            if (result.y < newBoundsMin.y)
+                                newBoundsMin.y = result.y;
+                            if (result.z < newBoundsMin.z)
+                                newBoundsMin.z = result.z;
+                            if (result.x > newBoundsMax.x)
+                                newBoundsMax.x = result.x;
+                            if (result.y > newBoundsMax.y)
+                                newBoundsMax.y = result.y;
+                            if (result.z > newBoundsMax.z)
+                                newBoundsMax.z = result.z;
+                        }
+                        else
+                        {
+                            // 如果阳光与地面平行，则不存在阴影
+                            isIntersection = false;
+                            break;
+                        }
+                    }
+
+                    if (isIntersection)
+                    {
+                        // 使用新的包围盒进行视锥剔除，
+                        // 如果依旧不可见，则剔除这个植被
+                        // 如果可见，则说明当前植被实例虽然植被本身不可见，但它的阴影却是可见的。
+                        boundVerts[0] = newBoundsMin;
+                        boundVerts[1] = newBoundsMax;
+                        boundVerts[2] = new float3(newBoundsMax.x, newBoundsMax.y, newBoundsMin.z);
+                        boundVerts[3] = new float3(newBoundsMax.x, newBoundsMin.y, newBoundsMax.z);
+                        boundVerts[4] = new float3(newBoundsMax.x, newBoundsMin.y, newBoundsMin.z);
+                        boundVerts[5] = new float3(newBoundsMin.x, newBoundsMax.y, newBoundsMax.z);
+                        boundVerts[6] = new float3(newBoundsMin.x, newBoundsMax.y, newBoundsMin.z);
+                        boundVerts[7] = new float3(newBoundsMin.x, newBoundsMin.y, newBoundsMax.z);
+                        if (!IsCulled(boundVerts))
+                        {
+                            // 阴影可见时，将阴影植被数据存入仅渲染阴影的容器中
+                            // 这里还可以再次计算阴影的lod，用以渲染时选择合适的lod网格和材质球
+                            // 但计算了阴影lod之后，就需要对应容器写入....
+                            VisibleShadowNativeArray[VisibleShadowCountNativeArray[0]++] = instance;
+                        }
+                    }
+
+                    //// 将被提出的全部都渲染阴影
+                    //VisibleShadowNativeArray[VisibleShadowCountNativeArray[0]++] = instance;
+                }
+
                 boundVerts.Dispose();
                 return;
             }

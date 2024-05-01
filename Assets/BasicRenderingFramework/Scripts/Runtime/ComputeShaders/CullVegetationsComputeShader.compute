@@ -45,6 +45,12 @@ AppendStructuredBuffer<VegetationInstanceData> VisibleLOD4AppendStructuredBuffer
 AppendStructuredBuffer<Bounds> VegetationBoundsAppendStructuredBuffer;
 
 
+// 阴影优化
+bool EnableShadowOptimization;
+float3 SunshineDir;
+AppendStructuredBuffer<VegetationInstanceData> VisibleShadowAppendStructuredBuffer;
+
+
 float Distance(float3 center, float3 min, float3 max)
 {
 	float x = center.x;
@@ -150,6 +156,30 @@ int CalculateLOD(float3 lodBoundsCenter, float3 cameraPos, float lodBias,
     return 4;
 }
 
+/// <summary>
+/// 计算直线与平面的交点
+/// </summary>
+/// <param name="p">直线上某一点</param>
+/// <param name="direct">直线的方向</param>
+/// <param name="planeNormal">垂直于平面的的向量</param>
+/// <param name="planePoint">平面上的任意一点</param>
+/// <param name="result">交点</param>
+/// <returns>是否相交</returns>
+bool GetIntersectWithLineAndPlane(float3 p, float3 direct, float3 planeNormal, float3 planePoint, out float3 result)
+{
+	result = float3(0, 0, 0);
+    //要注意直线和平面平行的情况
+    float d1 = dot(direct, planeNormal);
+    if (d1 == 0)
+        return false;
+    float d2 = dot(planePoint - p,
+    planeNormal);
+    float d3 = d2 / d1;
+
+    result = d3 * direct + p;
+    return true;
+}
+
 [numthreads(64, 1, 1)]
 void CullVegetations(uint3 id : SV_DispatchThreadID)
 {
@@ -171,7 +201,76 @@ void CullVegetations(uint3 id : SV_DispatchThreadID)
 
 	// 测试植被可见性
 	bool culled = IsCulled(boundVerts);
-	if (culled) return;
+    if (culled)
+    {
+        if (EnableShadowOptimization)
+        {
+			// 重新计算阴影+原本植被包围盒的AABB包围盒
+            float3 newBoundsMin = boundMin;
+            float3 newBoundsMax = boundMax;
+            // 假设地面法向量向上，地面的一点是原本植被包围盒最底部的其中一点，
+            // 这里选择原本包围盒的最小点，也就是说这里假设植被最低点就是地面。
+            float3 planeNormal = float3(0, 1, 0);
+            float3 planePoint = boundMin;
+            bool isIntersection = false;
+            // 阳光从原本植被包围盒顶部的那四个顶点射向地面
+            for (int i = 1; i < 8; i += 2)
+            {
+                float3 vert = boundVerts[i];
+                 // result交点就是顶点投射到地面的阴影点，
+                float3 result;
+                if (GetIntersectWithLineAndPlane(vert, SunshineDir, planeNormal, planePoint, result))
+                {
+                    isIntersection = true;
+                    // 重新计算包围盒最大最小点
+                    if (result.x < newBoundsMin.x)
+                        newBoundsMin.x = result.x;
+                    if (result.y < newBoundsMin.y)
+                        newBoundsMin.y = result.y;
+                    if (result.z < newBoundsMin.z)
+                        newBoundsMin.z = result.z;
+                    if (result.x > newBoundsMax.x)
+                        newBoundsMax.x = result.x;
+                    if (result.y > newBoundsMax.y)
+                        newBoundsMax.y = result.y;
+                    if (result.z > newBoundsMax.z)
+                        newBoundsMax.z = result.z;
+                }
+                else
+                {
+                    // 如果阳光与地面平行，则不存在阴影
+                    isIntersection = false;
+                    break;
+                }
+            }
+
+            if (isIntersection)
+            {
+				// 使用新的包围盒进行视锥剔除，
+				// 如果依旧不可见，则剔除这个植被
+				// 如果可见，则说明当前植被实例虽然植被本身不可见，但它的阴影却是可见的。
+                boundVerts[0] = newBoundsMin;
+                boundVerts[1] = newBoundsMax;
+                boundVerts[2] = float3(newBoundsMax.x, newBoundsMax.y, newBoundsMin.z);
+                boundVerts[3] = float3(newBoundsMax.x, newBoundsMin.y, newBoundsMax.z);
+                boundVerts[4] = float3(newBoundsMax.x, newBoundsMin.y, newBoundsMin.z);
+                boundVerts[5] = float3(newBoundsMin.x, newBoundsMax.y, newBoundsMax.z);
+                boundVerts[6] = float3(newBoundsMin.x, newBoundsMax.y, newBoundsMin.z);
+                boundVerts[7] = float3(newBoundsMin.x, newBoundsMin.y, newBoundsMax.z);
+                if (!IsCulled(boundVerts))
+                {
+					// 阴影可见时，将阴影植被数据存入仅渲染阴影的容器中
+					// 这里还可以再次计算阴影的lod，用以渲染时选择合适的lod网格和材质球
+					// 但计算了阴影lod之后，就需要对应容器写入....
+                    VisibleShadowAppendStructuredBuffer.Append(instance);
+                }
+            }
+			
+            ////将被提出的全部都渲染阴影
+            //VisibleShadowAppendStructuredBuffer.Append(instance);
+        }
+        return;
+    }
 
 
 	// 摄像机是否在当前区块内

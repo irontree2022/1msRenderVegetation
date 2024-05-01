@@ -19,7 +19,8 @@ namespace RenderVegetationIn1ms
         [ReadOnly] public float ImpostorBlockMaxSize;
         [ReadOnly] public float ImpostorBlockMinSize;
         [ReadOnly] public Vector3 CameraPosition;
-
+        [ReadOnly] public bool EnableShadowOptimization;
+        [ReadOnly] public float ShadowOptimizationRange;
 
         bool IsOutPlane(float4 plane, float3 pointPosition) => 
             (math.dot(plane.xyz, pointPosition) + plane.w > 0);
@@ -88,6 +89,16 @@ namespace RenderVegetationIn1ms
             var isCulled = IsCulled(boundVerts);
             if (isCulled) 
             {
+                if (EnableShadowOptimization && Distance(CameraPosition, min, max) <= ShadowOptimizationRange)
+                {
+                    // 不可见的区块，但处于阴影优化范围之内的，
+                    // 依然需要收集起来
+                    block.available = true;
+                    block.IsCore = true;
+                    block.IsShadow = block.IsLeaf;
+                    AfterCullingBlocksNativeArray[index] = block;
+                }
+
                 boundVerts.Dispose();
                 return;
             }
