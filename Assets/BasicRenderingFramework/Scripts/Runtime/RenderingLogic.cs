@@ -8,7 +8,6 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.UI;
-using static Unity.Collections.AllocatorManager;
 
 namespace RenderVegetationIn1ms
 {
@@ -20,7 +19,7 @@ namespace RenderVegetationIn1ms
     {
         private static RenderVegetationIn1ms _RenderParams;
         private static RenderingSharedVars _RenderVars;
-
+        private static Vector3 _worldOffset;
 
         #region Unity 事件消息
         public static void OnEnable() { }
@@ -48,6 +47,17 @@ namespace RenderVegetationIn1ms
         {
             if(!_RenderVars.Initialized || !_RenderParams.AllowRendering) return;
             UpdateRendering();
+
+            if (!_RenderParams.EnableRuntimeAdditionDeletionModificationAndQuery) return;
+
+            if (Input.GetKeyDown(KeyCode.A))
+                AddInstance();
+            else if (Input.GetKeyDown(KeyCode.D))
+                DeleteInstance();
+            else if (Input.GetKeyDown(KeyCode.M))
+                ModifyInstance();
+            else if (Input.GetKeyDown(KeyCode.F))
+                FindInstance();
         }
         public static void OnDrawGizmos()
         {
@@ -173,6 +183,16 @@ namespace RenderVegetationIn1ms
                     }
                 }
             }
+
+            if(_RenderParams.EnableRuntimeAdditionDeletionModificationAndQuery && _RenderVars.FindInstanceDistanceToCameraResultCount > 0)
+            {
+                Gizmos.color = Color.yellow;
+                for (var i = 0; i < _RenderVars.FindInstanceDistanceToCameraResultCount; ++i)
+                {
+                    var data = _RenderVars.FindInstanceDistanceToCameraResults[i];
+                    GizmosDrawWireCube(data);
+                }
+            }
         }
         private static void GetBlockNodesDepths(BlockNode blockNode)
         {
@@ -217,7 +237,7 @@ namespace RenderVegetationIn1ms
             if (!_RenderVars.LocalVegetationDataLoaded || !_RenderVars.BlockDatasInitialized || !_RenderParams.AllowRendering) return;
 
 
-            if (_RenderVars.CameraChanged)
+            if (_RenderParams.ForceRender || _RenderVars.CameraChanged)
             {
                 _RenderVars.UpdateCameraDatas();
                 UnityEngine.Profiling.Profiler.BeginSample("CullBlocks");
@@ -243,6 +263,7 @@ namespace RenderVegetationIn1ms
             _RenderVars.CollectedBlocksNativeArray[0] = _RenderVars.BlockTree.RootBlockNode.Block;
             _RenderVars.CoreBlocksLength = 0;
             _RenderVars.ImpostorBlocksLength = 0;
+            _RenderVars.FindInstanceDistanceToCameraResultCount = 0;
         }
         /// <summary>
         /// 剔除区块
@@ -389,6 +410,7 @@ namespace RenderVegetationIn1ms
             _RenderVars.TempJobHandlesLength = 0;
             if (_RenderVars.TempJobHandles == null)
                 _RenderVars.TempJobHandles = new JobHandle[_RenderVars.ModelRenderingDatas.Length];
+
             for (var i = 0; i < _RenderVars.ModelRenderingDatas.Length; i++)
             {
                 var modelRenderingsData = _RenderVars.ModelRenderingDatas[i];
@@ -403,6 +425,7 @@ namespace RenderVegetationIn1ms
                     VisibleLOD4CountNativeArray = modelRenderingsData.VisibleLOD4CountNativeArray,
                     VegetationBoundsCountNativeArray = modelRenderingsData.VegetationBoundsCountNativeArray,
                     VisibleShadowCountNativeArray = modelRenderingsData.VisibleShadowCountNativeArray,
+                    FindInstanceDistanceToCameraResultsCountNativeArray = modelRenderingsData.FindInstanceDistanceToCameraResultsCountNativeArray,
                 }.Schedule();
                 jobhandle = new CullVegetationsJob()
                 {
@@ -437,6 +460,13 @@ namespace RenderVegetationIn1ms
                     VisibleLOD3NativeArray = modelRenderingsData.VisibleLOD3NativeArray,
                     VisibleLOD4NativeArray = modelRenderingsData.VisibleLOD4NativeArray,
                     VegetationBoundsNativeArray = modelRenderingsData.VegetationBoundsNativeArray,
+
+                    // 查找植被实例
+                    EnableRuntimeAdditionDeletionModificationAndQuery = _RenderParams.EnableRuntimeAdditionDeletionModificationAndQuery,
+                    FindInstanceDistanceToCamera = _RenderParams.FindInstanceDistanceToCamera,
+                    FindInstanceDistanceToCameraResultsCountNativeArray = modelRenderingsData.FindInstanceDistanceToCameraResultsCountNativeArray,
+                    FindInstanceDistanceToCameraResultsNativeArray = modelRenderingsData.FindInstanceDistanceToCameraResultsNativeArray,
+
 
                     // 阴影优化
                     EnableShadowOptimization = _RenderParams.EnableShadowOptimization,
@@ -538,6 +568,27 @@ namespace RenderVegetationIn1ms
                             }
                         }
 
+                        if (_RenderParams.EnableRuntimeAdditionDeletionModificationAndQuery)
+                        {
+                            var findInstanceDistanceToCameraResultCount = modelRenderingsData.FindInstanceDistanceToCameraResultsCountNativeArray[0];
+                            if (findInstanceDistanceToCameraResultCount > 0)
+                            {
+                                if (_RenderVars.FindInstanceDistanceToCameraResults == null ||
+                                    _RenderVars.FindInstanceDistanceToCameraResults.Length < _RenderVars.FindInstanceDistanceToCameraResultCount + findInstanceDistanceToCameraResultCount)
+                                {
+                                    var temp = new VegetationInstanceData[_RenderVars.FindInstanceDistanceToCameraResultCount + findInstanceDistanceToCameraResultCount];
+                                    if (_RenderVars.FindInstanceDistanceToCameraResults != null)
+                                        Array.Copy(_RenderVars.FindInstanceDistanceToCameraResults, temp, _RenderVars.FindInstanceDistanceToCameraResultCount);
+                                    _RenderVars.FindInstanceDistanceToCameraResults = temp;
+                                }
+
+                                NativeArray<VegetationInstanceData>.Copy(modelRenderingsData.FindInstanceDistanceToCameraResultsNativeArray,0,
+                                   _RenderVars.FindInstanceDistanceToCameraResults, _RenderVars.FindInstanceDistanceToCameraResultCount,
+                                   findInstanceDistanceToCameraResultCount);
+                                _RenderVars.FindInstanceDistanceToCameraResultCount += findInstanceDistanceToCameraResultCount;
+                            }
+                        }
+
                     }
                     if (modelRenderingsData.impostorInstancesCount > 0)
                     {
@@ -593,6 +644,11 @@ namespace RenderVegetationIn1ms
                 cs.SetBuffer(kernel, _RenderVars.ShaderName_VisibleLOD3AppendStructuredBuffer_ID, modelRenderingsData.VisibleLOD3ComputeBuffer);
                 cs.SetBuffer(kernel, _RenderVars.ShaderName_VisibleLOD4AppendStructuredBuffer_ID, modelRenderingsData.VisibleLOD4ComputeBuffer);
                 cs.SetBuffer(kernel, _RenderVars.ShaderName_VegetationBoundsAppendStructuredBuffer_ID, modelRenderingsData.VegetationBoundsComputeBuffer);
+                
+                // 查找植被实例
+                cs.SetBool(_RenderVars.ShaderName_EnableRuntimeAdditionDeletionModificationAndQuery_ID, _RenderParams.EnableRuntimeAdditionDeletionModificationAndQuery);
+                cs.SetFloat(_RenderVars.ShaderName_FindInstanceDistanceToCamera_ID, _RenderParams.FindInstanceDistanceToCamera);
+                cs.SetBuffer(kernel, _RenderVars.ShaderName_FindInstanceDistanceToCameraResultsComputeBuffer_ID, modelRenderingsData.FindInstanceDistanceToCameraResultsComputeBuffer);
 
                 // 阴影优化
                 cs.SetBool(_RenderVars.ShaderName_EnableShadowOptimization_ID, _RenderParams.EnableShadowOptimization);
@@ -662,6 +718,30 @@ namespace RenderVegetationIn1ms
                         }
                     }
                 }
+                // 查找植被实例
+                if (_RenderParams.EnableRuntimeAdditionDeletionModificationAndQuery)
+                {
+                    ComputeBuffer.CopyCount(modelRenderingsData.FindInstanceDistanceToCameraResultsComputeBuffer, 
+                        modelRenderingsData.FindInstanceDistanceToCameraResultsCountComputeBuffer, 0);
+                    modelRenderingsData.FindInstanceDistanceToCameraResultsCountComputeBuffer.GetData(modelRenderingsData.FindInstanceDistanceToCameraResultsCountArr);
+                    var findInstanceDistanceToCameraResultsCount = (int)modelRenderingsData.FindInstanceDistanceToCameraResultsCountArr[0];
+                    if (findInstanceDistanceToCameraResultsCount > 0)
+                    {
+                        if (_RenderVars.FindInstanceDistanceToCameraResults == null ||
+                            _RenderVars.FindInstanceDistanceToCameraResults.Length < _RenderVars.FindInstanceDistanceToCameraResultCount + findInstanceDistanceToCameraResultsCount)
+                        {
+                            var temp = new VegetationInstanceData[_RenderVars.FindInstanceDistanceToCameraResultCount + findInstanceDistanceToCameraResultsCount];
+                            if (_RenderVars.FindInstanceDistanceToCameraResults != null)
+                                Array.Copy(_RenderVars.FindInstanceDistanceToCameraResults, temp, _RenderVars.FindInstanceDistanceToCameraResultCount);
+                            _RenderVars.FindInstanceDistanceToCameraResults = temp;
+                        }
+                        modelRenderingsData.FindInstanceDistanceToCameraResultsComputeBuffer.GetData(_RenderVars.FindInstanceDistanceToCameraResults, 
+                            _RenderVars.FindInstanceDistanceToCameraResultCount, 
+                            0, findInstanceDistanceToCameraResultsCount);
+
+                        _RenderVars.FindInstanceDistanceToCameraResultCount += findInstanceDistanceToCameraResultsCount;
+                    }
+                }
             }
             UnityEngine.Profiling.Profiler.EndSample();
         }
@@ -670,10 +750,38 @@ namespace RenderVegetationIn1ms
         /// </summary>
         private static void Draw()
         {
-            for(var i = 0; i < _RenderVars.ModelRenderingDatas.Length; i++)
+            var needResetWorldOffset = false;
+            if (_worldOffset != RenderingAPI.RenderParams.WorldOffset)
+            {
+                needResetWorldOffset = true;
+                _worldOffset = RenderingAPI.RenderParams.WorldOffset;
+            }
+
+            for (var i = 0; i < _RenderVars.ModelRenderingDatas.Length; i++)
             {
                 var modelRenderingData = _RenderVars.ModelRenderingDatas[i];
                 if (modelRenderingData.InstanceCount + modelRenderingData.impostorInstancesCount == 0) continue;
+
+                if (needResetWorldOffset)
+                {
+                    if (modelRenderingData.impostorMPB != null)
+                        modelRenderingData.impostorMPB.SetVector(RenderingAPI.RenderVars.ShaderName_WorldOffset_ID, RenderingAPI.RenderParams.WorldOffset);
+                    if (modelRenderingData.visibleShadowMPB != null)
+                        modelRenderingData.visibleShadowMPB.SetVector(RenderingAPI.RenderVars.ShaderName_WorldOffset_ID, RenderingAPI.RenderParams.WorldOffset);
+                    // lod
+                    for (var lod = 0; lod < modelRenderingData.LODs.Count; lod++)
+                    {
+                        var _lod = modelRenderingData.LODs[lod];
+                        var _lodRenderersCount = _lod.renderers.Count;
+                        for (var j = 0; j < _lodRenderersCount; j++)
+                        {
+                            var renderer = _lod.renderers[j];
+                            if(renderer.mpb != null)
+                                renderer.mpb.SetVector(RenderingAPI.RenderVars.ShaderName_WorldOffset_ID, RenderingAPI.RenderParams.WorldOffset);
+                        }
+                    }
+                }
+
                 if (_RenderParams.DrawsWithProcedural) DrawWithProcedural(modelRenderingData);
                 else DrawWithIndirect(modelRenderingData);
             }
@@ -850,7 +958,7 @@ namespace RenderVegetationIn1ms
                 }
             }
 
-            // 进渲染阴影
+            // 仅渲染阴影
             if (_RenderParams.EnableShadowOptimization)
             {
                 var _lod = modelRenderingData.LODs[0];
@@ -879,5 +987,298 @@ namespace RenderVegetationIn1ms
 
             UnityEngine.Profiling.Profiler.EndSample();
         }
+
+
+        private static List<int> addedInstanceIDs = new List<int>();
+        private static void AddInstance()
+        {
+            var newInstance = new VegetationInstanceData();
+            // 在相机前方2米处
+            var pos = _RenderVars.CameraPosition + _RenderVars.CameraTransform.forward * 2f;
+            // y轴随机旋转
+            var r = Quaternion.Euler(0, UnityEngine.Random.Range(0, 180), 0);
+            // 尺寸随机0.5~3
+            var s = Vector3.one * UnityEngine.Random.Range(0.5f, 3f);
+            // 随机模型
+            var modelID = UnityEngine.Random.Range(0, _RenderParams.ModelPrototypeDatabase.ModelPrototypeList.Count);
+            // 计算包围盒
+            var prefab = _RenderParams.ModelPrototypeDatabase.ModelPrototypeList[modelID].PrefabObject;
+            var go = GameObject.Instantiate(prefab);
+            go.transform.position = pos;
+            go.transform.rotation = r;
+            go.transform.localScale = s;
+            var bounds = Tool.GetBounds(go);
+            GameObject.Destroy(go);
+            // 生成一个实例ID
+            var instanceID = _RenderParams.CurrentInstanceCount++;
+            addedInstanceIDs.Add(instanceID);
+
+            newInstance.matrix = Matrix4x4.TRS(pos, r, s);
+            newInstance.ModelPrototypeID = modelID;
+            newInstance.center = bounds.center;
+            newInstance.extents = bounds.extents;
+            newInstance.InstanceID = instanceID;
+
+
+            InWhichNode(_RenderVars.BlockTree.RootBlockNode, newInstance, nodeID => {
+
+                // 将新实例数据写入区块数据库中
+                var blockVegetationDatas = _RenderVars.Database.GetBlockVegetationDatas(nodeID);
+                var modelIndex = -1;
+                for(var i = 0; i < blockVegetationDatas.ModelPrototypeCount; ++i)
+                {
+                    if(blockVegetationDatas.ModelPrototypeIDs[i] == newInstance.ModelPrototypeID)
+                    {
+                        modelIndex = i;
+                        break;
+                    }
+                }
+                if(modelIndex == -1)
+                {
+                    var temp = new int[blockVegetationDatas.ModelPrototypeCount + 1];
+                    System.Array.Copy(blockVegetationDatas.ModelPrototypeIDs, temp, blockVegetationDatas.ModelPrototypeCount);
+                    temp[blockVegetationDatas.ModelPrototypeCount] = newInstance.ModelPrototypeID;
+                    blockVegetationDatas.ModelPrototypeIDs = temp;
+
+                    var datas = new VegetationInstanceData[temp.Length][];
+                    System.Array.Copy(blockVegetationDatas.DatasArray, datas, blockVegetationDatas.DatasArray.Length);
+                    datas[blockVegetationDatas.ModelPrototypeCount] = new VegetationInstanceData[1];
+                    datas[blockVegetationDatas.ModelPrototypeCount][0] = newInstance;
+                    blockVegetationDatas.DatasArray = datas;
+
+                    ++blockVegetationDatas.ModelPrototypeCount;
+                    ++blockVegetationDatas.TotalDataCount;
+                }
+                else
+                {
+                    var datas = blockVegetationDatas.DatasArray[modelIndex];
+                    var temp = new VegetationInstanceData[datas.Length + 1];
+                    System.Array.Copy(datas, temp, datas.Length);
+                    temp[datas.Length] = newInstance;
+                    blockVegetationDatas.DatasArray[modelIndex] = temp;
+                    ++blockVegetationDatas.TotalDataCount;
+                }
+
+                // 重新计算区块的包围盒
+                var bounds = new Bounds();
+                var isfirst = true;
+                for(var i = 0; i < blockVegetationDatas.ModelPrototypeCount; ++i)
+                {
+                    var datas = blockVegetationDatas.DatasArray[i];
+                    for (var j = 0; j < datas.Length; ++j) 
+                    {
+                        var data = datas[j];
+                        var _bounds = new Bounds();
+                        _bounds.center = data.center;
+                        _bounds.extents = data.extents;
+                        if (isfirst)
+                        {
+                            bounds = _bounds;
+                            isfirst = false;
+                        }
+                        else
+                            bounds.Encapsulate(_bounds);
+                    }
+                }
+                _RenderVars.BlockTree.GetBlockNode(nodeID).Block.TrueBounds = bounds;
+
+            });
+
+            _RenderParams.ForceRender = true;
+
+            UnityEngine.Debug.Log($"已添加新的植被实例！ {newInstance}");
+        }
+
+        private static bool InWhichNode(BlockNode node, VegetationInstanceData instance, System.Action<int> inNodeIDAction)
+        {
+            var nodeBounds = node.Block.Bounds;
+            if(Tool.IsInBounds(instance.center, nodeBounds.min, nodeBounds.max))
+            {
+                var blockVegetationDatas = _RenderVars.Database.GetBlockVegetationDatas(node.ID);
+                if (!blockVegetationDatas.TooMuchData)
+                    inNodeIDAction(node.ID);
+                if (!node.IsLeaf && node.NoEmptyChilds != null)
+                {
+                    for(var i = 0; i < node.NoEmptyChilds.Length; ++i)
+                    {
+                        var child = node.NoEmptyChilds[i];
+                        if (InWhichNode(child, instance, inNodeIDAction))
+                            break;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+
+        private static void DeleteInstance()
+        {
+            foreach (var instanceID in addedInstanceIDs)
+                DeleteInstance(_RenderVars.BlockTree.RootBlockNode, instanceID);
+            addedInstanceIDs.Clear();
+            _RenderParams.ForceRender = true;
+
+            UnityEngine.Debug.Log($"已删除所有新增的植被实例！");
+        }
+        private static bool DeleteInstance(BlockNode node, int instanceID)
+        {
+            var blockVegetationDatas = _RenderVars.Database.GetBlockVegetationDatas(node.ID);
+            var findChild = true;
+            var deleted = false;
+            if (!blockVegetationDatas.TooMuchData)
+            {
+                // 将instanceID对应位置的实例数据删除
+                findChild = false;
+                var needResetDatas = false;
+                for(var i = 0; i < blockVegetationDatas.ModelPrototypeCount; ++i)
+                {
+                    var datas = blockVegetationDatas.DatasArray[i];
+                    for(var j = 0; j < datas.Length; ++j)
+                    {
+                        if(findChild)
+                        {
+                            datas[j - 1] = datas[j]; 
+                            continue;
+                        }
+
+                        var data = datas[j];
+                        if(data.InstanceID == instanceID)
+                        {
+                            findChild = true;
+                            if(datas.Length == 1)
+                            {
+                                // 重新设置数据库
+                                blockVegetationDatas.DatasArray[i] = null;
+                                --blockVegetationDatas.ModelPrototypeCount;
+                                for (var k = i; k < blockVegetationDatas.ModelPrototypeCount; ++k)
+                                {
+                                    blockVegetationDatas.ModelPrototypeIDs[k] = blockVegetationDatas.ModelPrototypeIDs[k + 1];
+                                    blockVegetationDatas.DatasArray[k] = blockVegetationDatas.DatasArray[k + 1];
+                                }
+                                break;
+                            }
+                            needResetDatas = true;
+                        }
+                    }
+                    if (findChild)
+                    {
+                        if(needResetDatas)
+                        {
+                            var temp = new VegetationInstanceData[datas.Length - 1];
+                            Array.Copy(datas, temp, temp.Length);
+                            blockVegetationDatas.DatasArray[i] = temp;
+                        }
+                        break;
+                    }
+                }
+
+                // 重新计算区块包围盒
+                if (findChild)
+                {
+                    --blockVegetationDatas.TotalDataCount;
+                    var bounds = new Bounds();
+                    var isfirst = true;
+                    for (var i = 0; i < blockVegetationDatas.ModelPrototypeCount; ++i)
+                    {
+                        var datas = blockVegetationDatas.DatasArray[i];
+                        for (var j = 0; j < datas.Length; ++j)
+                        {
+                            var data = datas[j];
+                            var _bounds = new Bounds();
+                            _bounds.center = data.center;
+                            _bounds.extents = data.extents;
+                            if (isfirst)
+                            {
+                                isfirst = false;
+                                bounds = _bounds;
+                            }
+                            else bounds.Encapsulate(_bounds);
+                        }
+                    }
+                    node.Block.TrueBounds = bounds;
+                }
+
+                deleted = findChild;
+            }
+
+            if(findChild && !node.IsLeaf && node.NoEmptyChilds != null)
+            {
+                for (var i = 0; i < node.NoEmptyChilds.Length; ++i)
+                {
+                    var child = node.NoEmptyChilds[i];
+                    if (DeleteInstance(child, instanceID))
+                        break;
+                }
+            }
+            return deleted;
+        }
+
+
+        private static void ModifyInstance()
+        {
+            for (var i = 0; i < addedInstanceIDs.Count; ++i)
+            {
+                var instanceID = addedInstanceIDs[i];
+                var newInstanceID = ++_RenderParams.CurrentInstanceCount;
+                ModifyInstance(_RenderVars.BlockTree.RootBlockNode, instanceID, newInstanceID);
+                addedInstanceIDs[i] = newInstanceID;
+            }
+            _RenderParams.ForceRender = true;
+            UnityEngine.Debug.Log($"已修改所有新增的植被实例！");
+        }
+        private static bool ModifyInstance(BlockNode node, int instanceID, int newInstanceID)
+        {
+            var blockVegetationDatas = _RenderVars.Database.GetBlockVegetationDatas(node.ID);
+            var findChild = true;
+            var modified = false;
+            if (!blockVegetationDatas.TooMuchData)
+            {
+                // 将instanceID对应位置的实例数据修改掉
+                findChild = false;
+                for (var i = 0; i < blockVegetationDatas.ModelPrototypeCount; ++i)
+                {
+                    var datas = blockVegetationDatas.DatasArray[i];
+                    for (var j = 0; j < datas.Length; ++j)
+                    {
+                        var data = datas[j];
+                        if (data.InstanceID == instanceID)
+                        {
+                            findChild = true;
+                            // 修改实例ID
+                            data.InstanceID = newInstanceID;
+                            datas[j] = data;
+                        }
+                    }
+                    if (findChild)
+                        break;
+                }
+
+                // 重新计算区块包围盒
+                if (findChild)
+                {
+                    // 仅修改实例ID，所以不需要重新计算区块包围盒
+                }
+
+                modified = findChild;
+            }
+
+            if (findChild && !node.IsLeaf && node.NoEmptyChilds != null)
+            {
+                for (var i = 0; i < node.NoEmptyChilds.Length; ++i)
+                {
+                    var child = node.NoEmptyChilds[i];
+                    if (ModifyInstance(child, instanceID, newInstanceID))
+                        break;
+                }
+            }
+            return modified;
+        }
+
+        private static void FindInstance()
+        {
+
+        }
+
     }
 }

@@ -69,6 +69,7 @@ namespace RenderVegetationIn1ms
         public float QualitySettingsLodBias;
         public bool CameraOrthographic;
         public float CameraOrthographicSize;
+        public Transform CameraTransform => _cameraTransform;
 
         public float TanHalfAngle;
         public Vector4[] FrustumPlanes;
@@ -95,7 +96,9 @@ namespace RenderVegetationIn1ms
         public int CullVegetationsComputeShaderKernel;
 
         public const string ShaderName_IndirectShaderDataBuffer = "IndirectShaderDataBuffer";
+        public const string ShaderName_WorldOffset = "WorldOffset";
         public int ShaderName_IndirectShaderDataBuffer_ID = -1;
+        public int ShaderName_WorldOffset_ID = -1;
 
         public const string ShaderName_InstancesCount = "InstancesCount";
         public const string ShaderName_InstancesStructuredBuffer = "InstancesStructuredBuffer";
@@ -125,6 +128,12 @@ namespace RenderVegetationIn1ms
         public const string ShaderName_SunshineDir = "SunshineDir";
         public const string ShaderName_VisibleShadowAppendStructuredBuffer = "VisibleShadowAppendStructuredBuffer";
 
+        // 查找植被实例
+        public const string ShaderName_EnableRuntimeAdditionDeletionModificationAndQuery = "EnableRuntimeAdditionDeletionModificationAndQuery";
+        public const string ShaderName_FindInstanceDistanceToCamera = "FindInstanceDistanceToCamera";
+        public const string ShaderName_FindInstanceDistanceToCameraResultsComputeBuffer = "FindInstanceDistanceToCameraResultsComputeBuffer";
+
+
         public int ShaderName_InstancesCount_ID = -1;
         public int ShaderName_InstancesStructuredBuffer_ID = -1;
         public int ShaderName_LODLevelsCount_ID = -1;
@@ -153,7 +162,19 @@ namespace RenderVegetationIn1ms
         public int ShaderName_EnableShadowOptimization_ID = -1;
         public int ShaderName_SunshineDir_ID = -1;
         public int ShaderName_VisibleShadowAppendStructuredBuffer_ID = -1;
+
+
+        public int ShaderName_EnableRuntimeAdditionDeletionModificationAndQuery_ID = -1;
+        public int ShaderName_FindInstanceDistanceToCamera_ID = -1;
+        public int ShaderName_FindInstanceDistanceToCameraResultsComputeBuffer_ID = -1;
+
+
         #endregion
+
+
+        // 查找植被实例相关变量和容器
+        public int FindInstanceDistanceToCameraResultCount;
+        public VegetationInstanceData[] FindInstanceDistanceToCameraResults;
 
 
         /// <summary>
@@ -175,6 +196,9 @@ namespace RenderVegetationIn1ms
                 modelRenderingData.Model = _RenderParams.ModelPrototypeDatabase.ModelPrototypeList[i];
                 ModelRenderingDatas[i] = modelRenderingData;
             }
+
+            // 创建查找植被实例相关结果容器，这里随便写了个1000，可根据实际情况修改
+
             InitShaderIDs();
         }
         public void OnDestroy()
@@ -249,6 +273,7 @@ namespace RenderVegetationIn1ms
                 CullVegetationsComputeShaderKernel = _RenderParams.CullVegetationsComputeShader.FindKernel("CullVegetations");
 
             ShaderName_IndirectShaderDataBuffer_ID = Shader.PropertyToID(ShaderName_IndirectShaderDataBuffer);
+            ShaderName_WorldOffset_ID = Shader.PropertyToID(ShaderName_WorldOffset);
 
             ShaderName_InstancesCount_ID = Shader.PropertyToID(ShaderName_InstancesCount);
             ShaderName_InstancesStructuredBuffer_ID = Shader.PropertyToID(ShaderName_InstancesStructuredBuffer);
@@ -278,6 +303,10 @@ namespace RenderVegetationIn1ms
             ShaderName_EnableShadowOptimization_ID = Shader.PropertyToID(ShaderName_EnableShadowOptimization);
             ShaderName_SunshineDir_ID = Shader.PropertyToID(ShaderName_SunshineDir);
             ShaderName_VisibleShadowAppendStructuredBuffer_ID = Shader.PropertyToID(ShaderName_VisibleShadowAppendStructuredBuffer);
+
+            ShaderName_EnableRuntimeAdditionDeletionModificationAndQuery_ID = Shader.PropertyToID(ShaderName_EnableRuntimeAdditionDeletionModificationAndQuery);
+            ShaderName_FindInstanceDistanceToCamera_ID = Shader.PropertyToID(ShaderName_FindInstanceDistanceToCamera);
+            ShaderName_FindInstanceDistanceToCameraResultsComputeBuffer_ID = Shader.PropertyToID(ShaderName_FindInstanceDistanceToCameraResultsComputeBuffer);
 
         }
 

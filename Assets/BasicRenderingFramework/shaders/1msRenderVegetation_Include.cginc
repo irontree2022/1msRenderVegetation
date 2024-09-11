@@ -8,6 +8,7 @@ struct VegetationInstanceData {
 	int ModelPrototypeID;
 };
 StructuredBuffer<VegetationInstanceData> IndirectShaderDataBuffer;
+float3 WorldOffset;
 #endif	
 #endif
 float4x4 inverse(float4x4 input)
@@ -42,7 +43,9 @@ float4x4 inverse(float4x4 input)
 void setup()
 {
 #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-	unity_ObjectToWorld = IndirectShaderDataBuffer[unity_InstanceID].Matrix;
+	float4x4 instance = IndirectShaderDataBuffer[unity_InstanceID].Matrix;
+	instance._14_24_34 += WorldOffset;
+	unity_ObjectToWorld = instance;
 	unity_WorldToObject = inverse(unity_ObjectToWorld);
 #endif
 }

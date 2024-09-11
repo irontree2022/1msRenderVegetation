@@ -55,6 +55,16 @@ namespace RenderVegetationIn1ms
         public float ShadowOptimizationRange = 32;
         [Header("太阳光")]
         public Light Sunshine;
+        [Header("世界迁移")]
+        public Vector3 WorldOffset;
+        [Header("强制渲染")]
+        public bool ForceRender;
+        [Header("当前实例总量")]
+        public int CurrentInstanceCount;
+        [Header("允许运行时增删改查")]
+        public bool EnableRuntimeAdditionDeletionModificationAndQuery;
+        [Header("查找距离相机一定距离之内的所有可见植被")]
+        public float FindInstanceDistanceToCamera;
 
 
         [Space(30)]

@@ -111,6 +111,7 @@ namespace RenderVegetationIn1ms
             Debug.Log($"[RenderVegetationIn1ms] 本地植被数据加载完成！耗时：{dtime.TotalSeconds}s/{dtime.TotalMinutes}m");
             _RenderVars.LocalVegetationDataLoaded = true;
             _RenderVars.IsLoadingLocalVegetationData = false;
+            _RenderParams.CurrentInstanceCount = _RenderVars.BlockTree.RootBlockNode.TotalDataCount;
             RenderingAPI.TriggerEvent_E_LocalVegetationDataLoadingSituation(true, 1, info, details);
         }
         /// <summary>

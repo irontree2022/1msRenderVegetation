@@ -43,6 +43,13 @@ namespace RenderVegetationIn1ms
         public Unity.Collections.NativeArray<VegetationInstanceData> VisibleLOD4NativeArray;
         public Unity.Collections.NativeArray<Bounds> VegetationBoundsNativeArray;
 
+        // 查找植被实例相关变量和容器
+        public NativeArray<int> FindInstanceDistanceToCameraResultsCountNativeArray;
+        public NativeArray<VegetationInstanceData> FindInstanceDistanceToCameraResultsNativeArray;
+        public uint[] FindInstanceDistanceToCameraResultsCountArr = new uint[1] { 0 };
+        public ComputeBuffer FindInstanceDistanceToCameraResultsCountComputeBuffer;
+        public ComputeBuffer FindInstanceDistanceToCameraResultsComputeBuffer;
+
         // 阴影优化相关参数
         public int VisibleShadowCount;
         public Unity.Collections.NativeArray<int> VisibleShadowCountNativeArray;
@@ -145,7 +152,14 @@ namespace RenderVegetationIn1ms
                 VisibleLOD4CountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
             if (!VegetationBoundsCountNativeArray.IsCreated)
                 VegetationBoundsCountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
-
+            if (!FindInstanceDistanceToCameraResultsCountNativeArray.IsCreated)
+                FindInstanceDistanceToCameraResultsCountNativeArray = new NativeArray<int>(1, Allocator.Persistent);
+            if (!FindInstanceDistanceToCameraResultsNativeArray.IsCreated || FindInstanceDistanceToCameraResultsNativeArray.Length < InstanceCount)
+            {
+                if (FindInstanceDistanceToCameraResultsNativeArray.IsCreated)
+                    FindInstanceDistanceToCameraResultsNativeArray.Dispose();
+                FindInstanceDistanceToCameraResultsNativeArray = new NativeArray<VegetationInstanceData>(InstanceCount, Allocator.Persistent);
+            }
 
             if (!VisibleLOD0NativeArray.IsCreated || VisibleLOD0NativeArray.Length < InstanceCount)
             {
@@ -252,6 +266,14 @@ namespace RenderVegetationIn1ms
                 }
                 VegetationBoundsComputeBuffer.SetCounterValue(0);
 
+                if (FindInstanceDistanceToCameraResultsCountComputeBuffer == null)
+                    FindInstanceDistanceToCameraResultsCountComputeBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
+                if (FindInstanceDistanceToCameraResultsComputeBuffer == null || FindInstanceDistanceToCameraResultsComputeBuffer.count < InstanceCount)
+                {
+                    FindInstanceDistanceToCameraResultsComputeBuffer?.Release();
+                    FindInstanceDistanceToCameraResultsComputeBuffer = new ComputeBuffer(InstanceCount, VegetationInstanceData.stride, ComputeBufferType.Append);
+                }
+                FindInstanceDistanceToCameraResultsComputeBuffer.SetCounterValue(0);
 
                 if (visibleShadowCountComputeBuffer == null)
                     visibleShadowCountComputeBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
@@ -404,6 +426,7 @@ namespace RenderVegetationIn1ms
                 if (Model.enableRenderImpostor)
                 {
                     impostorMPB.Clear();
+                    impostorMPB.SetVector(RenderingAPI.RenderVars.ShaderName_WorldOffset_ID, RenderingAPI.RenderParams.WorldOffset);
                     impostorMPB.SetBuffer(RenderingAPI.RenderVars.ShaderName_IndirectShaderDataBuffer_ID, VisibleLOD4ComputeBuffer);
                 }
                 return;
@@ -412,6 +435,7 @@ namespace RenderVegetationIn1ms
             {
                 // 仅渲染阴影相关
                 visibleShadowMPB.Clear();
+                visibleShadowMPB.SetVector(RenderingAPI.RenderVars.ShaderName_WorldOffset_ID, RenderingAPI.RenderParams.WorldOffset);
                 visibleShadowMPB.SetBuffer(RenderingAPI.RenderVars.ShaderName_IndirectShaderDataBuffer_ID, VisibleShadowComputeBuffer);
                 return;   
             }
@@ -439,6 +463,7 @@ namespace RenderVegetationIn1ms
             {
                 var renderer = LOD.renderers[i];
                 renderer.mpb.Clear();
+                renderer.mpb.SetVector(RenderingAPI.RenderVars.ShaderName_WorldOffset_ID, RenderingAPI.RenderParams.WorldOffset);
                 renderer.mpb.SetBuffer(RenderingAPI.RenderVars.ShaderName_IndirectShaderDataBuffer_ID, cb);
             }
         }
@@ -488,6 +513,11 @@ namespace RenderVegetationIn1ms
             if (VegetationBoundsNativeArray.IsCreated)
                 VegetationBoundsNativeArray.Dispose();
 
+            if (FindInstanceDistanceToCameraResultsCountNativeArray.IsCreated)
+                FindInstanceDistanceToCameraResultsCountNativeArray.Dispose();
+            if (FindInstanceDistanceToCameraResultsNativeArray.IsCreated)
+                FindInstanceDistanceToCameraResultsNativeArray.Dispose();
+
 
             VisibleLOD0ComputeBuffer?.Release();
             VisibleLOD1ComputeBuffer?.Release();
@@ -506,6 +536,8 @@ namespace RenderVegetationIn1ms
             VegetationBoundsCountComputeBuffer = null;
             VegetationBoundsComputeBuffer = null;
             VegetationBoundsDatas = null;
+            FindInstanceDistanceToCameraResultsCountComputeBuffer?.Release();
+            FindInstanceDistanceToCameraResultsComputeBuffer?.Release();
 
 
             impostorMesh = null;

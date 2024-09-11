@@ -2,6 +2,7 @@
 #if defined(SHADER_API_GLCORE) || defined(SHADER_API_D3D11) || defined(SHADER_API_GLES3) || defined(SHADER_API_METAL) || defined(SHADER_API_VULKAN) || defined(SHADER_API_PSSL) || defined(SHADER_API_XBOXONE)
 // 表示外部将会给shader设置一个实例数据缓冲区，内部是要渲染的一系列实例数据
 StructuredBuffer<float4x4> IndirectShaderDataBuffer;
+float3 WorldOffset;
 #endif	
 #endif
 // inverse函数的作用是返回输入矩阵的逆矩阵
@@ -38,7 +39,9 @@ float4x4 inverse(float4x4 input)
 void setup()
 {
 #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
-	unity_ObjectToWorld = IndirectShaderDataBuffer[unity_InstanceID];
+	float4x4 instance = IndirectShaderDataBuffer[unity_InstanceID];
+	instance._14_24_34 += WorldOffset;
+	unity_ObjectToWorld = instance;
 	unity_WorldToObject = inverse(unity_ObjectToWorld);
 #endif
 }

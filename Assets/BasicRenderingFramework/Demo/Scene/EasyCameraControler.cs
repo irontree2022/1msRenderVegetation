@@ -28,7 +28,7 @@ namespace RenderVegetationIn1ms
         [Header("ÔÝÍ£")]
         public KeyCode stopKeyCode = KeyCode.Escape;
 
-        bool stop = false;
+        public bool stop = false;
         void Start()
         {
 

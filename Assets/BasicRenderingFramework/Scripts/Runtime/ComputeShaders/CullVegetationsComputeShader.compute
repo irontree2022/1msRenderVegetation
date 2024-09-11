@@ -36,6 +36,10 @@ float MaxCoreRenderingDistance;
 float MaxRenderingDistance;
 bool ShowVisibleVegetationBounds;
 
+// 查找植被实例
+bool EnableRuntimeAdditionDeletionModificationAndQuery;
+float FindInstanceDistanceToCamera;
+AppendStructuredBuffer<VegetationInstanceData> FindInstanceDistanceToCameraResultsComputeBuffer;
 
 AppendStructuredBuffer<VegetationInstanceData> VisibleLOD0AppendStructuredBuffer;
 AppendStructuredBuffer<VegetationInstanceData> VisibleLOD1AppendStructuredBuffer;
@@ -277,6 +281,11 @@ void CullVegetations(uint3 id : SV_DispatchThreadID)
 	float isCameraInBlock = IsInBounds(CameraPosition, boundMin, boundMax);
 	// 摄像机到当前实例的最近距离
 	float cameraToInstanceDistance = isCameraInBlock ? 0 : Distance(CameraPosition, boundMin, boundMax);
+
+	// 查找植被实例具体实现
+	// 将那些距离相机一定距离内的可见植被存入查找结果容器中
+	if (EnableRuntimeAdditionDeletionModificationAndQuery && cameraToInstanceDistance <= FindInstanceDistanceToCamera)
+		FindInstanceDistanceToCameraResultsComputeBuffer.Append(instance);
 
 	// 剔除超过最大渲染距离的植被
 	if (!isCameraInBlock && cameraToInstanceDistance > MaxRenderingDistance)

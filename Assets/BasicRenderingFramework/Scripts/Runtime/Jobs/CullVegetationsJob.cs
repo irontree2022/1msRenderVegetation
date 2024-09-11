@@ -20,6 +20,7 @@ namespace RenderVegetationIn1ms
         public NativeArray<int> VisibleLOD4CountNativeArray;
         public NativeArray<int> VisibleShadowCountNativeArray;
         public NativeArray<int> VegetationBoundsCountNativeArray;
+        public NativeArray<int> FindInstanceDistanceToCameraResultsCountNativeArray;
         public void Execute()
         {
             VisibleLOD0CountNativeArray[0] = 0;
@@ -29,6 +30,7 @@ namespace RenderVegetationIn1ms
             VisibleLOD4CountNativeArray[0] = 0;
             VisibleShadowCountNativeArray[0] = 0;
             VegetationBoundsCountNativeArray[0] = 0;
+            FindInstanceDistanceToCameraResultsCountNativeArray[0] = 0;
         }
     }
     [BurstCompile(CompileSynchronously = true)]
@@ -78,6 +80,13 @@ namespace RenderVegetationIn1ms
         [ReadOnly] public bool ShowVisibleVegetationBounds;
         public Unity.Collections.NativeArray<int> VegetationBoundsCountNativeArray;
         [NativeDisableParallelForRestriction] public Unity.Collections.NativeArray<Bounds> VegetationBoundsNativeArray;
+
+        // 查找植被实例对应变量和容器
+        [ReadOnly] public bool EnableRuntimeAdditionDeletionModificationAndQuery;
+        [ReadOnly] public float FindInstanceDistanceToCamera;
+        public NativeArray<int> FindInstanceDistanceToCameraResultsCountNativeArray;
+        [NativeDisableParallelForRestriction] public NativeArray<VegetationInstanceData> FindInstanceDistanceToCameraResultsNativeArray;
+
 
         float Distance(float3 center, float3 min, float3 max)
         {
@@ -300,8 +309,15 @@ namespace RenderVegetationIn1ms
             // 摄像机到当前实例的最近距离
             float cameraToInstanceDistance = isCameraInBlock ? 0 : Distance(CameraPosition, boundMin, boundMax);
 
+
+            // 查找植被实例具体实现
+            // 将那些距离相机一定距离内的可见植被存入查找结果容器中
+            if(EnableRuntimeAdditionDeletionModificationAndQuery && cameraToInstanceDistance <= FindInstanceDistanceToCamera)
+                FindInstanceDistanceToCameraResultsNativeArray[FindInstanceDistanceToCameraResultsCountNativeArray[0]++] = instance;
+
+
             // 剔除超过最大渲染距离的植被
-            if(!isCameraInBlock && cameraToInstanceDistance > MaxRenderingDistance)
+            if (!isCameraInBlock && cameraToInstanceDistance > MaxRenderingDistance)
             {
                 boundVerts.Dispose();
                 return;
