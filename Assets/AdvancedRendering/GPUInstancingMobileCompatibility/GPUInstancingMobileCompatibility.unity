@@ -567,7 +567,7 @@ MonoBehaviour:
   GeneralMaterial: {fileID: 2100000, guid: 9b38a1a79102eb04bb6873c99b658dba, type: 2}
   ForceDrawMeshInstanced: 0
   ForceRenderMeshInstanced: 0
-  ForceDrawMeshInstancedProcedural: 1
+  ForceDrawMeshInstancedProcedural: 0
 --- !u!4 &1425603122
 Transform:
   m_ObjectHideFlags: 0
