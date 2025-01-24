@@ -5,7 +5,6 @@ using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
-using static UnityEditor.MaterialProperty;
 
 namespace RenderVegetationIn1ms
 {

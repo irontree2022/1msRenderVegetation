@@ -104,6 +104,7 @@ public class CalculationLOD : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         // 实时计算LOD，并生成LOD对象
@@ -133,5 +134,6 @@ public class CalculationLOD : MonoBehaviour
             sceneView.rotation = cameraMain.transform.rotation;
         }
     }
+#endif
 
 }
