@@ -18,6 +18,7 @@ namespace TheVegetationEngine
         "Nature Renderer (Procedural Instancing)",
         "GPU Instancer (Instanced Indirect)",
         "1msRenderVegetation (Instanced Indirect)",
+        "1msRenderVegetation (Instanced Indirect float4x4)",
         };
 
         public static void SetMaterialSettings(Material material)
@@ -998,6 +999,13 @@ namespace TheVegetationEngine
             "           #pragma instancing_options procedural:setup forwardadd",
             "           #pragma multi_compile GPU_FRUSTUM_ON __",
             };
+            string[] engine1msRenderVegetationFloat4x4 = new string[]
+{
+            "           //1msRenderVegetation (Instanced Indirect float4x4)",
+            "           #include \"XXX\"",
+            "           #pragma instancing_options procedural:setup forwardadd",
+            "           #pragma multi_compile GPU_FRUSTUM_ON __",
+};
             string assetFolder = "Assets/BOXOPHOBIC/The Vegetation Engine";
 
             //Safer search, there might be many user folders
@@ -1058,6 +1066,17 @@ namespace TheVegetationEngine
                 }
             }
 
+            var cginc1msRVFloat4x4 = "Assets/AdvancedRendering/OcclusionCulling_Hi-z/OcclusionCulling_Hi-z_GPUInstancing_indirect.cginc";
+            searchFolders = AssetDatabase.FindAssets("OcclusionCulling_Hi-z_GPUInstancing_indirect");
+
+            for (int i = 0; i < searchFolders.Length; i++)
+            {
+                if (AssetDatabase.GUIDToAssetPath(searchFolders[i]).EndsWith("OcclusionCulling_Hi-z_GPUInstancing_indirect.cginc"))
+                {
+                    cginc1msRVFloat4x4 = AssetDatabase.GUIDToAssetPath(searchFolders[i]);
+                }
+            }
+
             // Add correct paths for VSP and GPUI
             engineNatureRenderer[1] = engineNatureRenderer[1].Replace("XXX", cgincNR);
             engineVegetationStudio[1] = engineVegetationStudio[1].Replace("XXX", assetFolder);
@@ -1066,6 +1085,7 @@ namespace TheVegetationEngine
             engineGPUInstancer[1] = engineGPUInstancer[1].Replace("XXX", cgincGPUI);
             engineQuadroRenderer[1] = engineQuadroRenderer[1].Replace("XXX", cgincQR);
             engine1msRenderVegetation[1] = engine1msRenderVegetation[1].Replace("XXX", cginc1msRV);
+            engine1msRenderVegetationFloat4x4[1] = engine1msRenderVegetationFloat4x4[1].Replace("XXX", cginc1msRVFloat4x4);
 
             var pipeline = "IS_STANDARD_PIPELINE";
 
@@ -1177,6 +1197,16 @@ namespace TheVegetationEngine
                     if (lines[i].Contains("SHADER INJECTION POINT BEGIN"))
                     {
                         lines.InsertRange(i + 1, engine1msRenderVegetation);
+                    }
+                }
+            }
+            if (renderEngine.Contains("1msRenderVegetation (Instanced Indirect float4x4)"))
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    if (lines[i].Contains("SHADER INJECTION POINT BEGIN"))
+                    {
+                        lines.InsertRange(i + 1, engine1msRenderVegetationFloat4x4);
                     }
                 }
             }

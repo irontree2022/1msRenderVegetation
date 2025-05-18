@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/AdvancedRendering/GPUInstancingMobileCompatibility/GPUInstancingMobileCompatibility.unity
     guid: 58beeed5acb17f84588d159647fe9af6
+  - enabled: 1
+    path: Assets/AdvancedRendering/OcclusionCulling_Hi-z/OcclusionCulling_Hi-z.unity
+    guid: 54cc6534ffd2c9141abf203141b7de27
   m_configObjects: {}

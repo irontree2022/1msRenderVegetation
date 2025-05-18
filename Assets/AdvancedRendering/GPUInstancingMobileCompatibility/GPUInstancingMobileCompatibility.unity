@@ -560,7 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12097cadc219f6442b92f84f79aa2217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instanceCount: 5000
+  instanceCount: 500
   genInstanceRange: {x: 10, y: 10, z: 10}
   instancePrefab: {fileID: 3446973963152892367, guid: e1f5e749e4a39cb43a4800340520c55a,
     type: 3}
