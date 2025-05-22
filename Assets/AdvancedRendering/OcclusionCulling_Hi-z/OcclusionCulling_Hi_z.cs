@@ -91,29 +91,42 @@ public class OcclusionCulling_Hi_z : MonoBehaviour
         }
 
 
-        if (hi_z__CPU != null)
+        if (depthMapController.IsMipmapGenCompleted)
         {
-            hi_z__CPU.EnabelHi_z_OcclusionCulling = EnabelHi_z_OcclusionCulling;
-            if (hi_z__CPU.EnabelHi_z_OcclusionCulling && hi_z__CPU.RT == null)
-                hi_z__CPU.RT = depthMapController.RT;
-        }
-        if (hi_z__GPU != null)
-        {
-            hi_z__GPU.EnabelHi_z_OcclusionCulling = EnabelHi_z_OcclusionCulling;
-            if (hi_z__GPU.EnabelHi_z_OcclusionCulling && hi_z__GPU.RT == null)
-                hi_z__GPU.RT = depthMapController.RT;
+            if (hi_z__CPU != null)
+            {
+                hi_z__CPU.EnabelHi_z_OcclusionCulling = EnabelHi_z_OcclusionCulling;
+                if (hi_z__CPU.EnabelHi_z_OcclusionCulling && hi_z__CPU.RT == null)
+                {
+                    hi_z__CPU.RT = depthMapController.RT;
+                    hi_z__CPU.GenMipmapSizes(depthMapController.MipmapCount);
+                }
+            }
+            if (hi_z__GPU != null)
+            {
+                hi_z__GPU.EnabelHi_z_OcclusionCulling = EnabelHi_z_OcclusionCulling;
+                if (hi_z__GPU.EnabelHi_z_OcclusionCulling && hi_z__GPU.RT == null)
+                {
+                    hi_z__GPU.RT = depthMapController.RT;
+                    hi_z__GPU.GenMipmapSizes(depthMapController.MipmapCount);
+                }
+            }
+
+            if (EnableDebug)
+            {
+                if (!Hi_z_Debug.Enable)
+                {
+                    Hi_z_Debug.rtMipmapCount = depthMapController.MipmapCount;
+                    Hi_z_Debug.Enable = true;
+                }
+            }
+            else
+            {
+                if (Hi_z_Debug.Enable)
+                    Hi_z_Debug.Enable = false;
+            }
         }
 
-        if (EnableDebug)
-        {
-            if (!Hi_z_Debug.Enable)
-                Hi_z_Debug.Enable = true;
-        }
-        else
-        {
-            if(Hi_z_Debug.Enable)
-                Hi_z_Debug.Enable = false;
-        }
 
         per_EnableRandomGenGrassInstances = EnableRandomGenGrassInstances;
     }

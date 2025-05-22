@@ -20,7 +20,11 @@ public class GenDepthMapController : MonoBehaviour
     public bool IsInitialized;
     [Header("深度图")]
     public RenderTexture RT;
-
+    public int MipmapCount;
+    [Header("用于生成mipmap")]
+    public Shader genDepthMipmapShader;
+    [Header("mipmap生成完成")]
+    public bool IsMipmapGenCompleted;
 
 
     [Space(10)]
@@ -52,7 +56,7 @@ public class GenDepthMapController : MonoBehaviour
         Camera.depthTextureMode |= DepthTextureMode.Depth;
 
         RT = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.RFloat);
-        RT.useMipMap = false;
+        RT.useMipMap = true;
         RT.autoGenerateMips = false;
         RT.filterMode = FilterMode.Point;
         RT.Create();

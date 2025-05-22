@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -57,12 +58,24 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
     public ComputeBuffer visiblesBuffer;
     MaterialPropertyBlock mpb;
 
+    int rtMipmapCount;
+    [Header("各层级mipmap尺寸以及数据偏移量")]
+    public Vector3Int[] rtMipmapSizes;
+    // Vector3Int：宽、高、数据偏移量
+    NativeArray<Vector3Int> rtMipmapSizesNativeArray;
+    int maxDepthDatasLength;
     int depthDatasLength;
-    NativeArray<float> depthDataNativeArray;
+    // RT各层级mipmap的数据，将会全部写入该数组中，
+    // 第0层mipmap，数据范围是0~offset_1； 第1层mipmap数据范围则是 offset_1~offset_2； 第2层mipmap数据范围则是offset_2~offset_3...
+    // 对应要取第i层mipmap数据，则需要偏移offset_i，才取得正确的数据
+    NativeArray<float> depthDataNativeArray; 
   
 
     Matrix4x4 per_vpMatrix;
-    bool enabelDebug;
+    [Header("能够向mipmap取值的最小层级")]
+    public int minMipmapLevel = 5;
+    [Header("调试Job")]
+    public bool enabelDebug;
 
 
     public event System.Action<NativeArray<float>, int> RTRequestDoneEvent;
@@ -114,9 +127,30 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
 
         depthDatasLength = 0;
         depthDataNativeArray = new NativeArray<float>(0, Allocator.Persistent);
-        enabelDebug = true;
         per_vpMatrix = Matrix4x4.identity;
 
+    }
+    public void GenMipmapSizes(int mipmapCount)
+    {
+        rtMipmapCount = mipmapCount;
+        if (!rtMipmapSizesNativeArray.IsCreated || mipmapCount != rtMipmapSizesNativeArray.Length)
+        {
+            if (rtMipmapSizesNativeArray.IsCreated)
+                rtMipmapSizesNativeArray.Dispose();
+            rtMipmapSizesNativeArray = new NativeArray<Vector3Int>(mipmapCount, Allocator.Persistent);
+            rtMipmapSizes = new Vector3Int[rtMipmapCount];
+        }
+        maxDepthDatasLength = 0;
+        // 这里计算各层mipmap尺寸以及偏移量，
+        // 并把最终整个RT（各层mipmap）的数据量统计出来
+        for (var i = 0; i < mipmapCount; ++i)
+        {
+            var w = RT.width >> i;
+            var h = RT.height >> i;
+            rtMipmapSizes[i] = new Vector3Int(w, h, maxDepthDatasLength);
+            maxDepthDatasLength += w * h;
+        }
+        NativeArray<Vector3Int>.Copy(rtMipmapSizes, rtMipmapSizesNativeArray, mipmapCount);
     }
 
     JobHandle jobHandle;
@@ -143,6 +177,7 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
 
 
         // 更新深度图数据
+        // 异步向GPU请求读取深度图RT数据
         var totalPixels = Screen.width * Screen.height;
         if (!depthDataNativeArray.IsCreated || depthDataNativeArray.Length < totalPixels)
         {
@@ -150,7 +185,6 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
                 depthDataNativeArray.Dispose();
             depthDataNativeArray = new NativeArray<float>(totalPixels, Allocator.Persistent);
         }
-        // 异步向GPU请求读取深度图RT数据
         AsyncRTRequest();
 
         // 并行视锥剔除+遮挡剔除
@@ -175,6 +209,10 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
             farClipPlane = Camera.main.farClipPlane,
             nearClipPlane = Camera.main.nearClipPlane,
             ScreenSize = new Vector2Int(Screen.width, Screen.height),
+            rtMipmapCount = rtMipmapCount,
+            rtMipmapSizesNativeArray = rtMipmapSizesNativeArray,
+            minMipmapLevel = minMipmapLevel,
+
 
             EnableDrawGrassInstanceBounds  = EnableDrawGrassInstanceBounds,
             onlyGetVisibleBoundsNearPoint = onlyGetVisibleBoundsNearPoint,
@@ -204,22 +242,38 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
 
     private void AsyncRTRequest()
     {
-        AsyncGPUReadback.Request(RT, 0, TextureFormat.RFloat, request =>
+        if(!depthDataNativeArray.IsCreated || depthDataNativeArray.Length < maxDepthDatasLength)
         {
-            if (isDestroyed) return;
-            if (request.hasError) return;
+            if (depthDataNativeArray.IsCreated)
+                depthDataNativeArray.Dispose();
+            depthDataNativeArray = new NativeArray<float>(maxDepthDatasLength, Allocator.Persistent);
+        }
+        depthDatasLength = maxDepthDatasLength;
+        for (var i = 0; i < rtMipmapCount; ++i)
+        {
+            var mipmapLevel = i;
+            var mipmapOffset = rtMipmapSizesNativeArray[i].z;
+            // CPU回读RT，RT的各层级mipmap数据，就需要逐一回读才行，
+            // 根据当前mipmap层级，将读到的数据写入数组的对应位置中去，
+            // 在使用数组中各层级mipmap数据时，则根据写入的位置去取对应mipmap的值
+            AsyncGPUReadback.Request(RT, mipmapLevel, TextureFormat.RFloat, request =>
+            {
+                if (isDestroyed) return;
+                if (request.hasError) return;
 
+                var depthDatas = request.GetData<float>();
+                NativeArray<float>.Copy(depthDatas,0, depthDataNativeArray, mipmapOffset, depthDatas.Length);
 
-            var depthDatas = request.GetData<float>();
-            NativeArray<float>.Copy(depthDatas, depthDataNativeArray, depthDatas.Length);
-            depthDatasLength = depthDatas.Length;
-            RTRequestDoneEvent?.Invoke(depthDataNativeArray, depthDatasLength);
-        });
+                RTRequestDoneEvent?.Invoke(depthDataNativeArray, depthDatasLength);
+            });
+        }
     }
 
     private void LateUpdate()
     {
         if (!EnableDraw) return;
+
+        // 批量渲染实例
         if (!jobHandle.IsCompleted)
         {
             jobHandle.Complete();
@@ -266,6 +320,8 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
         if (FrustumPlanesNativeArray.IsCreated)
             FrustumPlanesNativeArray.Dispose();
 
+        if (rtMipmapSizesNativeArray.IsCreated)
+            rtMipmapSizesNativeArray.Dispose();
         if (depthDataNativeArray.IsCreated)
             depthDataNativeArray.Dispose();
 

@@ -13,6 +13,8 @@ public class GenDepthMapFeature : ScriptableRendererFeature
         private Material depthMaterial;
         private RenderTexture targetRT;
         public bool done;
+        RenderTextureFormat colorFormat = RenderTextureFormat.RFloat;
+        Material genDepthMipmapaterial;
         public GenDepthMapPass()
         {
             depthHandle.Init("_CustomDepthRT");
@@ -22,7 +24,6 @@ public class GenDepthMapFeature : ScriptableRendererFeature
         {
             if (!Enable) return;
 
-            var colorFormat = RenderTextureFormat.RFloat; // 存储深度值
             // 匹配目标RT的描述
             RenderTextureDescriptor desc = cameraTextureDescriptor;
             desc.colorFormat = colorFormat;
@@ -54,10 +55,56 @@ public class GenDepthMapFeature : ScriptableRendererFeature
                 depthHandle.Identifier(),       // 目标：临时RT
                 depthMaterial                   // 深度转换材质
             );
-            cmd.CopyTexture(depthHandle.Identifier(), targetRT);
-            GenDepthMapController.Instance.Trigger_AfterDepthMapGeneratedEvent(cmd, depthHandle.Identifier());
+
+            // 开始生成Mipmap
+            // 这里最小mipmap尺寸为 1x1
+            if (genDepthMipmapaterial == null)
+                genDepthMipmapaterial = new Material(GenDepthMapController.Instance.genDepthMipmapShader);
+            RenderTargetHandle tempMipmapRT = default;
+            tempMipmapRT.Init("tempDepthMipmapRT");
+            RenderTextureDescriptor _desc = new RenderTextureDescriptor(Screen.width, Screen.height, colorFormat, 0);
+            _desc.useMipMap = true;
+            _desc.autoGenerateMips = false;
+            cmd.GetTemporaryRT(tempMipmapRT.id, _desc, FilterMode.Point);
+
+            var width = targetRT.width;
+            var height = targetRT.height;
+            var _w = width;
+            var _h = width;
+            var mipmapLevel = 0;
+            RenderTargetHandle per = default;
+            while (_w > 1 && _h > 1)
+            {
+                RenderTargetHandle mipmapHandle = mipmapLevel == 0 ? depthHandle : default;
+
+                if(mipmapLevel != 0)
+                {
+                    mipmapHandle.Init($"tempMipmap_{mipmapLevel}");
+                    RenderTextureDescriptor desc = new RenderTextureDescriptor(_w, _h, colorFormat, 0);
+                    desc.useMipMap = false;
+                    cmd.GetTemporaryRT(mipmapHandle.id, desc, FilterMode.Point);
+                    cmd.Blit(per.Identifier(), mipmapHandle.Identifier(), genDepthMipmapaterial);
+                }
+                cmd.CopyTexture(mipmapHandle.Identifier(), 0, 0, tempMipmapRT.Identifier(), 0, mipmapLevel);
+                cmd.CopyTexture(mipmapHandle.Identifier(), 0, 0, targetRT, 0, mipmapLevel);
+                if (mipmapLevel != 0)
+                    cmd.ReleaseTemporaryRT(per.id);
+                per = mipmapHandle;
+
+
+                ++mipmapLevel;
+                // 也就是每层mipmap尺寸都是之前的一半
+                _w = width >> mipmapLevel; 
+                _h = height >> mipmapLevel;
+            }
+            cmd.ReleaseTemporaryRT(per.id);
+            GenDepthMapController.Instance.MipmapCount = mipmapLevel;
+            GenDepthMapController.Instance.IsMipmapGenCompleted = true;
+
+            GenDepthMapController.Instance.Trigger_AfterDepthMapGeneratedEvent(cmd, tempMipmapRT.Identifier());
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
+            cmd.ReleaseTemporaryRT(tempMipmapRT.id);
         }
 
         public override void FrameCleanup(CommandBuffer cmd)
@@ -82,4 +129,5 @@ public class GenDepthMapFeature : ScriptableRendererFeature
             return;
         renderer.EnqueuePass(depthPass);
     }
+
 }

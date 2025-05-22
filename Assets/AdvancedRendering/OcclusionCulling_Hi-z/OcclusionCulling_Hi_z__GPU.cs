@@ -58,6 +58,19 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
     public Bounds drawBounds;
     Matrix4x4 per_vpMatrix;
 
+    int rtMipmapCount;
+    [Header("各层级mipmap尺寸以及数据偏移量")]
+    public Vector3Int[] rtMipmapSizes;
+    [Header("能够向mipmap取值的最小层级")]
+    public int minMipmapLevel = 5;
+   
+    int maxDepthDatasLength;
+    int depthDatasLength;
+    // RT各层级mipmap的数据，将会全部写入该数组中，
+    // 第0层mipmap，数据范围是0~offset_1； 第1层mipmap数据范围则是 offset_1~offset_2； 第2层mipmap数据范围则是offset_2~offset_3...
+    // 对应要取第i层mipmap数据，则需要偏移offset_i，才取得正确的数据
+    NativeArray<float> depthDataNativeArray;
+
     public event System.Action<NativeArray<float>, int> RTRequestDoneEvent;
 
     public void Init(ComputeShader cs, Mesh mesh, Material material, Bounds grassBounds, Matrix4x4[] instances, Bounds[] boundses)
@@ -93,7 +106,7 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
         cullResultBoundsCountComputeBuffer = new ComputeBuffer(1, sizeof(uint), ComputeBufferType.IndirectArguments);
 
         args[0] = grassMesh.GetIndexCount(0);
-        args[1] = (uint)instancesCount;
+        args[1] = 0;
         args[2] = grassMesh.GetIndexStart(0);
         args[3] = grassMesh.GetBaseVertex(0);
         args[4] = 0;
@@ -119,8 +132,22 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
         depthOnlyPassIndex = grassMaterial.FindPass("DepthOnly");
 
     }
-
-
+    public void GenMipmapSizes(int mipmapCount)
+    {
+        rtMipmapCount = mipmapCount;
+        if (rtMipmapSizes == null || mipmapCount != rtMipmapSizes.Length)
+            rtMipmapSizes = new Vector3Int[mipmapCount];
+        maxDepthDatasLength = 0;
+        // 这里计算各层mipmap尺寸以及偏移量，
+        // 并把最终整个RT（各层mipmap）的数据量统计出来
+        for (var i = 0; i < mipmapCount; ++i)
+        {
+            var w = RT.width >> i;
+            var h = RT.height >> i;
+            rtMipmapSizes[i] = new Vector3Int(w, h, maxDepthDatasLength);
+            maxDepthDatasLength += w * h;
+        }
+    }
     private void Update()
     {
         if (RT != null)
@@ -164,6 +191,8 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
             cs.SetFloat("nearDistance", nearDistance);
 
             cs.SetTexture(kernel, "_HiZMap", RT);
+            cs.SetInt("rtMipmapCount", rtMipmapCount);
+            cs.SetInt("minMipmapLevel", minMipmapLevel);
 
             cullResultAppendBuffer.SetCounterValue(0);
             cullResultBoundsAppendBuffer.SetCounterValue(0);
@@ -194,14 +223,31 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
     }
     private void AsyncRTRequest()
     {
-        AsyncGPUReadback.Request(RT, 0, TextureFormat.RFloat, request =>
+        if (!depthDataNativeArray.IsCreated || depthDataNativeArray.Length < maxDepthDatasLength)
         {
-            if (isDestroyed) return;
-            if (request.hasError) return;
+            if (depthDataNativeArray.IsCreated)
+                depthDataNativeArray.Dispose();
+            depthDataNativeArray = new NativeArray<float>(maxDepthDatasLength, Allocator.Persistent);
+        }
+        depthDatasLength = maxDepthDatasLength;
+        for (var i = 0; i < rtMipmapCount; ++i)
+        {
+            var mipmapLevel = i;
+            var mipmapOffset = rtMipmapSizes[i].z;
+            // CPU回读RT，RT的各层级mipmap数据，就需要逐一回读才行，
+            // 根据当前mipmap层级，将读到的数据写入数组的对应位置中去，
+            // 在使用数组中各层级mipmap数据时，则根据写入的位置去取对应mipmap的值
+            AsyncGPUReadback.Request(RT, mipmapLevel, TextureFormat.RFloat, request =>
+            {
+                if (isDestroyed) return;
+                if (request.hasError) return;
 
-            var depthDatas = request.GetData<float>();
-            RTRequestDoneEvent?.Invoke(depthDatas, depthDatas.Length);
-        });
+                var depthDatas = request.GetData<float>();
+                NativeArray<float>.Copy(depthDatas, 0, depthDataNativeArray, mipmapOffset, depthDatas.Length);
+
+                RTRequestDoneEvent?.Invoke(depthDataNativeArray, depthDatasLength);
+            });
+        }
     }
     public void AfterDepthMapGenerated(CommandBuffer cmd, RenderTargetIdentifier targetIdentifier)
     {
@@ -239,6 +285,8 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
         cmd.SetComputeFloatParam(cs, "nearDistance", nearDistance);
 
         cmd.SetComputeTextureParam(cs, kernel, "_HiZMap", targetIdentifier);
+        cmd.SetComputeIntParam(cs, "rtMipmapCount", rtMipmapCount);
+        cmd.SetComputeIntParam(cs, "minMipmapLevel", minMipmapLevel);
 
         cmd.SetBufferCounterValue(cullResultAppendBuffer, 0);
         cmd.SetBufferCounterValue(cullResultBoundsAppendBuffer, 0);
@@ -346,6 +394,8 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
         cullResultBoundsAppendBuffer?.Release();
         cullResultBoundsCountComputeBuffer?.Release();
 
+        if (depthDataNativeArray.IsCreated)
+            depthDataNativeArray.Dispose();
         RTRequestDoneEvent = null;
     }
 }

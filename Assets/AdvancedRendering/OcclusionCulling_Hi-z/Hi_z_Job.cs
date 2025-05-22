@@ -24,6 +24,9 @@ public struct Hi_z_Job : IJobParallelFor
     [ReadOnly] public float nearClipPlane;
     [ReadOnly] public float farClipPlane;
     [ReadOnly] public Vector2Int ScreenSize;
+    [ReadOnly] public int rtMipmapCount;
+    [ReadOnly] public NativeArray<Vector3Int> rtMipmapSizesNativeArray;
+    [ReadOnly] public int minMipmapLevel;
     [ReadOnly] public bool EnableDrawGrassInstanceBounds;
     [ReadOnly] public bool onlyGetVisibleBoundsNearPoint;
     [ReadOnly] public Vector3 nearPoint;
@@ -137,6 +140,18 @@ public struct Hi_z_Job : IJobParallelFor
                 }
             }
 
+            // 求当前覆盖屏幕的像素尺寸，
+            // 并根据最长的边，log2求出对应mipmapLevel
+            var minUV = new float2(minX, minY);
+            var maxUV = new float2(maxX, maxY);
+            var minPixel = minUV * new float2(ScreenSize.x, ScreenSize.y);
+            var maxPixel = maxUV * new float2(ScreenSize.x, ScreenSize.y); // 这里就计算出当前物体覆盖屏幕的像素区域
+            var maxPixelCount = math.max(math.abs(maxPixel.x - minPixel.x), math.abs(maxPixel.y - minPixel.y)); // 物体覆盖屏幕像素区域的最长一边
+            var mipmapLevel = math.clamp((int)math.log2(maxPixelCount), 0, math.min(rtMipmapCount - 1, minMipmapLevel)); // log2求出取值mipmap层级，clamp确保层级在最小和最大层级之间
+            var _mipmapData = rtMipmapSizesNativeArray[mipmapLevel];
+            // 宽、长、数据偏移量，由于我们回读RT数据是将所有层级mipmap写入数组中，
+            // 这里数据偏移量，用于定位对应mipmap层级的数据
+            int3 mipmapData = new int3(_mipmapData.x, _mipmapData.y, _mipmapData.z); 
 
             // 深度值映射到[0-1]之间
             // 优先取相机最近的深度值，OpenGL取最小z；
@@ -158,18 +173,18 @@ public struct Hi_z_Job : IJobParallelFor
             var uv1 = new float2(minX, maxY);
             var uv2 = new float2(maxX, minY);
             var uv3 = new float2(maxX, maxY);
-            if (isOccluded(uv0, linear01Depth) &&
-                isOccluded(uv1, linear01Depth) &&
-                isOccluded(uv2, linear01Depth) &&
-                isOccluded(uv3, linear01Depth))
+            if (isOccluded(uv0, linear01Depth, mipmapData) &&
+                isOccluded(uv1, linear01Depth, mipmapData) &&
+                isOccluded(uv2, linear01Depth, mipmapData) &&
+                isOccluded(uv3, linear01Depth, mipmapData))
             {
                 boundVerts.Dispose();
                 return;
             }
 
 
-            //if (enabelDebug)
-            //    Debug.Log($"没有被遮挡剔除：{index}，offset={offset}, mipLevel={mipLevel}, uvSize={mipmapSize}");
+            if (enabelDebug)
+                Debug.Log($"没有被遮挡剔除：{index}，mipmapData={mipmapData}，mipmapLevel={mipmapLevel}，maxPixelCount={maxPixelCount}");
         }
 
 
@@ -183,7 +198,7 @@ public struct Hi_z_Job : IJobParallelFor
 
     }
     // 计算遮挡关系
-    bool isOccluded(float2 uv, float depth)
+    bool isOccluded(float2 uv, float depth, int3 mipmapData)
     {
         var screenSize = ScreenSize;
         // 先将uv映射到[0-1]之间，
@@ -196,10 +211,15 @@ public struct Hi_z_Job : IJobParallelFor
         if (!isInScreen)
             return true;
 
-        var pixelX = math.clamp((int)pixel.x, 0, screenSize.x -1);
-        var pixelY = math.clamp((int)pixel.y, 0, screenSize.y -1);
+        // 获取对应mipmap像素坐标
+        var mipmapSize = new int2(mipmapData.x, mipmapData.y);
+        var mipmapOffset = mipmapData.z;
+        pixel = uv * mipmapSize;
+        var pixelX = math.clamp((int)pixel.x, 0, mipmapSize.x -1);
+        var pixelY = math.clamp((int)pixel.y, 0, mipmapSize.y -1);
 
-        var bufferIndex = pixelY * screenSize.x + pixelX;
+        // 对应mipmap偏移量处取值，进行深度对比
+        var bufferIndex = pixelY * mipmapSize.x + pixelX + mipmapOffset;
         if (bufferIndex < 0 || bufferIndex >= depthDataNativeArray.Length)
             return true;
 

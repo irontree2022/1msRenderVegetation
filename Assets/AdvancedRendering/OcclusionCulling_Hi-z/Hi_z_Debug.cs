@@ -4,8 +4,12 @@ using Unity.Collections;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
+/// <summary>
+/// 这个类是专门用于遮挡剔除的Debug类
+/// </summary>
 public class Hi_z_Debug : MonoBehaviour
 {
     static Hi_z_Debug instance;
@@ -23,6 +27,7 @@ public class Hi_z_Debug : MonoBehaviour
                     var prefab = Resources.Load("Debug");
                     var go = Instantiate(prefab) as GameObject;
                     instance = go.GetComponent<Hi_z_Debug>();
+                    instance.GenMipmapSizes();
                 }
             }
             else
@@ -36,12 +41,17 @@ public class Hi_z_Debug : MonoBehaviour
 
 
 
-    public GameObject TestGo;
-    public Image Image;
+    public GameObject TestGo;//用于运行时移动对象，方便观察结果
+    public Image Image;//剔除结果会通过这个UI组件显示在屏幕上
     public Text Text;
-    public bool UseTestGoWorldPos;
+    public bool UseTestGoWorldPos;//这个表示仅仅使用TestGo对象的世界坐标（不用它的包围盒）去计算遮挡关系
+    public static int rtMipmapCount;
+    [Header("各层级mipmap尺寸以及数据偏移量")]
+    public Vector3Int[] rtMipmapSizes;
+    [Header("能够向mipmap取值的最小层级")]
+    public int minMipmapLevel = 5;
 
-
+    int maxDepthDatasLength;
     private Transform TestGOTransform;
     private MeshRenderer TestGOMeshRenderer;
     private Material TestGOMaterial;
@@ -64,6 +74,24 @@ public class Hi_z_Debug : MonoBehaviour
         rtUpdated = false;
     }
 
+    void GenMipmapSizes()
+    {
+        if (rtMipmapSizes == null || rtMipmapCount != rtMipmapSizes.Length)
+            rtMipmapSizes = new Vector3Int[rtMipmapCount];
+        maxDepthDatasLength = 0;
+        // 这里计算各层mipmap尺寸以及偏移量，
+        // 并把最终整个RT（各层mipmap）的数据量统计出来
+        for (var i = 0; i < rtMipmapCount; ++i)
+        {
+            var w = Screen.width >> i;
+            var h = Screen.height >> i;
+            rtMipmapSizes[i] = new Vector3Int(w, h, maxDepthDatasLength);
+            maxDepthDatasLength += w * h;
+        }
+        minMipmapLevel = rtMipmapCount - 1;
+    }
+
+
     private OcclusionCulling_Hi_z culling_Hi_Z;
     private Bounds per_testGOBounds;
     private Vector3 per_worldPos;
@@ -72,7 +100,7 @@ public class Hi_z_Debug : MonoBehaviour
     private float2[] uvs = new float2[4];
     private void Update()
     {
-
+        //RT回读数据的事件注册
         if(culling_Hi_Z == null)
             culling_Hi_Z = GameObject.FindAnyObjectByType<OcclusionCulling_Hi_z>();
         if (culling_Hi_Z != null && culling_Hi_Z.UseCPU && culling_Hi_Z.hi_z__CPU != null && culling_Hi_Z.hi_z__CPU.EnableDraw)
@@ -87,7 +115,8 @@ public class Hi_z_Debug : MonoBehaviour
         }
 
 
-            var worldPos = TestGOTransform.position;
+        //实时计算当前TestGo对象的遮挡关系
+        var worldPos = TestGOTransform.position;
         var bounds = TestGOMeshRenderer.bounds;
         if (depthDatasLength > 0 && ((UseTestGoWorldPos && worldPos != per_worldPos) || (!UseTestGoWorldPos && bounds != per_testGOBounds)) || rtUpdated || per_UseTestGoWorldPos != UseTestGoWorldPos)
         {
@@ -98,7 +127,8 @@ public class Hi_z_Debug : MonoBehaviour
             float3 ndc = default;
             var depth = 0f;
             var isInClipSpace = false;
-            float2 uvSize = new float2(15f, 15f);
+            float2 uvSize = new float2(15f, 15f);// 默认覆盖15x15像素区域，后面的计算会实时更新物体在屏幕上的像素区域
+            int4 mipmapData = new int4(screenSize.xy, 0, 0);
 
             // 将世界坐标转换到裁剪空间
             clipSpace = math.mul(vpMatrix, new float4(worldPos, 1f));
@@ -164,6 +194,13 @@ public class Hi_z_Debug : MonoBehaviour
                     maxUV = maxUV * 0.5f + 0.5f;
                     uvSize = new float2((maxUV.x - minUV.x) * screenSize.x, (maxUV.y - minUV.y) * screenSize.y);
 
+                    var maxPixelCount = math.max(math.abs(uvSize.x), math.abs(uvSize.y)); // 物体覆盖屏幕像素区域的最长一边
+                    var mipmapLevel = math.clamp((int)math.log2(maxPixelCount), 0, math.min(rtMipmapCount - 1, minMipmapLevel)); // log2求出取值mipmap层级，clamp确保层级在最小和最大层级之间
+                    var _mipmapData = rtMipmapSizes[mipmapLevel];
+                    // 宽、长、数据偏移量，由于我们回读RT数据是将所有层级mipmap写入数组中，
+                    // 这里数据偏移量，用于定位对应mipmap层级的数据
+                    mipmapData = new int4(_mipmapData.x, _mipmapData.y, _mipmapData.z, mipmapLevel);
+
                     // 深度值映射到[0-1]之间
                     // 优先取相机最近的深度值，OpenGL取最小z；
                     // 其他平台默认是反转的，所以取最大z（再度反转后，也是最小z了）
@@ -184,7 +221,7 @@ public class Hi_z_Debug : MonoBehaviour
 
             //Debug.Log($"屏幕尺寸：{screenSize}, 深度图尺寸：{rtSize}, Mipmap尺寸：{mipmapSize}");
 
-
+            var isInScreen = false;
             var isOccluded = true;
             if (isInClipSpace)
             {
@@ -210,13 +247,17 @@ public class Hi_z_Debug : MonoBehaviour
                         continue;
                     }
 
+                    isInScreen = true;
 
-                    var pixelX = (int)pixel.x;
-                    var pixelY = (int)pixel.y;
+                    // 获取对应mipmap像素坐标
+                    var mipmapSize = new int2(mipmapData.x, mipmapData.y);
+                    var mipmapOffset = mipmapData.z;
+                    pixel = uv * mipmapSize;
+                    var pixelX = math.clamp((int)pixel.x, 0, mipmapSize.x - 1);
+                    var pixelY = math.clamp((int)pixel.y, 0, mipmapSize.y - 1);
 
-
-                    // 取出深度图中记录的该点深度值，计算遮挡关系
-                    var bufferIndex = pixelY * screenSize.x + pixelX;
+                    // 取出深度图中记录的该点深度值(对应mipmap则需要偏移量)，计算遮挡关系
+                    var bufferIndex = pixelY * mipmapSize.x + pixelX + mipmapOffset;
                     if (bufferIndex < 0 || bufferIndex >= depthDatasLength)
                     {
                         Debug.Log($"像素值索引出界，bufferIndex:{bufferIndex}, depthDatasLength:{depthDatasLength}");
@@ -238,7 +279,7 @@ public class Hi_z_Debug : MonoBehaviour
             SetTestGoActive(!isOccluded);
             uv0 = uv0 * 0.5f + 0.5f;
             var _pixel = uv0 * screenSize;
-            SetImage(_pixel, uvSize, isOccluded);
+            SetImage(_pixel, uvSize, isOccluded, isInScreen, mipmapData.w);
         }
 
 
@@ -264,12 +305,13 @@ public class Hi_z_Debug : MonoBehaviour
         var a = active ? 1f : 0.2f;
         TestGOMaterial.SetColor("_BaseColor", new Color(1f, 1f, 1f, a));
     }
-    void SetImage(Vector2 pos, Vector2 size, bool isOccluded)
+    void SetImage(Vector2 pos, Vector2 size, bool isOccluded,bool isInScreen, int mipmapLevel)
     {
         ImageRectTransform.anchoredPosition = pos;
         ImageRectTransform.sizeDelta = size;
-        Text.text = $"覆盖像素\n{(int)size.x}x{(int)size.y}{(isOccluded? "\nHide" : "")}";
+        Text.text = $"mipmap:{mipmapLevel}\n像素:{(int)size.x}x{(int)size.y}{(isOccluded? "\nHide" : "")}";
         Text.gameObject.SetActive(!UseTestGoWorldPos);
+        ImageRectTransform.gameObject.SetActive(isInScreen);
     }
     void WhenRTRequestDone(NativeArray<float> depthDatas, int depthDatasLength)
     {
