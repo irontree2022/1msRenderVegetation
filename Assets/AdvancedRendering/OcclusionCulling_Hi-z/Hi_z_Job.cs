@@ -47,20 +47,20 @@ public struct Hi_z_Job : IJobParallelFor
 
         var mMatrix = grassInstances[index];
         // 这里记录了每个草实例的实际包围盒，
-        // 但是如果没有旋转和缩放，那么包围盒只需要一直值就足够了，
+        // 但是如果没有旋转和缩放，那么包围盒只需要一个值就足够了，
         // 那样就可以在这里使用类似代码： grassBounds.center = mMatrix.GetPosition();
         // 将包围盒更新到当前实例的世界坐标处
         var grassBounds = grassBoundsesNativeArray[index];
-        // 包围盒是世界坐标的，就不用mvp，只要vp矩阵就足够了
-        // mvp测试时候有问题，
+        // 如果包围盒是模型空间的，使用mvp
+        // 不过，我使用mvp时候一直没测试成功...
         //var mvp = math.mul(vpMatrix, mMatrix);
 
         //包围盒的8个顶点的View Space坐标
         var boundMin = grassBounds.min;
         var boundMax = grassBounds.max;
         var boundVerts = new NativeArray<float4>(8, Allocator.Temp);
-        boundVerts[0] = new float4(boundMin, 1);
-        boundVerts[1] = new float4(boundMax, 1);
+        boundVerts[0] = new float4(boundMin, 1f);
+        boundVerts[1] = new float4(boundMax, 1f);
         boundVerts[2] = new float4(boundMax.x, boundMax.y, boundMin.z, 1f);
         boundVerts[3] = new float4(boundMax.x, boundMin.y, boundMax.z, 1f);
         boundVerts[4] = new float4(boundMax.x, boundMin.y, boundMin.z, 1f);
@@ -70,7 +70,7 @@ public struct Hi_z_Job : IJobParallelFor
 
 
         bool ndcDone = false;
-        float minX = 1, minY = 1, minZ = 1, maxX = -1, maxY = -1, maxZ = -1;//NDC下新的的AABB各个参数
+        float minNDCx = 1, minNDCy = 1, minNDCz = 1, maxNDCx = -1, maxNDCy = -1, maxNDCz = -1;//NDC下新的的AABB各个参数
         //-------------------------------------------------------视椎剔除-------------------------------------------------------
         if (EnableFrustumCulling)
         {
@@ -102,12 +102,12 @@ public struct Hi_z_Job : IJobParallelFor
                     {
                         //计算ndc下的新的AABB
                         float3 ndc = clipSpace.xyz / clipSpace.w;
-                        if (minX > ndc.x) minX = ndc.x;
-                        if (minY > ndc.y) minY = ndc.y;
-                        if (minZ > ndc.z) minZ = ndc.z;
-                        if (maxX < ndc.x) maxX = ndc.x;
-                        if (maxY < ndc.y) maxY = ndc.y;
-                        if (maxZ < ndc.z) maxZ = ndc.z;
+                        if (minNDCx > ndc.x) minNDCx = ndc.x;
+                        if (minNDCy > ndc.y) minNDCy = ndc.y;
+                        if (minNDCz > ndc.z) minNDCz = ndc.z;
+                        if (maxNDCx < ndc.x) maxNDCx = ndc.x;
+                        if (maxNDCy < ndc.y) maxNDCy = ndc.y;
+                        if (maxNDCz < ndc.z) maxNDCz = ndc.z;
                         ndcDone = true;
                     }
                 }
@@ -128,51 +128,61 @@ public struct Hi_z_Job : IJobParallelFor
             {
                 for (int i = 0; i < 8; i++)
                 {
+                    // 转换剪裁空间
                     float4 clipSpace = math.mul(vpMatrix, boundVerts[i]);
-                    //计算ndc下的新的AABB
+                    // 透视除法得到ndc坐标，其z值表示深度
                     float3 ndc = clipSpace.xyz / clipSpace.w;
-                    if (minX > ndc.x) minX = ndc.x;
-                    if (minY > ndc.y) minY = ndc.y;
-                    if (minZ > ndc.z) minZ = ndc.z;
-                    if (maxX < ndc.x) maxX = ndc.x;
-                    if (maxY < ndc.y) maxY = ndc.y;
-                    if (maxZ < ndc.z) maxZ = ndc.z;
+                    // 计算ndc下的新的AABB
+                    if (minNDCx > ndc.x) minNDCx = ndc.x;
+                    if (minNDCy > ndc.y) minNDCy = ndc.y;
+                    if (minNDCz > ndc.z) minNDCz = ndc.z;
+                    if (maxNDCx < ndc.x) maxNDCx = ndc.x;
+                    if (maxNDCy < ndc.y) maxNDCy = ndc.y;
+                    if (maxNDCz < ndc.z) maxNDCz = ndc.z;
                 }
             }
 
             // 求当前覆盖屏幕的像素尺寸，
-            // 并根据最长的边，log2求出对应mipmapLevel
-            var minUV = new float2(minX, minY);
-            var maxUV = new float2(maxX, maxY);
+            var minUV = new float2(minNDCx, minNDCy);
+            var maxUV = new float2(maxNDCx, maxNDCy);
+            minUV = minUV * 0.5f + 0.5f;
+            maxUV = maxUV * 0.5f + 0.5f;
             var minPixel = minUV * new float2(ScreenSize.x, ScreenSize.y);
             var maxPixel = maxUV * new float2(ScreenSize.x, ScreenSize.y); // 这里就计算出当前物体覆盖屏幕的像素区域
+            // 根据最长的边，log2求出对应mipmapLevel
             var maxPixelCount = math.max(math.abs(maxPixel.x - minPixel.x), math.abs(maxPixel.y - minPixel.y)); // 物体覆盖屏幕像素区域的最长一边
             var mipmapLevel = math.clamp((int)math.log2(maxPixelCount), 0, math.min(rtMipmapCount - 1, minMipmapLevel)); // log2求出取值mipmap层级，clamp确保层级在最小和最大层级之间
+            // 宽(mipmapData.x)、长(mipmapData.y)、数据偏移量(mipmapData.z)，
+            // 由于我们回读RT数据是将所有层级mipmap数据写入数组中，
+            // 所以这里的数据偏移量，用于定位mipmap数据的开始位置
             var _mipmapData = rtMipmapSizesNativeArray[mipmapLevel];
-            // 宽、长、数据偏移量，由于我们回读RT数据是将所有层级mipmap写入数组中，
-            // 这里数据偏移量，用于定位对应mipmap层级的数据
+            // 动态Mip层级选择，如果包围盒覆盖像素边长大于该Mip纹理尺寸，则选择更精细的Mip层级
+            if(maxPixelCount > _mipmapData.x || maxPixelCount > _mipmapData.y)
+                _mipmapData = rtMipmapSizesNativeArray[math.clamp(mipmapLevel - 1, 0, mipmapLevel - 1)];
             int3 mipmapData = new int3(_mipmapData.x, _mipmapData.y, _mipmapData.z); 
 
             // 深度值映射到[0-1]之间
             // 优先取相机最近的深度值，OpenGL取最小z；
             // 其他平台默认是反转的，所以取最大z（再度反转后，也是最小z了）
-            var depth = minZ;
-            if(isOpenGL)
-                depth = minZ * 0.5f + 0.5f; // OpenGL ndc.z处于[-1,1]之间，需要映射到[0-1]
+            var depth = minNDCz;
+            if (isOpenGL)
+                depth = minNDCz * 0.5f + 0.5f; // OpenGL ndc.z处于[-1,1]之间，需要映射到[0-1]
             if (usesReversedZBuffer)
             {
-                depth = maxZ;
-                depth = 1f - depth; // 处理平台差异：DX11/Metal/Vulkan 使用反向Z，1.0（近） → 0.0（远）
+                depth = maxNDCz;// 处理平台差异：DX11/Metal/Vulkan 使用反向Z，1.0（近） → 0.0（远）
+                depth = 1f - depth; 
             }
+            // 生成线性深度值
             float zBufferParamX = 1.0f - farClipPlane / nearClipPlane;
             float zBufferParamY = farClipPlane / nearClipPlane;
-            // 深度图中写入的是0-1的线性深度值，这里要同步处理成线性深度值
             float linear01Depth = 1.0f / (zBufferParamX * depth + zBufferParamY);
+
+
             // 保守剔除：新包围盒的四个顶点都被遮挡住了，才会被剔除
-            var uv0 = new float2(minX, minY);
-            var uv1 = new float2(minX, maxY);
-            var uv2 = new float2(maxX, minY);
-            var uv3 = new float2(maxX, maxY);
+            var uv0 = new float2(minNDCx, minNDCy);
+            var uv1 = new float2(minNDCx, maxNDCy);
+            var uv2 = new float2(maxNDCx, minNDCy);
+            var uv3 = new float2(maxNDCx, maxNDCy);
             if (isOccluded(uv0, linear01Depth, mipmapData) &&
                 isOccluded(uv1, linear01Depth, mipmapData) &&
                 isOccluded(uv2, linear01Depth, mipmapData) &&
@@ -181,7 +191,7 @@ public struct Hi_z_Job : IJobParallelFor
                 boundVerts.Dispose();
                 return;
             }
-
+          
 
             if (enabelDebug)
                 Debug.Log($"没有被遮挡剔除：{index}，mipmapData={mipmapData}，mipmapLevel={mipmapLevel}，maxPixelCount={maxPixelCount}");
@@ -200,25 +210,23 @@ public struct Hi_z_Job : IJobParallelFor
     // 计算遮挡关系
     bool isOccluded(float2 uv, float depth, int3 mipmapData)
     {
-        var screenSize = ScreenSize;
         // 先将uv映射到[0-1]之间，
         uv = uv * 0.5f + 0.5f;
-        var pixel = uv * new float2(screenSize.x, screenSize.y);
 
-
-        var isInScreen = pixel.x >= 0 || pixel.y >= 0 || pixel.x <= screenSize.x - 1 || pixel.y <= screenSize.y - 1;
         // 剔除屏幕之外的像素点
+        var pixel = uv * new float2(ScreenSize.x, ScreenSize.y);
+        var isInScreen = pixel.x >= 0 || pixel.y >= 0 || pixel.x <= ScreenSize.x - 1 || pixel.y <= ScreenSize.y - 1;
         if (!isInScreen)
             return true;
 
+        // 对mipmap取值时确保在数据范围内，不要越界 
         // 获取对应mipmap像素坐标
         var mipmapSize = new int2(mipmapData.x, mipmapData.y);
-        var mipmapOffset = mipmapData.z;
         pixel = uv * mipmapSize;
         var pixelX = math.clamp((int)pixel.x, 0, mipmapSize.x -1);
         var pixelY = math.clamp((int)pixel.y, 0, mipmapSize.y -1);
-
-        // 对应mipmap偏移量处取值，进行深度对比
+        // 在对应mipmap偏移量的地方取值
+        var mipmapOffset = mipmapData.z;
         var bufferIndex = pixelY * mipmapSize.x + pixelX + mipmapOffset;
         if (bufferIndex < 0 || bufferIndex >= depthDataNativeArray.Length)
             return true;

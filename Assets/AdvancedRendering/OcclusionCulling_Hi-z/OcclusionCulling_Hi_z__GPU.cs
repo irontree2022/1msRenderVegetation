@@ -16,6 +16,7 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
     public Vector3 nearPoint = new Vector3(5.5f, -3.35f, -0.25f);
     public float nearDistance = 2f;
 
+    [Header("绘制可见实例包围盒")]
     public bool EnableDrawGrassInstanceBounds;
     public bool EnableGenGoWithBounds;
     public bool DestroyGoWhenUnableDrawGrassBounds = true;
@@ -44,8 +45,8 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
     public ComputeBuffer cullResultAppendBuffer;
     public ComputeBuffer cullResultBoundsAppendBuffer;
     public ComputeBuffer cullResultBoundsCountComputeBuffer;
-    public uint[] cullResultBoundsCountArr = new uint[1] { 0 };
     public uint visibleBoundsesCount;
+    public uint[] cullResultBoundsCountArr = new uint[1] { 0 };
     public Bounds[] visibleBoundses;
     public bool IsDrawDataOk;
 
@@ -65,13 +66,8 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
     public int minMipmapLevel = 5;
    
     int maxDepthDatasLength;
-    int depthDatasLength;
-    // RT各层级mipmap的数据，将会全部写入该数组中，
-    // 第0层mipmap，数据范围是0~offset_1； 第1层mipmap数据范围则是 offset_1~offset_2； 第2层mipmap数据范围则是offset_2~offset_3...
-    // 对应要取第i层mipmap数据，则需要偏移offset_i，才取得正确的数据
-    NativeArray<float> depthDataNativeArray;
 
-    public event System.Action<NativeArray<float>, int> RTRequestDoneEvent;
+
 
     public void Init(ComputeShader cs, Mesh mesh, Material material, Bounds grassBounds, Matrix4x4[] instances, Bounds[] boundses)
     {
@@ -150,9 +146,6 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
     }
     private void Update()
     {
-        if (RT != null)
-            AsyncRTRequest();
-
         if (!useCommandBuffer && RT != null)
         {
             cs.SetInt("InstancesCount", instancesCount);
@@ -219,40 +212,14 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
         if (drawWithGraphics)
             Graphics.DrawMeshInstancedIndirect(grassMesh, 0, grassMaterial, drawBounds, argsBuffer, 0, mpb,
                  ShadowCastingMode.On, true);
-
     }
-    private void AsyncRTRequest()
-    {
-        if (!depthDataNativeArray.IsCreated || depthDataNativeArray.Length < maxDepthDatasLength)
-        {
-            if (depthDataNativeArray.IsCreated)
-                depthDataNativeArray.Dispose();
-            depthDataNativeArray = new NativeArray<float>(maxDepthDatasLength, Allocator.Persistent);
-        }
-        depthDatasLength = maxDepthDatasLength;
-        for (var i = 0; i < rtMipmapCount; ++i)
-        {
-            var mipmapLevel = i;
-            var mipmapOffset = rtMipmapSizes[i].z;
-            // CPU回读RT，RT的各层级mipmap数据，就需要逐一回读才行，
-            // 根据当前mipmap层级，将读到的数据写入数组的对应位置中去，
-            // 在使用数组中各层级mipmap数据时，则根据写入的位置去取对应mipmap的值
-            AsyncGPUReadback.Request(RT, mipmapLevel, TextureFormat.RFloat, request =>
-            {
-                if (isDestroyed) return;
-                if (request.hasError) return;
 
-                var depthDatas = request.GetData<float>();
-                NativeArray<float>.Copy(depthDatas, 0, depthDataNativeArray, mipmapOffset, depthDatas.Length);
 
-                RTRequestDoneEvent?.Invoke(depthDataNativeArray, depthDatasLength);
-            });
-        }
-    }
     public void AfterDepthMapGenerated(CommandBuffer cmd, RenderTargetIdentifier targetIdentifier)
     {
         if (!useCommandBuffer) return;
 
+        // 使用CommandBuffer执行ComputeShader Hi-Z遮挡剔除计算
         cmd.SetComputeIntParam(cs, "InstancesCount", instancesCount);
         cmd.SetComputeBufferParam(cs, kernel, "InstancesStructuredBuffer", grassInstancesBuffer);
         cmd.SetComputeBufferParam(cs, kernel, "InstancesBoundsStructuredBuffer", grassBoundsesBuffer);
@@ -313,6 +280,17 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
 
     }
 
+
+    // 注意：下面两个函数使用CommandBuffer执行GPU Instancing渲染实例存在极大的问题，
+    //      实际中因为光照阴影等数据设置问题，导致渲染出错，因此仍要使用 Graphics.DrawMeshInstancedIndirect 才能正确渲染物体和阴影
+    // 
+    //      网络上有人遇到同样得问题，得到答案都是URP下需要修改渲染管线才能将阴影正确设置好（涉及光源、级联阴影什么的，一看就难度高，没戏）
+    //      另一种解决办法则是使用内置渲染管线（不要使用URP或HDRP），然后使用相机事件和灯光事件，利用CommandBuffer可以（疑似）正确渲染物体和阴影
+    //      链接1：https://discussions.unity.com/t/commandbuffer-drawmeshinstanced-shadowcasting/895927/3
+    //      链接2：https://discussions.unity.com/t/drawing-to-shadow-map-using-command-buffers/865936
+    //
+    //      感觉现阶段 Graphics.DrawMeshInstancedIndirect 还是第一选择
+    // 
     public void DrawInstances(CommandBuffer cmd)
     {
         if (drawWithGraphics || !IsDrawDataOk) return;
@@ -394,8 +372,5 @@ public class OcclusionCulling_Hi_z__GPU : MonoBehaviour
         cullResultBoundsAppendBuffer?.Release();
         cullResultBoundsCountComputeBuffer?.Release();
 
-        if (depthDataNativeArray.IsCreated)
-            depthDataNativeArray.Dispose();
-        RTRequestDoneEvent = null;
     }
 }

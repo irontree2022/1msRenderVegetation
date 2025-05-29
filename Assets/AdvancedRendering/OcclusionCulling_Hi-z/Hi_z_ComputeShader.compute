@@ -235,6 +235,12 @@ void Hi_z_Main(uint3 id : SV_DispatchThreadID)
         int mipmapLevel = clamp((int) log2(maxPixelCount), 0, min(rtMipmapCount - 1, minMipmapLevel)); // log2求出取值mipmap层级，clamp确保层级在最小和最大层级之间
         // 将宽、高和计算求得的要取值的mipmapLevel，一起传给 isOccluded() 函数计算遮挡关系
         int2 mipmapSize = int2(ScreenWidth >> mipmapLevel, ScreenHeight >> mipmapLevel);
+        // 动态Mip层级选择，如果包围盒覆盖像素边长大于该Mip纹理尺寸，则选择更精细的Mip层级
+        if (maxPixelCount > mipmapSize.x || maxPixelCount > mipmapSize.y)
+        {
+            mipmapLevel = clamp(mipmapLevel - 1, 0, mipmapLevel - 1);
+            mipmapSize = int2(ScreenWidth >> mipmapLevel, ScreenHeight >> mipmapLevel);
+        }
         int3 mipmapData = int3(mipmapSize, mipmapLevel);
                 
         // 深度值映射到[0-1]之间
@@ -248,9 +254,9 @@ void Hi_z_Main(uint3 id : SV_DispatchThreadID)
             depth = maxZ;
             depth = 1.0f - depth; // 处理平台差异：DX11/Metal/Vulkan 使用反向Z，1.0（近） → 0.0（远）
         }
+         // 深度图中写入的是0-1的线性深度值，这里要同步处理成线性深度值
         float zBufferParamX = 1.0f - farClipPlane / nearClipPlane;
         float zBufferParamY = farClipPlane / nearClipPlane;
-        // 深度图中写入的是0-1的线性深度值，这里要同步处理成线性深度值
         float linear01Depth = 1.0f / (zBufferParamX * depth + zBufferParamY);
         
         // 保守剔除策略：新包围盒的四个顶点都被遮挡住了，才会被剔除

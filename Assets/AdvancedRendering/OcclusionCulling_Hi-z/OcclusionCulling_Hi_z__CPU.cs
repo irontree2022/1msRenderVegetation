@@ -1,6 +1,7 @@
 using RenderVegetationIn1ms;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Unity.Collections;
 using Unity.Jobs;
@@ -78,9 +79,6 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
     public bool enabelDebug;
 
 
-    public event System.Action<NativeArray<float>, int> RTRequestDoneEvent;
-
-
     public void Init(Mesh mesh, Material material, Bounds grassBounds, Matrix4x4[] instances, Bounds[] boundses)
     {
         OnDestroy();
@@ -141,8 +139,8 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
             rtMipmapSizes = new Vector3Int[rtMipmapCount];
         }
         maxDepthDatasLength = 0;
-        // 这里计算各层mipmap尺寸以及偏移量，
-        // 并把最终整个RT（各层mipmap）的数据量统计出来
+        // 这里计算各层mipmap尺寸、数据量长度以及偏移量，
+        // 并最终整个RT（各层mipmap）的数据量长度统计出来
         for (var i = 0; i < mipmapCount; ++i)
         {
             var w = RT.width >> i;
@@ -261,10 +259,8 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
                 if (isDestroyed) return;
                 if (request.hasError) return;
 
-                var depthDatas = request.GetData<float>();
+                NativeArray<float> depthDatas = request.GetData<float>();
                 NativeArray<float>.Copy(depthDatas,0, depthDataNativeArray, mipmapOffset, depthDatas.Length);
-
-                RTRequestDoneEvent?.Invoke(depthDataNativeArray, depthDatasLength);
             });
         }
     }
@@ -325,7 +321,6 @@ public class OcclusionCulling_Hi_z__CPU : MonoBehaviour
         if (depthDataNativeArray.IsCreated)
             depthDataNativeArray.Dispose();
 
-        RTRequestDoneEvent = null;
     }
 
     bool gend;

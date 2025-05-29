@@ -31,10 +31,10 @@ Shader "Hidden/DepthConversion"
 
             float4 frag (v2f i) : SV_Target
             {
-                // 采样深度并处理平台差异
+                // 采样深度并处理平台差异，将深度值转换为线性深度（0-1范围）
                 float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
-                // 转换为线性深度（0-1范围）
                 float linearDepth = Linear01Depth(depth);
+                // 输出最终颜色（深度）
                 return float4(linearDepth, linearDepth, linearDepth, 1.0);
             }
             ENDCG

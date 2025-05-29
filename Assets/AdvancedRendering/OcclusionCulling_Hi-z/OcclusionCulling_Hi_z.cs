@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class OcclusionCulling_Hi_z : MonoBehaviour
 {
+    public Button SwitchButton;
     public bool EnabelHi_z_OcclusionCulling;
     public bool UseCPU;
     public OcclusionCulling_Hi_z__CPU hi_z__CPU;
@@ -28,13 +30,22 @@ public class OcclusionCulling_Hi_z : MonoBehaviour
     [Header("调试选项")]
     public bool EnableDebug;
 
-
+    private Text SwitchText;
     private GenDepthMapController depthMapController;
     void Start()
     {
+        SwitchText = SwitchButton.GetComponentInChildren<Text>();
+        SwitchText.text = $"【{(UseCPU ? "CPU" : "GPU")}端】Hi-Z遮挡剔除";
+        SwitchButton.onClick.AddListener(SwitchButtonClick);
         depthMapController = gameObject.GetComponent<GenDepthMapController>();
         InitGrassPosition();
         per_EnableRandomGenGrassInstances = EnableRandomGenGrassInstances;
+    }
+
+    void SwitchButtonClick()
+    {
+        UseCPU = !UseCPU;
+        SwitchText.text = $"【{(UseCPU?"CPU":"GPU")}端】Hi-Z遮挡剔除";
     }
 
     bool per_EnableRandomGenGrassInstances;
@@ -96,7 +107,7 @@ public class OcclusionCulling_Hi_z : MonoBehaviour
             if (hi_z__CPU != null)
             {
                 hi_z__CPU.EnabelHi_z_OcclusionCulling = EnabelHi_z_OcclusionCulling;
-                if (hi_z__CPU.EnabelHi_z_OcclusionCulling && hi_z__CPU.RT == null)
+                if (hi_z__CPU.RT == null)
                 {
                     hi_z__CPU.RT = depthMapController.RT;
                     hi_z__CPU.GenMipmapSizes(depthMapController.MipmapCount);
@@ -105,7 +116,7 @@ public class OcclusionCulling_Hi_z : MonoBehaviour
             if (hi_z__GPU != null)
             {
                 hi_z__GPU.EnabelHi_z_OcclusionCulling = EnabelHi_z_OcclusionCulling;
-                if (hi_z__GPU.EnabelHi_z_OcclusionCulling && hi_z__GPU.RT == null)
+                if (hi_z__GPU.RT == null)
                 {
                     hi_z__GPU.RT = depthMapController.RT;
                     hi_z__GPU.GenMipmapSizes(depthMapController.MipmapCount);
@@ -116,8 +127,9 @@ public class OcclusionCulling_Hi_z : MonoBehaviour
             {
                 if (!Hi_z_Debug.Enable)
                 {
-                    Hi_z_Debug.rtMipmapCount = depthMapController.MipmapCount;
                     Hi_z_Debug.Enable = true;
+                    Hi_z_Debug.Instance.RT = depthMapController.RT;
+                    Hi_z_Debug.Instance.GenMipmapSizes(depthMapController.MipmapCount);
                 }
             }
             else
@@ -135,13 +147,11 @@ public class OcclusionCulling_Hi_z : MonoBehaviour
     //获取每个草的世界坐标矩阵
     void InitGrassPosition()
     {
-        // 计算草实例在零点位置的包围盒，
+        grassBounds = grassMesh.bounds;
         GameObject go = new GameObject();
         go.AddComponent<MeshFilter>().sharedMesh = grassMesh;
         MeshRenderer mr = go.AddComponent<MeshRenderer>();
         mr.sharedMaterial = grassMaterial;
-        grassBounds = mr.bounds;
-
 
         // 在场景种生成一些草的实例数据, 随机旋转和随机缩放
         m_grassCount = GrassCountPerRaw * GrassCountPerRaw;

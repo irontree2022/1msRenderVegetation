@@ -38,7 +38,9 @@ Shader "Hidden/GenDepthMipmap"
                     depth.z = tex2D(_MainTex, uv + float2(offset.x,  0));
                     depth.w = tex2D(_MainTex, uv + offset);
                     // 挑选出深度最大的那个
-                    // 因为从相机获取深度时，已经对深度处理过平台差异并最后做线性处理，所以这里是直接取最大作为结果输出
+                    // (最大表示距离相机更远那个，如果物体在该区域的深度值比这里记录的深度值还大的话，肯定被遮挡住了)
+                    // 因为从相机获取深度时，已经对深度处理过平台差异并最后做线性处理，
+                    // 所以这里是直接取最大作为结果输出
                     return max(max(depth.x, depth.y), max(depth.z, depth.w));
                 }
                 v2f vert(appdata v)

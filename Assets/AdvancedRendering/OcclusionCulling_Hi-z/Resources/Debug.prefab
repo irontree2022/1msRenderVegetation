@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 1302031805314163724}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6.87, y: -3.96, z: 6.43}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1302031805440487887}
@@ -308,10 +308,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5dd3f1f9618144438f5030ae935068c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RT: {fileID: 0}
   TestGo: {fileID: 1302031805314163724}
   Image: {fileID: 1302031804342443913}
   Text: {fileID: 5525069902980036279}
-  UseTestGoWorldPos: 0
+  rtMipmapSizes: []
+  minMipmapLevel: 5
 --- !u!1 &2936663560094561827
 GameObject:
   m_ObjectHideFlags: 0

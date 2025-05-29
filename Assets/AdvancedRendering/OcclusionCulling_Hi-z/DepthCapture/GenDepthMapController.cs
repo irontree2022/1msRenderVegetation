@@ -56,11 +56,11 @@ public class GenDepthMapController : MonoBehaviour
         Camera.depthTextureMode |= DepthTextureMode.Depth;
 
         RT = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.RFloat);
-        RT.useMipMap = true;
-        RT.autoGenerateMips = false;
-        RT.filterMode = FilterMode.Point;
+        RT.useMipMap = true; // 使用MipMap
+        RT.autoGenerateMips = false; // 禁止自动生成Mips
+        RT.filterMode = FilterMode.Point; // 点采样，不做插值，取原始深度值
         RT.Create();
-
+        
         IsInitialized = true;
         _instance = this;
     }

@@ -62,9 +62,10 @@ Shader "Hidden/DepthConversion2"
 			{
 				float4 sampleTex = tex2D(_MainTex, i.uv);
 				half2 screenPos = i.scrPos.xy / i.scrPos.w;
-				//深度
+				// 采样深度并处理平台差异，将深度值转换为线性深度（0-1范围）
 				float depth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, screenPos).r;
 				float depthValue = Linear01Depth(depth, _ZBufferParams);
+				 // 输出最终颜色（深度）
 				return float4(depthValue, depthValue, depthValue, 1);
 			}
 			ENDHLSL
