@@ -159,6 +159,10 @@ public class compressedInstanceData : MonoBehaviour
         // position: 计算所有实例坐标范围，使用ushort量化,(x - min) / range * 65535
         // rotation: 四元数每个分量在[-1,1]，可以使用ushort量化, 先将值映射到[0-1], (x * 0.5 + 0.5) * 65535
         // scale: 计算缩放范围，使用ushort量化，(x - min) / range * 65535
+        //Matrix4x4 matrix = new Matrix4x4();
+        //var position = matrix.GetPosition();
+        //var rotation = matrix.rotation;
+        //var scale = matrix.lossyScale;
 
 
         // position各分量的最小最大值和范围

@@ -216,6 +216,7 @@ public class Simple__FrustumCulling_OcclusionCulling : MonoBehaviour
         drawBounds.center = Camera.main.transform.position;
         Graphics.DrawMeshInstancedIndirect(mesh, 0, material, drawBounds, argsBuffer, 0, mpb,
                  ShadowCastingMode.On, true);
+
     }
 
     public void AfterDepthMapGenerated(CommandBuffer cmd, RenderTargetIdentifier targetIdentifier)
