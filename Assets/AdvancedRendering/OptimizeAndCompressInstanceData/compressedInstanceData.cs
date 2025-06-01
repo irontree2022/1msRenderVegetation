@@ -13,6 +13,7 @@ using UnityEngine.UIElements;
 public struct CompressedInfo
 {
     // position各分量取值范围
+    // 也可以像scale一样使用整体的取值范围：posMin，posMax，posRange
     public float posMinX;
     public float posMaxX;
     public float posRangeX;
@@ -70,15 +71,18 @@ public struct CompressedMatrix
 
     public void Compress(CompressedInfo info, Vector3 pos, Quaternion r, Vector3 s)
     {
+        // 量化 (x - min) / range
         px = (ushort)((pos.x - info.posMinX) / info.posRangeX * 65535);
         py = (ushort)((pos.y - info.posMinY) / info.posRangeY * 65535);
         pz = (ushort)((pos.z - info.posMinZ) / info.posRangeZ * 65535);
 
+        // 四元数各个分量在[-1,1]，映射到[0,1]
         qx = (ushort)((r.x * 0.5f + 0.5f) * 65535);
         qy = (ushort)((r.y * 0.5f + 0.5f) * 65535);
         qz = (ushort)((r.z * 0.5f + 0.5f) * 65535);
         qw = (ushort)((r.w * 0.5f + 0.5f) * 65535);
 
+        // 量化 (x - min) / range
         sx = (ushort)((s.x - info.scaleMin) / info.scaleRange * 65535);
         sy = (ushort)((s.y - info.scaleMin) / info.scaleRange * 65535);
         sz = (ushort)((s.z - info.scaleMin) / info.scaleRange * 65535);
@@ -132,7 +136,6 @@ public struct CompressedMatrix
         sx = (ushort)(packed[index + 3] >> 16);
         sy = (ushort)(packed[index + 4] & 0xFFFF);
         sz = (ushort)(packed[index + 4] >> 16);
-
     }
 
     public static int stride => sizeof(ushort) * 3 + sizeof(ushort) * 4 + sizeof(ushort) * 3;
@@ -164,10 +167,8 @@ public class compressedInstanceData : MonoBehaviour
         float posMinX = float.MaxValue, posMaxX = float.MinValue, posRangeX;
         float posMinY = float.MaxValue, posMaxY = float.MinValue, posRangeY;
         float posMinZ = float.MaxValue, posMaxZ = float.MinValue, posRangeZ;
-        // rotation各分量[-1,1]，直接乘以32767.0f
         // scale最小最大值和范围
         float scaleMin = float.MaxValue, scaleMax = float.MinValue, scaleRange;
-
         for(var i = 0; i < Cubes.Length; ++i)
         {
             var cube = Cubes[i];
@@ -192,6 +193,7 @@ public class compressedInstanceData : MonoBehaviour
         posRangeY = posMaxY - posMinY;
         posRangeZ = posMaxZ - posMinZ;
         scaleRange = scaleMax - scaleMin;
+        Debug.Log($"posRangeX={posRangeX}, posRangeY={posRangeY}, posRangeZ={posRangeZ}, scaleRange={scaleRange}");
 
         // 压缩信息，用于压缩和数据还原
         var info = new CompressedInfo()
@@ -210,8 +212,6 @@ public class compressedInstanceData : MonoBehaviour
             scaleMax= scaleMax,
             scaleRange = scaleRange,
         };
-       
-
         packed = new uint[Cubes.Length * CompressedMatrix.packedCount];
         CompressedCubeDatas = new CompressedMatrix[Cubes.Length];
         uint[] tempPacked = null;

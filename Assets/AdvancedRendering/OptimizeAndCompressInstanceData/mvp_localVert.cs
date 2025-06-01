@@ -10,6 +10,7 @@ public class mvp_localVert : MonoBehaviour
     public GameObject Cube;
     public Image Image;
     public Text Text;
+    public bool isShowNDC;
 
     private Mesh mesh;
     private RectTransform imageRectTransform;
@@ -25,10 +26,11 @@ public class mvp_localVert : MonoBehaviour
     private Bounds calculatedBounds;
     void Update()
     {
+       
+        // ------------- 模型空间8个顶点 ------------------
         var localBounds = mesh.bounds;
         var localBoundsCenter = localBounds.center;
         var localBoundsExtents = localBounds.extents;
-        // 模型空间8个顶点
         boundsVerts[0] = new Vector4(
             localBoundsCenter.x - localBoundsExtents.x,
             localBoundsCenter.y - localBoundsExtents.y,
@@ -75,6 +77,7 @@ public class mvp_localVert : MonoBehaviour
         var max = obbBoundsVerts[0];
         // M矩阵
         var m = Matrix4x4.TRS(Cube.transform.position, Cube.transform.rotation, Cube.transform.lossyScale);
+        // var m = Cube.transform.localToWorldMatrix;
         for(var i = 0; i < boundsVerts.Length; i++)
         {
             var boundsVert = boundsVerts[i];
@@ -97,6 +100,9 @@ public class mvp_localVert : MonoBehaviour
         calculatedBounds.max = max;
 
 
+        if (imageRectTransform.parent.gameObject.activeSelf != isShowNDC)
+            imageRectTransform.parent.gameObject.SetActive(isShowNDC);
+        if (!isShowNDC) return;
 
         // -------------------------------- 模型空间AABB转换到NDC -------------------------------
         var v = Camera.main.worldToCameraMatrix;
@@ -108,7 +114,7 @@ public class mvp_localVert : MonoBehaviour
         {
             var boundsVert = boundsVerts[i];
             // 转换到裁剪空间
-            var clipSpace = mvp * new Vector4(boundsVert.x, boundsVert.y, boundsVert.z, 1f);
+            var clipSpace = mvp * boundsVert;
             // 透视除法转换到NDC
             var ndc = new Vector3(clipSpace.x, clipSpace.y, clipSpace.z) / clipSpace.w;
             //计算ndc下的新的AABB
@@ -142,7 +148,7 @@ public class mvp_localVert : MonoBehaviour
     private void OnDrawGizmos()
     {
         // 绘制OBB以及各点连线
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.red;
         for (var i = 0; i < obbBoundsVerts.Length; ++i)
         {
             Gizmos.DrawSphere(obbBoundsVerts[i], 0.05f);

@@ -2,7 +2,6 @@
 
 
 int usePackedDatas;
-StructuredBuffer<uint> PackedInstancesStructuredBuffer;
 // position各分量取值范围
 float posMinX;
 float posMaxX;
@@ -37,26 +36,28 @@ float4x4 MatrixTRS(float3 p, float4 q, float3 s)
 }
 
 
+// 实例模型空间AABB
 float3 localBoundsCenter;
 float3 localBoundsExtents;
-
+// 实例数据
 uint InstancesCount;
 StructuredBuffer<float4x4> InstancesStructuredBuffer;
+StructuredBuffer<uint> PackedInstancesStructuredBuffer;
 
 
+// 遮挡剔除相关参数
 Texture2D<float> _HiZMap;
 float4x4 vpMatrix; //相机的VP矩阵
 int enableOcclusionCulling;
 int isOpenGL; //是否是OpenGL的API
 int usesReversedZBuffer;
-
 int ScreenWidth;
 int ScreenHeight;
 float nearClipPlane;
 float farClipPlane;
 
-
-AppendStructuredBuffer<float4x4> cullResultAppendBuffer; //剔除后保留的草
+//剔除后保留的草
+AppendStructuredBuffer<float4x4> cullResultAppendBuffer; 
 
 
 
@@ -114,7 +115,7 @@ void Hi_z_Main(uint3 id : SV_DispatchThreadID)
     float4x4 m;
     if (usePackedDatas != 0)
     {
-        // 从压缩包中解包, 每五个一组取出10个short量化值
+        // 从压缩包中解包, 每五个一组取出10个ushort量化值(这里可以用 uint 存储 ushort)
         uint packed0 = PackedInstancesStructuredBuffer[id.x * 5 + 0];
         uint packed1 = PackedInstancesStructuredBuffer[id.x * 5 + 1];
         uint packed2 = PackedInstancesStructuredBuffer[id.x * 5 + 2];
@@ -168,7 +169,6 @@ void Hi_z_Main(uint3 id : SV_DispatchThreadID)
     
     float4x4 mvp = mul(vpMatrix, m);
     
-    
     //包围盒的8个顶点的View Space坐标
     float3 boundMin = localBoundsCenter - localBoundsExtents;
     float3 boundMax = localBoundsCenter + localBoundsExtents;
@@ -181,8 +181,8 @@ void Hi_z_Main(uint3 id : SV_DispatchThreadID)
     boundVerts[5] = float4(boundMin.x, boundMax.y, boundMax.z, 1);
     boundVerts[6] = float4(boundMin.x, boundMax.y, boundMin.z, 1);
     boundVerts[7] = float4(boundMin.x, boundMin.y, boundMax.z, 1);
-    
-    float minX = 1, minY = 1, minZ = 1, maxX = -1, maxY = -1, maxZ = -1; //NDC下新的的AABB各个参数
+    //NDC下新的的AABB各个参数
+    float minX = 1, minY = 1, minZ = 1, maxX = -1, maxY = -1, maxZ = -1; 
     
     
     //-------------------------------------------------------视椎剔除-------------------------------------------------------
