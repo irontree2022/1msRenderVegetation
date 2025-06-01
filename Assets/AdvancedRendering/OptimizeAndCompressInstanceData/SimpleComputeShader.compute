@@ -1,0 +1,261 @@
+﻿#pragma kernel Hi_z_Main
+
+
+int usePackedDatas;
+StructuredBuffer<uint> PackedInstancesStructuredBuffer;
+// position各分量取值范围
+float posMinX;
+float posMaxX;
+float posRangeX;
+
+float posMinY;
+float posMaxY;
+float posRangeY;
+
+float posMinZ;
+float posMaxZ;
+float posRangeZ;
+
+// scale取值范围
+float scaleMin;
+float scaleMax;
+float scaleRange;
+
+float4x4 MatrixTRS(float3 p, float4 q, float3 s)
+{
+    float x = q.x, y = q.y, z = q.z, w = q.w;
+    float xx = x * x, yy = y * y, zz = z * z;
+    float xy = x * y, xz = x * z, yz = y * z;
+    float wx = w * x, wy = w * y, wz = w * z;
+
+    return float4x4(
+        (1 - 2 * (yy + zz)) * s.x, (2 * (xy - wz)) * s.y, (2 * (xz + wy)) * s.z, p.x,
+        (2 * (xy + wz)) * s.x, (1 - 2 * (xx + zz)) * s.y, (2 * (yz - wx)) * s.z, p.y,
+        (2 * (xz - wy)) * s.x, (2 * (yz + wx)) * s.y, (1 - 2 * (xx + yy)) * s.z, p.z,
+        0, 0, 0, 1
+    );
+}
+
+
+float3 localBoundsCenter;
+float3 localBoundsExtents;
+
+uint InstancesCount;
+StructuredBuffer<float4x4> InstancesStructuredBuffer;
+
+
+Texture2D<float> _HiZMap;
+float4x4 vpMatrix; //相机的VP矩阵
+int enableOcclusionCulling;
+int isOpenGL; //是否是OpenGL的API
+int usesReversedZBuffer;
+
+int ScreenWidth;
+int ScreenHeight;
+float nearClipPlane;
+float farClipPlane;
+
+
+AppendStructuredBuffer<float4x4> cullResultAppendBuffer; //剔除后保留的草
+
+
+
+
+
+//在Clip Space下，根据齐次坐标做Clipping操作
+bool IsInClipSpace(in float4 clipSpacePosition)
+{
+    if (isOpenGL != 0)
+        return clipSpacePosition.x > -clipSpacePosition.w && clipSpacePosition.x < clipSpacePosition.w &&
+        clipSpacePosition.y > -clipSpacePosition.w && clipSpacePosition.y < clipSpacePosition.w &&
+        clipSpacePosition.z > -clipSpacePosition.w && clipSpacePosition.z < clipSpacePosition.w;
+    else
+        return clipSpacePosition.x > -clipSpacePosition.w && clipSpacePosition.x < clipSpacePosition.w &&
+        clipSpacePosition.y > -clipSpacePosition.w && clipSpacePosition.y < clipSpacePosition.w &&
+        clipSpacePosition.z > 0 && clipSpacePosition.z < clipSpacePosition.w;
+}
+// 计算遮挡关系
+bool isOccluded(in float2 uv, in float depth, in int3 mipmapData)
+{
+    bool result = true;
+    int2 ScreenSize = int2(ScreenWidth, ScreenHeight);
+    // 先将uv映射到[0-1]之间，
+    uv = uv * 0.5f + 0.5f;
+    float2 pixel = uv * float2(ScreenSize.x, ScreenSize.y);
+
+    bool isInScreen = pixel.x >= 0 || pixel.y >= 0 || pixel.x <= ScreenSize.x - 1 || pixel.y <= ScreenSize.y - 1;
+    // 剔除屏幕之外的像素点
+    if (isInScreen)
+    {
+        // 取对应mipmap上的像素值
+        int2 mipmapSize = int2(mipmapData.x, mipmapData.y);
+        int mipmapLevel = mipmapData.z;
+        pixel = uv * mipmapSize;
+        int pixelX = clamp((int) pixel.x, 0, mipmapSize.x - 1);
+        int pixelY = clamp((int) pixel.y, 0, mipmapSize.y - 1);
+        float pixelDepthValue = _HiZMap.Load(int3(pixelX, pixelY, mipmapLevel));
+        // 深度大于深度图记录的深度，表示被遮挡住了
+        result = depth > pixelDepthValue;
+    }
+
+    return result;
+}
+
+
+
+
+
+[numthreads(64,1,1)]
+void Hi_z_Main(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= InstancesCount)
+        return;
+    
+    float4x4 m;
+    if (usePackedDatas != 0)
+    {
+        // 从压缩包中解包, 每五个一组取出10个short量化值
+        uint packed0 = PackedInstancesStructuredBuffer[id.x * 5 + 0];
+        uint packed1 = PackedInstancesStructuredBuffer[id.x * 5 + 1];
+        uint packed2 = PackedInstancesStructuredBuffer[id.x * 5 + 2];
+        uint packed3 = PackedInstancesStructuredBuffer[id.x * 5 + 3];
+        uint packed4 = PackedInstancesStructuredBuffer[id.x * 5 + 4];
+        
+        uint px = (packed0 & 0xFFFF);
+        uint py = (packed0 >> 16);
+        uint pz = (packed1 & 0xFFFF);
+        
+        uint qx = (packed1 >> 16);
+        uint qy = (packed2 & 0xFFFF);
+        uint qz = (packed2 >> 16);
+        uint qw = (packed3 & 0xFFFF);
+
+        uint sx = (packed3 >> 16);
+        uint sy = (packed4 & 0xFFFF);
+        uint sz = (packed4 >> 16);
+        
+        
+        // 还原为：位置、旋转和缩放值
+        float3 pos = float3(
+            px / 65535.0 * posRangeX + posMinX,
+            py / 65535.0 * posRangeY + posMinY,
+            pz / 65535.0 * posRangeZ + posMinZ
+        );
+        float4 r = float4(
+            (qx / 65535.0 - 0.5) * 2.0,
+            (qy / 65535.0 - 0.5) * 2.0,
+            (qz / 65535.0 - 0.5) * 2.0,
+            (qw / 65535.0 - 0.5) * 2.0
+        );
+        // 手动归一化（替代 Quaternion.Normalized）
+        float lengthSq = r.x * r.x + r.y * r.y + r.z * r.z + r.w * r.w;
+        float rsqrtLength = 0;
+        if(lengthSq > 0)
+            rsqrtLength = rsqrt(lengthSq); // 高效的反平方根计算
+        r *= rsqrtLength;
+        float3 s = float3(
+            sx / 65535.0 * scaleRange + scaleMin,
+            sy / 65535.0 * scaleRange + scaleMin,
+            sz / 65535.0 * scaleRange + scaleMin
+        );
+        
+        
+        // 构建实例矩阵
+        m = MatrixTRS(pos, r, s);
+    }
+    else
+        m = InstancesStructuredBuffer[id.x];
+    
+    float4x4 mvp = mul(vpMatrix, m);
+    
+    
+    //包围盒的8个顶点的View Space坐标
+    float3 boundMin = localBoundsCenter - localBoundsExtents;
+    float3 boundMax = localBoundsCenter + localBoundsExtents;
+    float4 boundVerts[8];
+    boundVerts[0] = float4(boundMin, 1);
+    boundVerts[1] = float4(boundMax, 1);
+    boundVerts[2] = float4(boundMax.x, boundMax.y, boundMin.z, 1);
+    boundVerts[3] = float4(boundMax.x, boundMin.y, boundMax.z, 1);
+    boundVerts[4] = float4(boundMax.x, boundMin.y, boundMin.z, 1);
+    boundVerts[5] = float4(boundMin.x, boundMax.y, boundMax.z, 1);
+    boundVerts[6] = float4(boundMin.x, boundMax.y, boundMin.z, 1);
+    boundVerts[7] = float4(boundMin.x, boundMin.y, boundMax.z, 1);
+    
+    float minX = 1, minY = 1, minZ = 1, maxX = -1, maxY = -1, maxZ = -1; //NDC下新的的AABB各个参数
+    
+    
+    //-------------------------------------------------------视椎剔除-------------------------------------------------------
+    // 裁剪空间实现视锥剔除：
+            //      适用小物体，比如草；
+            //      当物体非常大时，就不适用了，因为大包围盒可见，但它的顶点都在NDC之外，就会被错误剔除掉
+            //
+    // 通过mvp矩阵得到顶点的Clip Space的齐次坐标，然后在Clip Space做视椎剔除判断，所有点都不在NDC内就被剔除。
+    bool isInClipSpace = false;
+    for (int i = 0; i < 8; i++)
+    {
+        float4 clipSpace = mul(mvp, boundVerts[i]);
+        if (!isInClipSpace && IsInClipSpace(clipSpace))
+            isInClipSpace = true;
+
+        if (enableOcclusionCulling != 0)
+        {
+            //计算ndc下的新的AABB
+            float3 ndc = clipSpace.xyz / clipSpace.w;
+            if (minX > ndc.x)
+                minX = ndc.x;
+            if (minY > ndc.y)
+                minY = ndc.y;
+            if (minZ > ndc.z)
+                minZ = ndc.z;
+            if (maxX < ndc.x)
+                maxX = ndc.x;
+            if (maxY < ndc.y)
+                maxY = ndc.y;
+            if (maxZ < ndc.z)
+                maxZ = ndc.z;
+        }
+    }
+
+    if (!isInClipSpace)
+        return;
+    
+    
+    //-------------------------------------------------------遮挡剔除-------------------------------------------------------
+    if (enableOcclusionCulling != 0)
+    {
+        int3 mipmapData = int3(ScreenWidth, ScreenHeight, 0);
+                
+        // 深度值映射到[0-1]之间
+        // 优先取相机最近的深度值，OpenGL取最小z；
+        // 其他平台默认是反转的，所以取最大z（再度反转后，就自然变成最小z了）
+        float depth = minZ;
+        if (isOpenGL != 0)
+            depth = minZ * 0.5f + 0.5f; // OpenGL ndc.z处于[-1,1]之间，需要映射到[0-1]
+        if (usesReversedZBuffer != 0)
+        {
+            depth = maxZ;
+            depth = 1.0f - depth; // 处理平台差异：DX11/Metal/Vulkan 使用反向Z，1.0（近） → 0.0（远）
+        }
+        // 深度图中写入的是0-1的线性深度值，这里要同步处理成线性深度值
+        float zBufferParamX = 1.0f - farClipPlane / nearClipPlane;
+        float zBufferParamY = farClipPlane / nearClipPlane;
+        float linear01Depth = 1.0f / (zBufferParamX * depth + zBufferParamY);
+        
+        // 保守剔除策略：新包围盒的四个顶点都被遮挡住了，才会被剔除
+        float2 uv0 = float2(minX, minY);
+        float2 uv1 = float2(minX, maxY);
+        float2 uv2 = float2(maxX, minY);
+        float2 uv3 = float2(maxX, maxY);
+        if (isOccluded(uv0, linear01Depth, mipmapData) &&
+            isOccluded(uv1, linear01Depth, mipmapData) &&
+            isOccluded(uv2, linear01Depth, mipmapData) &&
+            isOccluded(uv3, linear01Depth, mipmapData))
+            return;
+    }
+
+    
+    // ------------------------------------------------------剔除结果----------------------------------------------------
+    cullResultAppendBuffer.Append(m);
+    
+}
