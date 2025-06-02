@@ -1,6 +1,9 @@
 # 1msRenderVegetation
 基于Unity，在1ms内渲染大规模植被
 
+# 分支
+仓库中的 **main** 分支对应【技术验证Demo】这部分的源代码， **BasicRenderingFramework**  分支对应【基础渲染框架】这部分的源代码，**AdvancedRendering** 分支对应【渲染技术进阶】这部分的源代码。
+
 ## 辅助课程的Unity插件获取方式
 https://cloud.189.cn/t/bei6JbqQ7zYz (访问码:3vvv)
 
@@ -30,7 +33,10 @@ https://115.com/s/sw6porx3wfq (访问码:c523)
 3. 世界偏移、增删改查和碰撞检测
 4. 获取Unity Terrain中树和草数据
 5. GPU Instancing 移动端兼容解决办法
-6. 实现遮挡剔除
+6. 实现基础的Hi-Z遮挡剔除（CPU+GPU）
+7. 实例数据优化和压缩
+## 结课总结
+1. 结课总结
 
 # 技术讨论群
 QQ群：263192020
