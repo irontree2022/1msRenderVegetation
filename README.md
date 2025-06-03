@@ -41,8 +41,7 @@ https://115.com/s/sw6porx3wfq (访问码:c523)
 # 课程截图
 ![GPU Instancing 基础框架渲染效果](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/GPU%20Instancing%20%E5%9F%BA%E7%A1%80%E6%A1%86%E6%9E%B6%E6%B8%B2%E6%9F%93%E6%95%88%E6%9E%9C.png?raw=true)
 ## 并发计算工具
-![JobSystem Demo](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/JobSystem%20Demo.png?raw=true)
-![ComputeShader Demo](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/ComputeShader%20Demo.png?raw=true)
+![JobSystem Demo](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/JobSystem%20Demo.png?raw=true)![ComputeShader Demo](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/ComputeShader%20Demo.png?raw=true)
 ## 实例数据分区管理
 ![数据分区管理1](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/%E6%95%B0%E6%8D%AE%E5%88%86%E5%8C%BA%E7%AE%A1%E7%90%861.png?raw=true)
 ![数据分区管理2](https://github.com/irontree2022/1msRenderVegetation/blob/AdvancedRendering/Images/%E6%95%B0%E6%8D%AE%E5%88%86%E5%8C%BA%E7%AE%A1%E7%90%862.png?raw=true)
